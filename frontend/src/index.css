@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#studentDetailsForm {
+  width: 50%;
+  margin: auto;
+  background-color: rgba(185, 241, 241, 0.581);
+  padding: 10px 20px;
+}
+
+#courseSelection {
+  padding: 10px;
+  background-color: rgba(166, 169, 95, 0.449);
+}
+
+.form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 10px 0;
+}
+
+input {
+  border: 2px solid black;
+  padding: 10px;
+}
+
+.submit-button {
+  background-color: rgb(4, 4, 4);
+  padding: 10px;
+  margin: auto;
+  width: 100%;
+  color: aliceblue;
+}
