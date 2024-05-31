@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Form from './pages/Form';
 import Dashboard from './pages/Dashboard';
+import Followup from './component/FollowUp/Followup';
 // import Table from './pages/Table';
 const App = () => {
 
@@ -11,7 +12,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Form />} />
           <Route path='/fn' element={<Dashboard />} />
-          {/* <Route path='/table' element={<Table />} /> */}
+          <Route path='/profile' element={<Followup />} />
         </Routes>
 
       </BrowserRouter>

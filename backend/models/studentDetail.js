@@ -100,17 +100,20 @@ const studentDetailSchema = new mongoose.Schema(
 
         preffredCollege: {
             type: String,
-            required: [true, "Please Selct Preffred College "]
+            default:""
+            // required: [true, "Please Selct Preffred College "]
         },
 
         source: {
             type: String,
-            required: [true, "Please enter your source "]
+            default:""
+            // required: [true, "Please enter your source "]
         },
 
         sourceId: {
             type: String,
-            required: [true, "Please enter source Id "]
+            default:""
+            // required: [true, "Please enter source Id "]
         },
 
         neetScore: {

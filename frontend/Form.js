@@ -166,7 +166,7 @@ function submitForm(event) {
         state: document.getElementById('state').value,
         courseSelection: document.getElementById('courseSelection').value,
         neetScore: document.getElementById('neetScore').value,
-        preferredCollege: document.getElementById('preferredCollege').value,
+        // preferredCollege: document.getElementById('preferredCollege').value,
         agreeCheckbox: document.getElementById('agreeCheckbox').checked,
         formSource: utmData
     };

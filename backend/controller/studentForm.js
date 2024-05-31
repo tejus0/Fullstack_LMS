@@ -1,4 +1,5 @@
 import studentModal from '../models/studentDetail.js'
+import Todo from '../models/councellorToDoModel.js';
 
 
 export async function createStudentProfile(req, res) {
@@ -108,3 +109,36 @@ export async function getAllStudentProfile(req, res) {
             })
     }
 }
+
+export const getTodos = async (req, res) => {
+    //    const todos = await Todo.find();
+    const id = req.params.id;
+    try {
+      const todos = await Todo.find({ employee_id: id });
+      if (!todos) {
+        return res.status(404).json({ msg: "User data not found" });
+      }
+      res.status(200).json(todos);
+    } catch (error) {
+      res.status(500).json({ error: error });
+    }
+  };
+
+  export const createTodos = async (req, res) => {
+    const todo = await Todo.create(req.body);
+    res.json(todo);
+  };
+
+  export const deleteTodos = async (req, res) => {
+    const id = req.params.id;
+    try {
+      console.log(id, "id in cpntroller");
+      // Todo.deleteOne({_id:id}).then(console.log("listaddedsuccess"))
+      // const userExist = await Todo.findById(id);
+      const findTodo = await Todo.findByIdAndDelete(id);
+      res.status(200).json({ msg: "ToDo deleted successfully" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "servererror" });
+    }
+  };
