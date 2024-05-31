@@ -4,18 +4,59 @@ import studentModal from '../models/studentDetail.js'
 export async function createStudentProfile(req, res) {
     try {
         const data = await req.body;
-        const student = await studentModal.create(data);
-        console.log(student);
-        console.log(" Test:- ok Till here ");
+        const user = await studentModal.findOne({ $or: [{ email: data.email }, { contactNumber: data.contactNumber }] });
 
-        // verifiaction logic will be written here 
+        if (user) {
 
-        return res.status(200).json(
-            {
-                sucess: true,
-                msg: "Detail Stored Sucessfully"
+            const isMail = user.email == data.email
+
+            const isOtherResponseExist = user.otherResponse.find(x => x.courseSelected == data.courseSelected && x.preffredCollege == data.preffredCollege)
+
+            if (user.courseSelected == data.courseSelected && user.preffredCollege == data.preffredCollege || isOtherResponseExist) {
+
+                const sameDetail = isMail ? "Email" : "Contact Number"
+                return res.status(400).json(
+                    {
+                        sucess: false,
+                        msg: `Same Detail With Same ${sameDetail} Already Exist`,
+
+                    }
+                )
             }
-        )
+
+
+            const anotherResponse = {
+                name: data.name,
+                whatsappNumber: data.whatsappNumber,
+                courseSelected: data.courseSelected,
+                source: data.source,
+                sourceId: data.sourceId,
+                preffredCollege: data.preffredCollege,
+                contactNumber: data.contactNumber,
+                email: data.email
+            }
+
+            user.otherResponse.push(anotherResponse)
+            await user.save()
+            return res.status(200).json(
+                {
+                    sucess: true,
+                    msg: "Detail Stored Sucessfully",
+                }
+            )
+        }
+
+        else {
+
+            await studentModal.create(data);
+            return res.status(201).json(
+                {
+                    sucess: true,
+                    msg: "Detail Stored Sucessfully",
+                }
+            )
+        }
+
     } catch (error) {
         return res.status(500).json(
             {

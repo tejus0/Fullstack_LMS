@@ -166,7 +166,7 @@ function submitForm(event) {
         state: document.getElementById('state').value,
         courseSelection: document.getElementById('courseSelection').value,
         neetScore: document.getElementById('neetScore').value,
-        // preferredCollege: document.getElementById('preferredCollege').value,
+        preferredCollege: document.getElementById('preferredCollege').value,
         agreeCheckbox: document.getElementById('agreeCheckbox').checked,
         formSource: utmData
     };
@@ -177,7 +177,14 @@ function submitForm(event) {
         return;
     }
 
+    else if (formData.agreeCheckbox === false) {
+        alert("Please agree to the terms and conditions.");
+        return;
+    }
+
     // console.log(formData);
+
+
     sendData(formData)
     // const form = document.getElementById('studentDetailsForm');
     // form.reset();
@@ -199,9 +206,11 @@ const sendData = async (formData) => {
         city: formData.city,
         state: formData.state,
         courseSelected: formData.courseSelection,
-        neetScore: formData.neetScore
+        neetScore: formData.neetScore,
+        source: formData.formSource.source,
+        sourceId: formData.formSource.source,
+        preffredCollege: formData.preffredCollege
     }
-    console.log(Data);
 
     try {
         const response = await fetch(url, {
@@ -220,13 +229,12 @@ const sendData = async (formData) => {
 
         const result = await response.json();
         const msg = result.msg
-        alert( msg);
-        // const form = document.getElementById('studentDetailsForm');
-        // form.reset();
+        alert(msg);
+        const form = document.getElementById('studentDetailsForm');
+        form.reset();
     } catch (errorData) {
         console.log(errorData);
         alert(errorData);
-        // console.error('Error:', error);
     }
 
 }
