@@ -7,6 +7,7 @@ import Registration from './pages/Registration/Registeration';
 import Login from './pages/Registration/LoginRegister/LoginRegister';
 import SignUp from './pages/Registration/SignUp';
 import StudentProfile from './pages/StudentProfile';
+import { Toaster } from 'react-hot-toast';
 
 // import Table from './pages/Table';
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
   return (
     <div>
       <BrowserRouter>
+        <Toaster />
         <Routes>
           <Route path='/' element={<Form />} />
           <Route path='/fn' element={<Dashboard />} />
