@@ -1,5 +1,7 @@
 import studentModal from '../models/studentDetail.js'
 import Todo from '../models/councellorToDoModel.js';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 
 export async function createStudentProfile(req, res) {
@@ -140,5 +142,52 @@ export const getTodos = async (req, res) => {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "servererror" });
+    }
+  };
+
+  export const securePassword = async (password) => {
+    try {
+      const passwordHash = await bcrypt.hash(password, 10);
+      return passwordHash;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  export const insertUser = async (req, res) => {
+    console.log("Reached");
+    try {
+  
+      const emp_Id = req.body.employee_id;
+      const olduser = await Registeration.findOne({ employee_id: emp_Id });
+      if (olduser) {
+        return res.send({ error: "User Exists !" });
+      }
+
+      const spassword = await securePassword(req.body.password);
+      console.log(spassword);
+  
+      const user = new Registeration({
+        employee_id: req.body.employee_id,
+        username: req.body.username,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        // image: "image",
+        password: spassword,
+        is_admin: 0,
+      });
+  
+      const userData = await user.save();
+      console.log(userData);
+      res.send(userData);
+  
+      if (userData) {
+        sendVerifyMail(req.body.username, req.body.email, userData._id);
+        alert("Your registration is successfull, Kindly verify your mail !");
+      } else {
+        alert("Registration failed!");
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };

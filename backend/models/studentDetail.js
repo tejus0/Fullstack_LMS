@@ -131,7 +131,8 @@ const studentDetailSchema = new mongoose.Schema(
         assignedCouns: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Counsellor"
+                ref: "Counsellor",
+                default:""
             }
         ],
         otherResponse: [otherResponse]
