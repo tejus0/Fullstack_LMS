@@ -112,6 +112,31 @@ export async function getAllStudentProfile(req, res) {
     }
 }
 
+export async function getStudentProfile(req, res) {
+  try {
+      const { studentId } = req.query
+
+      const student = await studentModal.find({studentId});
+
+      const data = student
+
+          return res.status(200).json(
+              {
+                  sucess: true,
+                  msg: "Sucessfull Fetched",
+                  data: student
+              }
+          )
+
+  } catch (error) {
+      return res.status(500).json(
+          {
+              sucess: false,
+              message: error.message
+          })
+  }
+}
+
 export const getTodos = async (req, res) => {
     //    const todos = await Todo.find();
     const id = req.params.id;
@@ -191,3 +216,39 @@ export const getTodos = async (req, res) => {
       console.log(error.message);
     }
   };
+
+
+  export const assignStudentsToCounselors = async () => {
+    const data = await req.body;
+    // const student = await studentModal;
+    try {
+      const counsellors = await Counselor.find({});
+      console.log(counsellors);
+      const students = await Student.find({ assignedCouns: null });
+      console.log(students);
+  
+      const studentsPerCounselor = Math.ceil(students.length / counsellors.length);
+  
+      for (let i = 0; i < counsellors.length; i++) {
+        const start = i * studentsPerCounselor;
+        const end = (i === counsellors.length - 1) ? students.length : (i + 1) * studentsPerCounselor;
+  
+        for (let j = start; j < end; j++) {
+          const student = students[j];
+          const counselor = counsellors[i];
+  
+          if (!student.counselor || student.counselor._id.toString() !== counselor._id.toString()) {
+            student.counselor = counselor;
+            await student.save();
+          }
+        }
+      }
+  
+      console.log('Students have been assigned to counselors evenly.');
+  
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
+  // assignStudentsToCounselors();

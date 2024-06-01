@@ -6,6 +6,7 @@ import Followup from './component/FollowUp/Followup';
 import Registration from './pages/Registration/Registeration';
 import Login from './pages/Registration/LoginRegister/LoginRegister';
 import SignUp from './pages/Registration/SignUp';
+import StudentProfile from './pages/StudentProfile';
 
 // import Table from './pages/Table';
 const App = () => {
@@ -19,6 +20,7 @@ const App = () => {
           <Route path='/profile' element={<Followup />} />
           <Route path='/registeration' element={<Registration />} />
           <Route path='/registerationfinal' element={<SignUp />} />
+          <Route path='/student/:id' element={<StudentProfile />} />
         </Routes>
 
       </BrowserRouter>
