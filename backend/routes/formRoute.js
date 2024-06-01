@@ -10,7 +10,7 @@ router.route('/counsoller').post(createCounsellor)
 
 router.route("/getTodos/:id").get(getTodos)
 router.route("/createTodos").post(createTodos)
-router.route("/deleteTodos/:id").get(deleteTodos)
+router.route("/deleteTodos/:id").delete(deleteTodos)
 
 router.route("/register").post(insertUser);
 
