@@ -22,6 +22,7 @@ const App = () => {
           <Route path='/profile' element={<Followup />} />
           <Route path='/registeration' element={<Registration />} />
           <Route path='/registerationfinal' element={<SignUp />} />
+          <Route path='/student/:id' element={<StudentProfile />} />
         </Routes>
 
       </BrowserRouter>

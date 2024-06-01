@@ -3,7 +3,7 @@ import Todo from '../models/councellorToDoModel.js';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import counsellorModal from '../models/counsellorDetail.js';
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 
 
@@ -113,6 +113,31 @@ export async function getAllStudentProfile(req, res) {
                 message: error.message
             })
     }
+}
+
+export async function getStudentProfile(req, res) {
+  try {
+      const { studentId } = req.query
+
+      const student = await studentModal.find({studentId});
+
+      const data = student
+
+          return res.status(200).json(
+              {
+                  sucess: true,
+                  msg: "Sucessfull Fetched",
+                  data: student
+              }
+          )
+
+  } catch (error) {
+      return res.status(500).json(
+          {
+              sucess: false,
+              message: error.message
+          })
+  }
 }
 
 export const getTodos = async (req, res) => {
@@ -226,19 +251,6 @@ export const getTodos = async (req, res) => {
       } else {
         alert("Registration failed!");
       }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  export const verifyMail = async (req, res) => {
-    try {
-      const updatedInfo = await counsellorModal.updateOne(
-        { _id: req.query.id },
-        { $set: { is_verified: 1 } }
-      );
-      console.log(updatedInfo);
-      alert("Email Verified Successfully !");
     } catch (error) {
       console.log(error.message);
     }
