@@ -21,7 +21,7 @@ const todo = ({ key, title, checkTodo, id, isCompleted, deleteTodo }) => {
           variant="outlined"
           style={{ maxHeight: 38, marginTop: 5, background: "lightgray" }}
         >
-          <CardContent style={{ margin: 0, padding: 0 }}>
+          <CardContent style={{ margin:6, padding: 3 }}>
             {/*Check Icon*/}
             <Typography style={todoStyle}>
               <IconButton onClick={markComplete}>

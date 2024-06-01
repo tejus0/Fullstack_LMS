@@ -27,6 +27,7 @@ useEffect(() => {
       .post(`http://localhost:4000/api/v1/createTodos`, {employee_id:userId, name: text })
       .then((response) => {
         toast.success("task added successfully !", { position: "top-right" });
+        console.log()
         addTodo(text);
         setText("");
       })
