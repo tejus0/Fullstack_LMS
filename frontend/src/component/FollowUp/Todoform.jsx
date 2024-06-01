@@ -24,7 +24,7 @@ useEffect(() => {
     else{
     console.log(text, "text is here");
     await axios
-      .post(`${process.env.VITE_API}/createTodos`, {employee_id:userId, name: text })
+      .post(`http://localhost:4000/api/v1/createTodos`, {employee_id:userId, name: text })
       .then((response) => {
         toast.success("task added successfully !", { position: "top-right" });
         addTodo(text);
