@@ -15,7 +15,7 @@ export default function Followup() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.VITE_API}/getTodos/${user_id}`
+        `http://localhost:4000/api/v1/getTodos/${user_id}`
       );
       console.log(response.data);
       setTodos(response.data);
@@ -37,7 +37,7 @@ export default function Followup() {
   };
   const deleteTodo = async (id) => {
     await axios
-      .delete(`${process.env.VITE_API}/deleteTodos/${id}`)
+      .delete(`http://localhost:4000/api/v1/deleteTodos/${id}`)
       .then((response) => {
         toast.success("task deleted successfully !", { position: "top-right" });
       })

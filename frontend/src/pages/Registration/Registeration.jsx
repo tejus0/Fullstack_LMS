@@ -171,10 +171,10 @@ const Registration = () => {
     }
     setFormValid(null);
     setSuccess("Form Submitted Successfully");
-    if (otpVerified) {
+    if (!otpVerified) {   /// otp validation is removed for testing mail .
       console.log("axios");
       await axios
-        .post(`${process.env.VITE_API}/register`, {
+        .post(`http://localhost:4000/api/v1/register`, {
           employee_id,
           username,
           email,

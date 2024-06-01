@@ -2,6 +2,9 @@ import studentModal from '../models/studentDetail.js'
 import Todo from '../models/councellorToDoModel.js';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import counsellorModal from '../models/counsellorDetail.js';
+// import nodemailer from "nodemailer";
+import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 
 
 export async function createStudentProfile(req, res) {
@@ -179,12 +182,48 @@ export const getTodos = async (req, res) => {
     }
   };
 
+  export const sendVerifyMail = async (name, email, user_id) => {
+    console.log("Top line - ", user_id);
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: emailUser,
+          pass: emailPass,
+        },
+      });
+  
+      const mailOptions = {
+        from: emailUser,
+        to: email,
+        subject: "Verification mail .",
+        html:
+          "<p>Hi " +
+          name +
+          ', please click <a href="http://127.0.0.1:7000/api/verify?id=' +
+          user_id +
+          '">Here</a> to verify your mail .</p>',
+      };
+  
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent successfully - ", info.response);
+          console.log(user_id);
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   export const insertUser = async (req, res) => {
     console.log("Reached");
     try {
   
       const emp_Id = req.body.employee_id;
-      const olduser = await Registeration.findOne({ employee_id: emp_Id });
+      const olduser = await counsellorModal.findOne({ employee_id: emp_Id });
       if (olduser) {
         return res.send({ error: "User Exists !" });
       }
@@ -192,7 +231,7 @@ export const getTodos = async (req, res) => {
       const spassword = await securePassword(req.body.password);
       console.log(spassword);
   
-      const user = new Registeration({
+      const user = new counsellorModal({
         employee_id: req.body.employee_id,
         username: req.body.username,
         email: req.body.email,
@@ -207,7 +246,7 @@ export const getTodos = async (req, res) => {
       res.send(userData);
   
       if (userData) {
-        sendVerifyMail(req.body.username, req.body.email, userData._id);
+        // sendVerifyMail(req.body.username, req.body.email, userData._id);
         alert("Your registration is successfull, Kindly verify your mail !");
       } else {
         alert("Registration failed!");
@@ -216,39 +255,3 @@ export const getTodos = async (req, res) => {
       console.log(error.message);
     }
   };
-
-
-  export const assignStudentsToCounselors = async () => {
-    const data = await req.body;
-    // const student = await studentModal;
-    try {
-      const counsellors = await Counselor.find({});
-      console.log(counsellors);
-      const students = await Student.find({ assignedCouns: null });
-      console.log(students);
-  
-      const studentsPerCounselor = Math.ceil(students.length / counsellors.length);
-  
-      for (let i = 0; i < counsellors.length; i++) {
-        const start = i * studentsPerCounselor;
-        const end = (i === counsellors.length - 1) ? students.length : (i + 1) * studentsPerCounselor;
-  
-        for (let j = start; j < end; j++) {
-          const student = students[j];
-          const counselor = counsellors[i];
-  
-          if (!student.counselor || student.counselor._id.toString() !== counselor._id.toString()) {
-            student.counselor = counselor;
-            await student.save();
-          }
-        }
-      }
-  
-      console.log('Students have been assigned to counselors evenly.');
-  
-    } catch (err) {
-      console.error(err);
-    }
-  }
-  
-  // assignStudentsToCounselors();

@@ -68,4 +68,5 @@ const counsellorDetail = mongoose.Schema({
 },{timestamps:true}
 );
 
-export default mongoose.model("Counsellor", counsellorDetail);
+const counsellorModal = mongoose.model("Counsellor", counsellorDetail);
+export default  counsellorModal;
