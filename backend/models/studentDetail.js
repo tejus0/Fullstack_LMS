@@ -78,7 +78,7 @@ const studentDetailSchema = new mongoose.Schema(
             match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
-        fatherName: {
+        guardianName: {
             type: String,
             required: [true, "Please enter your father's Name "]
         },
