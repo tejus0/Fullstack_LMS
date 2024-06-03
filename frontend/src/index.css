@@ -3,3 +3,136 @@
 @tailwind utilities;
 
 
+.basic {
+    background-color: white;
+}
+
+.popup {
+    display: block;
+    background-color: rebeccapurple;
+}
+
+.embed {
+    position: static;
+    background-color: red;
+}
+
+.bottom-right {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: pink;
+}
+
+.form-popup > #studentDetailsForm > .form-group {
+    padding: 20px;
+}
+
+.formWrapper {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    max-width: 300px;
+    margin: 0 auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+
+.formWrapper header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px; 
+    flex-direction: column;
+}
+
+
+.logo-contact-container {
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 10px;
+
+}
+
+.logo-style {
+    max-width: 50%;
+    padding: 10px;
+    height:auto;
+}
+
+.contact-style {
+    font-size: 14px;
+    color: #555;
+    margin-left: 10%;
+    margin-top: 5px; 
+}
+
+.formWrapper .form-group {
+    margin-bottom: 15px;
+}
+
+
+.formWrapper input,
+.formWrapper select,
+.formWrapper textarea {
+    width: calc(100% - 20px);
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 100%; 
+}
+.checkbox-group input[type="checkbox"] {
+  width: 16px; 
+  height: 16px;
+  margin: 0; 
+  padding: 0;
+  transform: scale(0.8); 
+}
+
+
+.checkbox-input {
+  margin: 0; 
+  padding: 0;
+  width: 16px; 
+  height: 16px; 
+  transform: scale(0.8); 
+}
+
+.checkbox-group label {
+  margin-left: 5px; 
+}
+
+
+.formWrapper input::placeholder,
+.formWrapper select::placeholder,
+.formWrapper textarea::placeholder {
+    color: black;
+    font-size: 14px;
+}
+
+.formWrapper button[type="submit"] {
+    background-color: #55b80c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.formWrapper button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+@media screen and (max-width: 768px) {
+  .formWrapper {
+      padding: 10px; 
+}
+.contact-style
+{
+  margin-left: 1%;
+}
+}

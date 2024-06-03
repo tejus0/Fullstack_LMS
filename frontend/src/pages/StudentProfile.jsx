@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/main
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Followup from '../component/FollowUp/Followup';
@@ -38,10 +34,6 @@ const StudentProfile = (id) => {
       </div>
     </div>
     
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/main
   )
 }
 

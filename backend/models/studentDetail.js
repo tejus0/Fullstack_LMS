@@ -78,12 +78,12 @@ const studentDetailSchema = new mongoose.Schema(
             match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
-        fatherName: {
+        guardianName: {
             type: String,
             required: [true, "Please enter your father's Name "]
         },
 
-        city: {
+        district: {
             type: String,
             required: [true, "Please enter your city "]
         },
@@ -117,17 +117,19 @@ const studentDetailSchema = new mongoose.Schema(
         },
 
         neetScore: {
-            type: Number,
+            type: String,
             required: [true, 'Marks are required'],
+        },
+        neetAIR: {
+            type: String,
+            required: [true, 'Rank is required'],
         },
         remarks: [
             {
                 type: String,
+                default: "",
             }
         ],
-        neetAir: {
-            type: Number,
-        },
         assignedCouns: [
             
                { type: mongoose.Schema.Types.String,
