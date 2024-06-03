@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import counsellorModal from '../models/counsellorDetail.js';
 // import nodemailer from "nodemailer";
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
+import councellorToDoModel from '../models/councellorToDoModel.js';
 
 
 export async function createStudentProfile(req, res) {
@@ -232,8 +233,8 @@ export const getTodos = async (req, res) => {
       console.log(spassword);
   
       const user = new counsellorModal({
-        employee_id: req.body.employee_id,
-        username: req.body.username,
+        counsellor_id: req.body.employee_id,
+        name: req.body.username,
         email: req.body.email,
         mobile: req.body.mobile,
         // image: "image",
@@ -255,3 +256,115 @@ export const getTodos = async (req, res) => {
       console.log(error.message);
     }
   };
+
+  export const verifyLogin = async (req, res) => {
+    try {
+      const mobileInput = req.body.mobile;
+      const passwordInput = req.body.password;
+      // const email = req.body.email;
+      // console.log(email,"email is here");
+  
+      const userData = await counsellorModal.findOne({
+        // employee_id: employee_id,
+        // email: email,
+        mobile:mobileInput,
+      });
+  
+      if (userData) {
+        const passwordMatch = await bcrypt.compare(passwordInput, userData.password);
+  
+        // if(res.status(201)){
+        //    res.json({status:"ok",data:token});
+        // }
+        // else{
+        //    res.json({error:"error"});
+        // }
+        console.log(passwordMatch,"match");
+        if (passwordMatch) {
+          // if (userData.is_verified === 0) {
+          //   return res.json({ error: "Email not verified !" });
+          // } else {
+            const token = jwt.sign(
+              { employee_id: userData.employee_id }, //error maybe
+              process.env.SECRET_KEY
+              // {
+              //   expiresIn: 10,
+              // }
+            );
+            console.log(token, "token in verify");
+            if (res.status(201)) {
+              if (userData.is_admin === 1) {
+                return res.json({ status: "ok", data: token, type: "admin" });
+              } else {
+                return res.json({ status: "ok", data: token, type: "user" });
+              }
+            } else {
+              return res.json({ error: "error" });
+            }
+            // req.session.user_id = userData._id;
+            // res.redirect("/admin-page");
+          // }
+        } else {
+          return res.json({ error: " ID and Passsword are incoreect !" });
+        }
+      } else {
+        return res.json({ error: "No username exists !" });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  export const assignAuto = async(req,res)=>{
+//     const { MongoClient } = require('mongodb');
+
+// async function updateStudentCounsellorIds() {
+//   const uri = 'mongodb://localhost:27017'; // Update with your MongoDB URI
+//   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+//   try {
+//     await client.connect();
+//     const database = client.db('yourDatabaseName'); // Replace with your database name
+    // const studentsCollection = database.collection('students');
+    // const counsellorsCollection = database.collection('counsellor');
+
+    // Fetch all counsellor ids
+    const counsellors = await counsellorModal.find({});
+    // console.log(counsellors,"councellord")
+    // counsellors= counsellors.toArray();
+    const counsellorIds = counsellors.map(c => c.counsellor_id);
+
+    if (counsellorIds.length !== 2) {
+      throw new Error('There should be exactly 5 counsellors in the collection');
+    }
+
+    // Fetch all student documents
+    const students = await studentModal.find({});
+    console.log(students,"stude")
+
+    // Assign counsellor ids in a round-robin fashion
+    let counsellorIndex = 0;
+    for (let i = 0; i < students.length; i++) {
+      const student = students[i];
+      const newCounsellorId = counsellorIds[counsellorIndex];
+      console.log(newCounsellorId,typeof(newCounsellorId))
+
+      await studentModal.updateOne(
+        { _id: student._id },
+        { $set: { 'assignedCouns': newCounsellorId } }
+      );
+      console.log(student._id,"student id")
+      counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
+    }
+
+    console.log('Updated students with counsellor ids successfully.');
+  // } catch (error) {
+  //   console.error('An error occurred while updating students:', error);
+  // } finally {
+  //   await client.close();
+  // }
+// }
+
+// updateStudentCounsellorIds();
+
+  }

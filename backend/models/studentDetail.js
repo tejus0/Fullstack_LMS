@@ -129,11 +129,11 @@ const studentDetailSchema = new mongoose.Schema(
             type: Number,
         },
         assignedCouns: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
+            
+               { type: mongoose.Schema.Types.String,
                 ref: "Counsellor",
-                default:""
-            }
+                default:""}
+            
         ],
         otherResponse: [otherResponse]
     }, { timestamps: true }
