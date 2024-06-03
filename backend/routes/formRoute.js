@@ -1,5 +1,5 @@
 import express from "express";
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto} from "../controller/studentForm.js";
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
 const router = express.Router();
@@ -14,5 +14,7 @@ router.route("/createTodos").post(createTodos)
 router.route("/deleteTodos/:id").delete(deleteTodos)
 
 router.route("/register").post(insertUser);
+router.route("/login").post(verifyLogin);
+router.route("/autoassign").post(assignAuto);
 
 export default router;

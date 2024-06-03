@@ -4,10 +4,11 @@ import Form from './pages/Form';
 import Dashboard from './pages/Dashboard';
 import Followup from './component/FollowUp/Followup';
 import Registration from './pages/Registration/Registeration';
-import Login from './pages/Registration/LoginRegister/LoginRegister';
+import Login from './pages/Login/Login';
 import SignUp from './pages/Registration/SignUp';
 import StudentProfile from './pages/StudentProfile';
 import { Toaster } from 'react-hot-toast';
+import AssignAuto from './component/AssignAuto';
 
 // import Table from './pages/Table';
 const App = () => {
@@ -22,7 +23,9 @@ const App = () => {
           <Route path='/profile' element={<Followup />} />
           <Route path='/registeration' element={<Registration />} />
           <Route path='/registerationfinal' element={<SignUp />} />
+          <Route path='/login' element={<Login />} />
           <Route path='/student/:id' element={<StudentProfile />} />
+          <Route path='/assignAuto' element={<AssignAuto />} />
         </Routes>
 
       </BrowserRouter>

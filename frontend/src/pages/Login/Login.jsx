@@ -1,129 +1,280 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useState } from "react";
+import axios from "axios";
+import {
+  Box,
+  Grid,
+  Typography,
+  Container,
+  Avatar,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Button,
+  Stack,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import {
+  LockOutlined as LockOutlinedIcon,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import toast from "react-hot-toast";
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import bg from "../../assets/signin.svg";
+import bgimg from "../../assets/backimg.jpg";
 
-// TODO remove, this demo shouldn't need to reset the theme.
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
-const defaultTheme = createTheme();
+const boxstyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "75%",
+  height: "70%",
+  bgcolor: "background.paper",
+  boxShadow: 24,
+};
 
-export default function SignInSide() {
-  const handleSubmit = (event) => {
+const center = {
+  position: "relative",
+  top: "50%",
+  left: "37%",
+};
+
+function Login() {
+  const [mobileInput, setMobileInput] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [mobileError, setMobileError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  };
+
+  const handleMobile = () => {
+    if (mobileInput.length !== 10) {
+      setMobileError(true);
+      return;
+    }
+    setMobileError(false);
+  };
+
+  const handlePassword = () => {
+    if (!password || password.length < 5 || password.length > 20) {
+      setPasswordError(true);
+      return;
+    }
+    setPasswordError(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    handleMobile();
+    handlePassword();
+
+    if (mobileError || !mobileInput) {
+      toast.error("Mobile number must be 10 digits. Please re-enter.");
+      return;
+    }
+
+    if (passwordError || !password) {
+      toast.error("Password must be between 5 - 20 characters. Please re-enter.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`http://localhost:4000/api/v1/login`, {
+        mobile: mobileInput,
+        password,
+      });
+
+      if (response.data.status === "ok") {
+        toast.success("Login Successful", { position: "top-right" });
+        window.localStorage.setItem("token", response.data.data);
+        window.localStorage.setItem("loggedIn", true);
+        window.localStorage.setItem("mobile", mobileInput);
+        window.localStorage.setItem("user-type", response.data.type);
+
+        if (response.data.type === "user") {
+          navigate("/fn");
+        } else {
+          navigate("/admin-page");
+        }
+      } else {
+        toast.error(response.data.error);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error("An error occurred. Please try again.");
+    }
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
-        <CssBaseline />
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-          <Box
-            sx={{
-              my: 8,
-              mx: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
+    <div
+      style={{
+        backgroundImage: `url(${bgimg})`,
+        backgroundSize: "cover",
+        height: "100vh",
+        color: "#f5f5f5",
+      }}
+    >
+      <Box sx={boxstyle}>
+        <Grid container>
+          <Grid item xs={12} sm={12} lg={6}>
+            <Box
+              style={{
+                backgroundImage: `url(${bg})`,
+                backgroundSize: "cover",
+                marginTop: "40px",
+                marginLeft: "15px",
+                marginRight: "15px",
+                height: "63vh",
+                color: "#f5f5f5",
+              }}
+            ></Box>
+          </Grid>
+          <Grid item xs={12} sm={12} lg={6}>
+            <Box
+              style={{
+                backgroundSize: "cover",
+                height: "70vh",
+                minHeight: "500px",
+                backgroundColor: "#3b33d5",
+              }}
+            >
+              <ThemeProvider theme={darkTheme}>
+                <Container>
+                  <Box height={35} />
+                  <Box sx={center}>
+                    <Avatar
+                      sx={{ ml: "35px", mb: "4px", bgcolor: "#ffffff" }}
+                    >
+                      <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h4">
+                      Sign In
+                    </Typography>
+                  </Box>
+                  <Box
+                    component="form"
+                    noValidate
+                    onSubmit={handleSubmit}
+                    sx={{ mt: 2 }}
+                  >
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
+                        <TextField
+                          label="Mobile Number"
+                          fullWidth
+                          error={mobileError}
+                          id="standard-basic"
+                          sx={{ width: "100%" }}
+                          value={mobileInput}
+                          onBlur={handleMobile}
+                          onChange={(event) => setMobileInput(event.target.value)}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
+                        <TextField
+                          sx={{ width: "100%" }}
+                          error={passwordError}
+                          value={password}
+                          label="Password"
+                          name="password"
+                          onBlur={handlePassword}
+                          id="standard-adornment-password"
+                          type={showPassword ? "text" : "password"}
+                          onChange={(event) => setPassword(event.target.value)}
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                >
+                                  {showPassword ? (
+                                    <VisibilityOff />
+                                  ) : (
+                                    <Visibility />
+                                  )}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
+                        <Stack direction="row" spacing={2}>
+                          <Typography
+                            variant="body1"
+                            component="span"
+                            onClick={() => navigate("/forget-pass")}
+                            style={{ marginTop: "10px", cursor: "pointer" }}
+                          >
+                            Forgot password?
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                      <Grid item xs={12} sx={{ ml: "5em", mr: "5em" }}>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          fullWidth
+                          size="large"
+                          sx={{
+                            mt: "10px",
+                            mr: "20px",
+                            borderRadius: 28,
+                            color: "#ffffff",
+                            minWidth: "170px",
+                            backgroundColor: "#FF9A01",
+                          }}
+                        >
+                          Sign in
+                        </Button>
+                      </Grid>
+                      <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
+                        <Stack direction="row" spacing={2}>
+                          <Typography
+                            variant="body1"
+                            component="span"
+                            style={{ marginTop: "10px" }}
+                          >
+                            Not registered yet?{" "}
+                            <span
+                              style={{ color: "#beb4fb", cursor: "pointer" }}
+                              onClick={() => navigate("/register")}
+                            >
+                              Create an Account
+                            </span>
+                          </Typography>
+                        </Stack>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Container>
+              </ThemeProvider>
             </Box>
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </ThemeProvider>
+      </Box>
+    </div>
   );
 }
+
+export default Login;

@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-import Followup from '../component/FollowUp/Followup'
-
-const StudentProfile = () => {
-  return (
-    <div>
-        <div>Student Profile</div>
-        <div className='flex justify-center'>
-            <Followup />
-        </div>
-    </div>
-
-=======
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import Followup from '../component/FollowUp/Followup';
@@ -48,7 +34,6 @@ const StudentProfile = (id) => {
       </div>
     </div>
     
->>>>>>> 56769224778602c10ce766678286fd18c03251d4
   )
 }
 
