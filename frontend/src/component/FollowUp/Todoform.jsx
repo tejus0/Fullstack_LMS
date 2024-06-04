@@ -2,10 +2,14 @@ import React, { useState,useEffect } from "react";
 import { FormControl, Container, TextField, Button, Paper } from "@mui/material";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Link, useLocation } from "react-router-dom";
 
 const TodoForm = ({ addTodo }) => {
 
 const [userId, setUserId] = useState("")
+
+const location = useLocation();   // abhigya has used location.hostname
+  const id = location.state.id;
 
 useEffect(() => {
     const Id = JSON.parse(localStorage.getItem("Id-data"));
@@ -24,7 +28,7 @@ useEffect(() => {
     else{
     console.log(text, "text is here");
     await axios
-      .post(`http://localhost:4000/api/v1/createTodos`, {employee_id:userId, name: text })
+      .post(`http://localhost:4000/api/v1/createTodos`, {_id:userId, name: text })
       .then((response) => {
         toast.success("task added successfully !", { position: "top-right" });
         console.log()

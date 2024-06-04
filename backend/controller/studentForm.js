@@ -316,25 +316,13 @@ export const getTodos = async (req, res) => {
   };
 
   export const assignAuto = async(req,res)=>{
-//     const { MongoClient } = require('mongodb');
-
-// async function updateStudentCounsellorIds() {
-//   const uri = 'mongodb://localhost:27017'; // Update with your MongoDB URI
-//   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-
-//   try {
-//     await client.connect();
-//     const database = client.db('yourDatabaseName'); // Replace with your database name
-    // const studentsCollection = database.collection('students');
-    // const counsellorsCollection = database.collection('counsellor');
-
     // Fetch all counsellor ids
     const counsellors = await counsellorModal.find({});
     // console.log(counsellors,"councellord")
     // counsellors= counsellors.toArray();
-    const counsellorIds = counsellors.map(c => c.counsellor_id);
+    const counsellorIds = counsellors.map(c => c._id);  // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-    if (counsellorIds.length !== 2) {
+    if (counsellorIds.length !== 3) {
       throw new Error('There should be exactly 5 counsellors in the collection');
     }
 
@@ -358,13 +346,20 @@ export const getTodos = async (req, res) => {
     }
 
     console.log('Updated students with counsellor ids successfully.');
-  // } catch (error) {
-  //   console.error('An error occurred while updating students:', error);
-  // } finally {
-  //   await client.close();
-  // }
-// }
+    return res.status(200).json(students);
+  }
 
-// updateStudentCounsellorIds();
-
+  export const getCounsellorDataList = async (req,res)=>{
+    const id = req.params.id;
+    console.log(id, "in SalesList");
+    try {
+      const sales = await studentModal.find({ assignedCouns: id });
+      if (!sales) {
+        return res.status(404).json({ msg: "Sales data not found" });
+      }
+      res.status(200).json(sales);
+      return;
+    } catch (error) {
+      res.status(500).json({ error: error });
+    }
   }
