@@ -286,7 +286,7 @@ export const getTodos = async (req, res) => {
           //   return res.json({ error: "Email not verified !" });
           // } else {
             const token = jwt.sign(
-              { employee_id: userData.employee_id }, //error maybe
+              { counsellor_id: userData.counsellor_id }, //error maybe
               process.env.SECRET_KEY
               // {
               //   expiresIn: 10,
@@ -295,9 +295,9 @@ export const getTodos = async (req, res) => {
             console.log(token, "token in verify");
             if (res.status(201)) {
               if (userData.is_admin === 1) {
-                return res.json({ status: "ok", data: token, type: "admin" });
+                return res.json({ status: "ok", data: userData._id, type: "admin" });
               } else {
-                return res.json({ status: "ok", data: token, type: "user" });
+                return res.json({ status: "ok", data: userData._id, type: "user" });
               }
             } else {
               return res.json({ error: "error" });

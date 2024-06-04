@@ -1,26 +1,4 @@
-// import mongoose from "mongoose";
 
-// const counsellorDetail = new mongoose.Schema(
-//     {
-//         name: {
-//             type: String,
-//             required: true
-//         },
-//         email:{
-//             type:String,
-//             required:true
-//         },
-//         students:{
-
-//         }
-
-//         // Define other required fields
-//     }, { timestamps: true }
-// )
-
-// const counsellorModal = mongoose.model('Counsellor', counsellorDetail)
-
-// export default counsellorModal
 
 import mongoose from "mongoose";
 const counsellorDetail = mongoose.Schema({

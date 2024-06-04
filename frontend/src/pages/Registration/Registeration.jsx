@@ -17,26 +17,9 @@ import {
   IconButton,
   Button,
   Input,
-  Checkbox,
   Alert,
-  Stack,
 } from "@mui/material";
-import {  Visibility, VisibilityOff } from "@mui/icons-material";
-import { Login } from "@mui/icons-material";
-
-// Material UI Icon Imports
-// import Visibility from "@mui/icons-material/Visibility";
-// import VisibilityOff from "@mui/icons-material/VisibilityOff";
-// import LoginIcon from "@mui/icons-material/Login";
-
-
-const sayHello = () => {
-  try {
-    alert("Your registration is successfull, Kindly verify your mail !");
-  } catch (error) {
-    console.log(error.response.data);
-  }
-};
+import { Visibility, VisibilityOff, Login } from "@mui/icons-material";
 
 // Email Validation
 const isEmail = (email) =>
@@ -50,46 +33,56 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [mobile, setPhone] = useState("");
   const [password, setPass] = useState("");
+  const [confirmpassword, setcomfirmPass] = useState("");
   const [verifyButton, setverifyButton] = useState(false);
   const [verifyOtp, setverifyOtp] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
 
   const [showPassword, setShowPassword] = useState(false);
-  // // Inputs Errors
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  // Inputs Errors
+  const [employeeIdError, setEmployeeIdError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [mobileError, setMobileError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  // // Overall Form Validity
+  const [confirmpasswordError, setconfirmpasswordError] = useState(false);
+  // Overall Form Validity
   const [formValid, setFormValid] = useState();
   const [success, setSuccess] = useState();
+  
   // Handles Display and Hide Password
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
   // Validation for onBlur Email
   const handleEmail = () => {
-    console.log(isEmail(email));
     if (!isEmail(email)) {
       setEmailError(true);
       return;
     }
-
     setEmailError(false);
   };
+
   // Validation for onBlur Password
   const handlePassword = () => {
-    if (
-      !password
-      // ||
-      // passwordInput.length < 5 ||
-      // passwordInput.length > 20
-    ) {
+    if (!password || password.length < 5 || password.length > 20) {
       setPasswordError(true);
       return;
     }
-
     setPasswordError(false);
+  };
+
+  const handleConfirmPassword = () => {
+    if (!confirmpassword || confirmpassword.length < 5 || confirmpassword.length > 20) {
+      setconfirmpasswordError(true);
+      return;
+    }
+    setconfirmpasswordError(false);
   };
 
   const navigate = useNavigate();
@@ -102,8 +95,6 @@ const Registration = () => {
         size: "invisible",
         callback: (response) => {
           onSignInSubmit();
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          // ...
         },
       }
     );
@@ -116,18 +107,12 @@ const Registration = () => {
 
     signInWithPhoneNumber(auth, phoneNumber, appVerifier)
       .then((confirmationResult) => {
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
         window.confirmationResult = confirmationResult;
         alert("OTP Sent Successfully !");
         setverifyOtp(true);
-        // ...
       })
       .catch((error) => {
         console.log(error);
-        // alert("OTP sent failed ")
-        // Error; SMS not sent
-        // ...
       });
   };
 
@@ -135,67 +120,97 @@ const Registration = () => {
     window.confirmationResult
       .confirm(otp)
       .then((result) => {
-        // User signed in successfully.
         const user = result.user;
         console.log(user);
-        alert("Verification DOne !");
+        alert("Verification Done !");
         setOtpVerified(true);
         setverifyOtp(false);
-        // ...
       })
       .catch((error) => {
         alert("Invalid OTP !");
-        // User couldn't sign in (bad verification code?)
-        // ...
       });
   };
 
   const changeMobile = (e) => {
     setPhone(e.target.value);
-    if (mobile.length == 9) {
+    if (e.target.value.length === 10) {
       setverifyButton(true);
     } else {
-      console.log(mobile.length);
+      setverifyButton(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(null);
-    //First of all Check for Errors
 
-    // If Email error is true
-    if (emailError || !email) {
-      setFormValid("Email is Invalid. Please Re-Enter");
+    // Validation Checks
+    if (!employee_id) {
+      setEmployeeIdError(true);
+      setFormValid("Employee ID is required.");
       return;
     }
+    setEmployeeIdError(false);
+
+    if (!username) {
+      setUsernameError(true);
+      setFormValid("Username is required.");
+      return;
+    }
+    setUsernameError(false);
+
+    if (!email || emailError) {
+      setFormValid("Email is invalid.");
+      return;
+    }
+
+    if (!mobile || mobile.length !== 10) {
+      setMobileError(true);
+      setFormValid("Mobile number is invalid.");
+      return;
+    }
+    setMobileError(false);
+
+    if (!password || passwordError) {
+      setFormValid("Password must be atleast 5 character long");
+      return;
+    }
+
+    if (!confirmpassword || confirmpasswordError || confirmpassword !== password) {
+      setconfirmpasswordError(true);
+      setFormValid("Password and Confirm Password do not match.");
+      return;
+    }
+    setconfirmpasswordError(false);
+
+    if (!otpVerified) {
+      alert("Please verify your mobile number.");
+      return;
+    }
+
     setFormValid(null);
     setSuccess("Form Submitted Successfully");
-    if (!otpVerified) {   /// otp validation is removed for testing mail .
-      console.log("axios");
-      await axios
-        .post(`http://localhost:4000/api/v1/register`, {
-          employee_id,
-          username,
-          email,
-          mobile,
-          password,
-        })
-        .then((response) => {
-          console.log(response);
-          if (response.status == 200) {
-            if(response.data.error=="User Exists !"){
-              alert("UserId exists.")
-            }else{
-            alert("Registration successfull !");
-            window.location.href = "./";
-            }
+
+    await axios
+      .post(`http://localhost:4000/api/v1/register`, {
+        employee_id,
+        username,
+        email,
+        mobile,
+        password,
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+          if (response.data.error === "User Exists !") {
+            alert("User already exists.");
+          } else {
+            alert("Registration successful!");
+            navigate("/login");
           }
-        })
-        .catch((error) => console.log(error.message));
-    } else {
-      alert("Please Verify MObile First !");
-    }
+        }
+      })
+      .catch((error) => console.log(error.message));
   };
 
   return (
@@ -213,7 +228,8 @@ const Registration = () => {
     >
       <h1>User Registration Form</h1>
 
-      <form action="" method="post" enctype="multipart/form-data">
+      <form action="" method="post" encType="multipart/form-data">
+        <div id="recaptcha-container"></div>
         <div style={{ marginTop: "5px" }}>
           <TextField
             type="text"
@@ -225,11 +241,11 @@ const Registration = () => {
             sx={{ width: "100%" }}
             value={employee_id}
             onChange={(e) => setEId(e.target.value)}
-            InputProps={{}}
+            error={employeeIdError}
             size="small"
           />
         </div>
-        <div id="recaptcha-container"></div>
+        
         <div style={{ marginTop: "5px" }}>
           <TextField
             type="text"
@@ -241,14 +257,13 @@ const Registration = () => {
             id="standard-basic"
             variant="standard"
             sx={{ width: "100%" }}
-            InputProps={{}}
+            error={usernameError}
             size="small"
           />
         </div>
 
         <div style={{ marginTop: "5px" }}>
           <TextField
-            // type="email"
             name="email"
             label="Email Address"
             fullWidth
@@ -257,12 +272,9 @@ const Registration = () => {
             variant="standard"
             sx={{ width: "100%" }}
             value={email}
-            InputProps={{}}
-            size="small"
             onBlur={handleEmail}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
+            onChange={(event) => setEmail(event.target.value)}
+            size="small"
           />
         </div>
 
@@ -277,10 +289,10 @@ const Registration = () => {
             id="standard-basic"
             variant="standard"
             sx={{ width: "100%" }}
-            InputProps={{}}
+            error={mobileError}
             size="small"
           />
-          {verifyButton ? (
+          {verifyButton && (
             <Button
               onClick={onSignInSubmit}
               type="button"
@@ -290,9 +302,10 @@ const Registration = () => {
             >
               {otpVerified ? "Verified" : "Verify"}
             </Button>
-          ) : null}
+          )}
         </div>
-        {verifyOtp ? (
+
+        {verifyOtp && (
           <div style={{ marginTop: "5px" }}>
             <TextField
               type="text"
@@ -304,7 +317,6 @@ const Registration = () => {
               id="standard-basic"
               variant="standard"
               sx={{ width: "100%" }}
-              InputProps={{}}
               size="small"
             />
             <Button
@@ -314,10 +326,10 @@ const Registration = () => {
               fullWidth
               startIcon={<Login />}
             >
-              OTP
+              Verify OTP
             </Button>
           </div>
-        ) : null}
+        )}
 
         <div style={{ marginTop: "5px" }}>
           <FormControl sx={{ width: "100%" }} variant="standard">
@@ -334,9 +346,7 @@ const Registration = () => {
               onBlur={handlePassword}
               id="standard-adornment-password"
               type={showPassword ? "text" : "password"}
-              onChange={(event) => {
-                setPass(event.target.value);
-              }}
+              onChange={(event) => setPass(event.target.value)}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -352,35 +362,45 @@ const Registration = () => {
           </FormControl>
           <FormControl sx={{ width: "100%" }} variant="standard">
             <InputLabel
-              error={passwordError}
+              error={confirmpasswordError}
               htmlFor="standard-adornment-password"
             >
               Confirm Password
             </InputLabel>
             <Input
-              error={passwordError}
-              value={password}
+              error={confirmpasswordError}
+              value={confirmpassword}
               name="password"
-              onBlur={handlePassword}
+              onBlur={handleConfirmPassword}
               id="standard-adornment-password"
-              type={showPassword ? "text" : "password"}
-              onChange={(event) => {
-                setPass(event.target.value);
-              }}
+              type={showConfirmPassword ? "text" : "password"}
+              onChange={(event) => setcomfirmPass(event.target.value)}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
+                    onClick={handleClickShowConfirmPassword}
                     onMouseDown={handleMouseDownPassword}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               }
             />
           </FormControl>
         </div>
+
+        {formValid && (
+          <Alert severity="error" sx={{ mt: 2 }}>
+            {formValid}
+          </Alert>
+        )}
+
+        {success && (
+          <Alert severity="success" sx={{ mt: 2 }}>
+            {success}
+          </Alert>
+        )}
 
         <div style={{ marginTop: "10px" }}>
           <Button
@@ -393,64 +413,6 @@ const Registration = () => {
             Sign Up
           </Button>
         </div>
-        {/* <input
-          type="text"
-          name="eId"
-          value={employee_id}
-          onChange={(e) => setEId(e.target.value)}
-          placeholder="Enter Your Employee ID"
-          required
-        />
-        <br />
-        <br />
-        <input
-          type="text"
-          name="name"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter Your name"
-          required
-        />
-        <br />
-        <br />
-        <input
-          type="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter Your email"
-          required
-        />
-        <br />
-        <br />
-        <input
-          type="text"
-          name="mno"
-          value={mobile}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="Enter Your number"
-          required
-        />
-        <br />
-        <br />
-        {/* <input type="file" name="image" required />
-        <br />
-        <br /> */}
-        {/* <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(e) => setPass(e.target.value)}
-          placeholder="Enter Your password"
-          required
-        />
-        <br />
-        <br />
-        <button onClick={handleSubmit} type="button">
-          Submit
-        </button>
-        <br />
-        <br /> */}
       </form>
     </Box>
   );
