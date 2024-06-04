@@ -109,7 +109,7 @@ const Table = () => {
                                                     onChange={() => dispatch(handleSelectRow({ id: item._id }))}
                                                 />
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap"> <Link to={`/student/${item._id}`} state={{ from: `${item._id}` }}>{item.name}</Link></td>
+                                            <td className="px-6 py-4 whitespace-nowrap"> <Link to={`/student/${item._id}`} state={{ id:`${item._id}`}}>{item.name}</Link></td>
                                             <td className="px-6 py-4 whitespace-nowrap">{item.email}</td>
                                             <td className="px-6 py-4 whitespace-nowrap"> {item.contactNumber}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{item.state}</td>
