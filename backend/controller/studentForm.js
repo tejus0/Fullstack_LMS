@@ -117,10 +117,11 @@ export async function getAllStudentProfile(req, res) {
 }
 
 export async function getStudentProfile(req, res) {
+  console.log(req.body)
   try {
-      const { studentId } = req.query
+      const studentId = req.params.id;
 
-      const student = await studentModal.find({studentId});
+      const student = await studentModal.find({_id: studentId});
 
       const data = student
 
