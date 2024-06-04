@@ -118,11 +118,11 @@ const studentDetailSchema = new mongoose.Schema(
 
         neetScore: {
             type: String,
-            required: [true, 'Marks are required'],
+            required: [false, 'Marks are required'],
         },
         neetAIR: {
             type: String,
-            required: [true, 'Rank is required'],
+            required: [false, 'Rank is required'],
         },
         remarks: [
             {
