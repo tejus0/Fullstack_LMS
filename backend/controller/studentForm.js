@@ -332,9 +332,9 @@ try {
     // counsellors= counsellors.toArray();
     const counsellorIds = counsellors.map(c => c._id);  // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-    if (counsellorIds.length !== 3) {
-      throw new Error('There should be exactly 5 counsellors in the collection');
-    }
+    // if (counsellorIds.length !== counsellors.length) {
+    //   throw new Error('There should be exactly 5 counsellors in the collection');
+    // }
 
     // Fetch all student documents
     const students = await studentModal.find({assignedCouns:""});
