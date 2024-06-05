@@ -4,18 +4,18 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
 
-const TodoForm = ({ addTodo }) => {
+const TodoForm = ({ addTodo, id }) => {
 
 const [userId, setUserId] = useState("")
 
 const location = useLocation();   // abhigya has used location.hostname
-  const id = window.location
+  const studId = id;
 
 useEffect(() => {
-    const Id = JSON.parse(localStorage.getItem("Id-data"));
-    if (Id) {
-      setUserId(Id);
-    }
+    // const Id = JSON.parse(localStorage.getItem("Id-data"));
+    // if (Id) {
+      setUserId(studId);
+    // }
   }, []);
   const [text, setText] = useState("");
 

@@ -55,7 +55,7 @@ export default function Followup(props) {
   };
   return (
     <Paper elevation={20}>
-      <Todoform addTodo={addTodo} />
+      <Todoform addTodo={addTodo} id = {props.id}/>
       <Todolist todos={todos} checkTodo={checkTodo} deleteTodo={deleteTodo} />
     </Paper>
   );

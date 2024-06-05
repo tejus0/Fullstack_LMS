@@ -134,9 +134,8 @@ const studentDetailSchema = new mongoose.Schema(
             
                { type: mongoose.Schema.Types.String,
                 ref: "Counsellor",
-                default:""}
-            
-        ,
+
+                default:""},
         otherResponse: [otherResponse]
     }, { timestamps: true }
 )
