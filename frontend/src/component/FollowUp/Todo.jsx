@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -6,37 +7,28 @@ import {
   Container,
   IconButton,
 } from "@mui/material";
-import { Check, Delete } from "@mui/icons-material";
-import { green } from "@mui/material/colors";
-const todo = ({ key, title, checkTodo, id, isCompleted, deleteTodo }) => {
-  const markComplete = () => checkTodo(id);
-  const delTodo = () => deleteTodo(id);
-  const todoStyle = isCompleted
-    ? { textDecoration: "line-through" }
-    : { textDecoration: "none" };
+const Todo = ({ key, title, date, id }) => {
   return (
     <div>
       <Container>
         <Card
           variant="outlined"
-          style={{ maxHeight: 38, marginTop: 5, background: "lightgray" }}
+          style={{ width: "70vw",
+            blockSize: "fit-content" , marginTop: 5, background: "lightgray" }}
         >
-          <CardContent style={{ margin:6, padding: 3 }}>
+          <CardContent  >
             {/*Check Icon*/}
-            <Typography style={todoStyle}>
-              <IconButton onClick={markComplete}>
-                <Check style={{ color: "green" }} />
-              </IconButton>
-              {key}
+            <Typography > 
               {title}
-              <IconButton style={{ float: "right" }} onClick={delTodo}>
-                <Delete style={{ color: "red" }} />
-              </IconButton>
             </Typography>
+            <div >
+              <Typography variant="caption">Posted on : {date}</Typography>
+            </div>
           </CardContent>
         </Card>
       </Container>
     </div>
   );
 };
-export default todo;
+
+export default Todo;

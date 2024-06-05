@@ -11,12 +11,12 @@ const [userId, setUserId] = useState("")
 const location = useLocation();   // abhigya has used location.hostname
   const studId = id;
 
-useEffect(() => {
-    // const Id = JSON.parse(localStorage.getItem("Id-data"));
-    // if (Id) {
-      setUserId(studId);
-    // }
-  }, []);
+// useEffect(() => {
+//     // const Id = JSON.parse(localStorage.getItem("Id-data"));
+//     // if (Id) {
+//       setUserId(studId);
+//     // }
+//   }, []);
   const [text, setText] = useState("");
 
   
@@ -28,7 +28,7 @@ useEffect(() => {
     else{
     console.log(text, "text is here");
     await axios
-      .post(`http://localhost:4000/api/v1/createTodos`, {_id:userId, name: text })
+      .post(`http://localhost:4000/api/v1/createTodos`, {_id:studId, name: text })
       .then((response) => {
         toast.success("task added successfully !", { position: "top-right" });
         console.log()

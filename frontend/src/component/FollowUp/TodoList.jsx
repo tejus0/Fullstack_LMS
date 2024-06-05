@@ -3,15 +3,17 @@ import Todo from "./Todo";
 
 
 
-const todolist=({todos,checkTodo, deleteTodo})=>{
-    // console.log(user_id);
+const todolist=({todos})=>{
+    console.log(todos,"todod");
     return(
         <div>
             {
-            todos.map((todo,index) =>
-            (
-            <Todo key={index+1}  title={todo.name} checkTodo={checkTodo} id={todo._id} isCompleted={todo.isCompleted} deleteTodo={deleteTodo}/>
-            ))
+                todos.map((todo,index) =>
+            (        
+            <Todo key={index+1} date={todo.updatedAt} title={todo.subject} id={todo._id} />
+            // console.log("up", todo.updatedAt);
+            )
+        )
             }
         {/* <Todo /> */}
         </div>

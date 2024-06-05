@@ -126,8 +126,13 @@ const studentDetailSchema = new mongoose.Schema(
         },
         remarks: [
             {
-                type: String,
-                default: "",
+                type: Object,
+                subject:{
+                    type:String,
+                    required:true
+                },
+                updatedAt:{type:String},
+                default: {},
             }
         ],
         assignedCouns: 

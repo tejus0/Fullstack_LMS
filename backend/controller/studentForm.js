@@ -123,7 +123,7 @@ export async function getStudentProfile(req, res) {
 
       const student = await studentModal.find({_id: studentId});
 
-      const data = student
+      // const data = student
 
           return res.status(200).json(
               {
@@ -146,7 +146,7 @@ export const getTodos = async (req, res) => {
     //    const todos = await Todo.find();
     const id = req.params.id;
     try {
-      const todos = await Todo.find({ employee_id: id });
+      const todos = await studentModal.find({ _id: id });
       if (!todos) {
         return res.status(404).json({ msg: "User data not found" });
       }
@@ -161,7 +161,7 @@ export const getTodos = async (req, res) => {
 try {
     const todo = await studentModal.updateOne(
       { _id: req.body._id },
-      { $push: { 'remarks': req.body.name } });
+      { $push: { 'remarks': {subject:req.body.name, updatedAt : new Date()}} });
       res.status(200).json(todo);
     // const todo = await studentModal.create(req.body);
   } catch (error) {
