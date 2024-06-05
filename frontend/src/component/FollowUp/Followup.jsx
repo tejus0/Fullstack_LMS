@@ -8,7 +8,8 @@ import axios from "axios";
 import { Box, Paper } from "@mui/material";
 // Modal.setAppElement("#root");
 
-export default function Followup() {
+export default function Followup(props) {
+  console.log(props,"props")
   const [todos, setTodos] = useState([]);
   const user_id = JSON.parse(localStorage.getItem("Id-data"));
 

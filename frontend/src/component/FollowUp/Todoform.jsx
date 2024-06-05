@@ -9,7 +9,7 @@ const TodoForm = ({ addTodo }) => {
 const [userId, setUserId] = useState("")
 
 const location = useLocation();   // abhigya has used location.hostname
-  const id = location.state.id;
+  const id = window.location
 
 useEffect(() => {
     const Id = JSON.parse(localStorage.getItem("Id-data"));
