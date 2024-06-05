@@ -110,7 +110,7 @@ function Login() {
         window.localStorage.setItem("user-type", response.data.type);
 
         if (response.data.type === "user") {
-          navigate(`/fn/${response.data.data}`);
+          navigate(`/counsellor-profile/${response.data.data}`,{state:{id:response.data.data}});
         } else {
           navigate("/admin-page");
         }

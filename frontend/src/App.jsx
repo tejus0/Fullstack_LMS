@@ -9,6 +9,7 @@ import SignUp from './pages/Registration/SignUp';
 import StudentProfile from './pages/StudentProfile';
 import { Toaster } from 'react-hot-toast';
 import AssignAuto from './component/AssignAuto';
+import CounsellorDashboard from './pages/counsellor/Dashboard';
 
 // import Table from './pages/Table';
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Form />} />
           <Route path='/fn' element={<Dashboard />} />
+          <Route path='/counsellor-profile/:id' element={<CounsellorDashboard />} />
           <Route path='/profile' element={<Followup />} />
           <Route path='/registeration' element={<Registration />} />
           <Route path='/registerationfinal' element={<SignUp />} />

@@ -9,7 +9,8 @@ const Table = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        fetchData(dispatch)
+        
+        // fetchData(dispatch)
     }, [])
 
     const data = useSelector(state => state.data.data)
