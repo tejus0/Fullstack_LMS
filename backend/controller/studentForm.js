@@ -157,8 +157,17 @@ export const getTodos = async (req, res) => {
   };
 
   export const createTodos = async (req, res) => {
-    const todo = await Todo.create(req.body);
-    res.json(todo);
+    console.log(req.body,"params");
+try {
+    const todo = await studentModal.updateOne(
+      { _id: req.body._id },
+      { $push: { 'remarks': req.body.name } });
+      res.status(200).json(todo);
+    // const todo = await studentModal.create(req.body);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+    // return res.status(404).json({ msg: "Sales data not found" });
   };
 
   export const deleteTodos = async (req, res) => {
@@ -328,8 +337,8 @@ export const getTodos = async (req, res) => {
     }
 
     // Fetch all student documents
-    const students = await studentModal.find({});
-    console.log(students,"stude")
+    const students = await studentModal.find({assignedCouns:""});
+    console.log(students,"stude");
 
     // Assign counsellor ids in a round-robin fashion
     let counsellorIndex = 0;
@@ -338,11 +347,13 @@ export const getTodos = async (req, res) => {
       const newCounsellorId = counsellorIds[counsellorIndex];
       console.log(newCounsellorId,typeof(newCounsellorId))
 
+      // if(student.assignedCouns == ""){
       await studentModal.updateOne(
         { _id: student._id },
         { $set: { 'assignedCouns': newCounsellorId } }
       );
-      console.log(student._id,"student id")
+    // }
+      console.log(student._id,"student id",student.assignedCouns,"assigned councellor")
       counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
     }
 
