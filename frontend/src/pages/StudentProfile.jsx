@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 const StudentProfile = () => {
   const baseUrl = import.meta.env.VITE_API
   const location = useLocation();
-  console.log(location.state);
+  const id = location.state.id;
 
     // TODO :- all this bunch of cluster will be removed and added to redux slice 
     const [studentData, setStudentData] = useState([])
@@ -14,11 +14,9 @@ const StudentProfile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const student = await axios.get(`${baseUrl}${location.pathname}`);
+                const student = await axios.get(`${baseUrl}/student/${id}`);
                 const fetchedData = student.data.data[0];
-                console.log(fetchedData);
                 setStudentData(fetchedData);
-                console.log(studentData);
             } catch (e) {
                 console.log(e);
             }
