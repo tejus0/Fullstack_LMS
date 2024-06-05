@@ -130,13 +130,13 @@ const studentDetailSchema = new mongoose.Schema(
                 default: "",
             }
         ],
-        assignedCouns: [
+        assignedCouns: 
             
                { type: mongoose.Schema.Types.String,
                 ref: "Counsellor",
                 default:""}
             
-        ],
+        ,
         otherResponse: [otherResponse]
     }, { timestamps: true }
 )
