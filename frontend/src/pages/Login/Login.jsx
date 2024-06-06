@@ -26,6 +26,8 @@ import toast from "react-hot-toast";
 import bg from "../../assets/signin.svg";
 import bgimg from "../../assets/backimg.jpg";
 
+// import LoginWithPhone from "./LoginWithPhone";
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -123,6 +125,24 @@ function Login() {
     }
   };
 
+  function nagigateToOtp() {
+    if (email) {
+      const OTP = Math.floor(Math.random() * 9000 + 1000);
+      console.log(OTP);
+      setOTP(OTP);
+
+      axios
+        .post("http://localhost:5000/send_recovery_email", {
+          OTP,
+          recipient_email: email,
+        })
+        .then(() => setPage("otp"))
+        .catch(console.log);
+      return;
+    }
+    return alert("Please enter your email");
+  }
+
   return (
     <div
       style={{
@@ -177,6 +197,7 @@ function Login() {
                   >
                     <Grid container spacing={1}>
                       <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
+                        
                         <TextField
                           label="Mobile Number"
                           fullWidth
@@ -223,7 +244,7 @@ function Login() {
                           <Typography
                             variant="body1"
                             component="span"
-                            onClick={() => navigate("/forget-pass")}
+                            onClick={() => nagigateToOtp()}
                             style={{ marginTop: "10px", cursor: "pointer" }}
                           >
                             Forgot password?
@@ -247,6 +268,7 @@ function Login() {
                         >
                           Sign in
                         </Button>
+                        {/* <LoginWithPhone /> */}
                       </Grid>
                       <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
                         <Stack direction="row" spacing={2}>

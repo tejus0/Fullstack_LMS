@@ -10,6 +10,7 @@ import StudentProfile from './pages/StudentProfile';
 import { Toaster } from 'react-hot-toast';
 import AssignAuto from './component/AssignAuto';
 import CounsellorDashboard from './pages/counsellor/Dashboard';
+import ForgetPass from './pages/Forgot-password/ForgetPass';
 
 // import Table from './pages/Table';
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/student/:id' element={<StudentProfile />} />
           <Route path='/assignAuto' element={<AssignAuto />} />
+          <Route path='/forgot-password' element={<ForgetPass />} />
         </Routes>
 
       </BrowserRouter>

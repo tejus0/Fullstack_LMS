@@ -25,6 +25,7 @@ const otherResponse = new mongoose.Schema({
     },
     preffredCollege: {
         type: String,
+        default:'',
         required: [true, "Please Selct Preffred College "]
     },
     contactNumber: {
