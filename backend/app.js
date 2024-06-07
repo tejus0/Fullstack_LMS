@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(cors());
 
-app.options('*', cors()); // enable pre-flight request for all routes
+// app.options('*', cors()); // enable pre-flight request for all routes
 
 app.use(helmet({ xssFilter: true }))
 
