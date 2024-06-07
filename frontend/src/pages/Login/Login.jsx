@@ -23,8 +23,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
-import bg from "../../../public/assets/signin.svg";
-import bgimg from "../../../public/assets/backimg.jpg";
+import bg from "../../../src/assets/signin.svg";
+import bgimg from "../../../src/assets/backimg.jpg";
 
 // import LoginWithPhone from "./LoginWithPhone";
 
@@ -52,6 +52,7 @@ const center = {
 };
 
 function Login() {
+  const baseUrl = import.meta.env.VITE_API;
   const [mobileInput, setMobileInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -99,7 +100,7 @@ function Login() {
     }
 
     try {
-      const response = await axios.post(`http://localhost:4000/api/v1/login`, {
+      const response = await axios.post(`${baseUrl}/login`, {
         mobile: mobileInput,
         password,
       });
@@ -125,23 +126,23 @@ function Login() {
     }
   };
 
-  function nagigateToOtp() {
-    if (email) {
-      const OTP = Math.floor(Math.random() * 9000 + 1000);
-      console.log(OTP);
-      setOTP(OTP);
+  // function nagigateToOtp() {
+  //   if (email) {
+  //     const OTP = Math.floor(Math.random() * 9000 + 1000);
+  //     console.log(OTP);
+  //     setOTP(OTP);
 
-      axios
-        .post("http://localhost:5000/send_recovery_email", {
-          OTP,
-          recipient_email: email,
-        })
-        .then(() => setPage("otp"))
-        .catch(console.log);
-      return;
-    }
-    return alert("Please enter your email");
-  }
+  //     axios
+  //       .post("http://localhost:5000/send_recovery_email", {
+  //         OTP,
+  //         recipient_email: email,
+  //       })
+  //       .then(() => setPage("otp"))
+  //       .catch(console.log);
+  //     return;
+  //   }
+  //   return alert("Please enter your email");
+  // }
 
   return (
     <div
@@ -244,7 +245,7 @@ function Login() {
                           <Typography
                             variant="body1"
                             component="span"
-                            onClick={() => nagigateToOtp()}
+                            // onClick={() => nagigateToOtp()}
                             style={{ marginTop: "10px", cursor: "pointer" }}
                           >
                             Forgot password?

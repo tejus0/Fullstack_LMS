@@ -27,7 +27,7 @@ const StudentProfile = ({counsellor_id}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/v1/getTodos/${id}`);
+        const response = await axios.get(`${baseUrl}/getTodos/${id}`);
         setTodos(response.data[0].remarks);
         const studData = await axios.get(`${baseUrl}/student/${id}`);
         setStudentData(studData.data.data[0]);
