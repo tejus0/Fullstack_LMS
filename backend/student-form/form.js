@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const styleLink = document.createElement('link');
             styleLink.rel = 'stylesheet';
-            styleLink.href = "http://localhost:4000/student-form/style.css";
+            styleLink.href = "https://abhigyadufare.github.io/dynamicForm/style.css";
             document.head.prepend(styleLink);
         }
     }
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   
   const logoElement = document.createElement('img');
-  logoElement.src = logo || 'http://localhost:4000/student-form/Careerkick.png'; 
+  logoElement.src = logo || 'https://abhigyadufare.github.io/dynamicForm/Careerkick.png'; 
   logoElement.alt = 'Company Logo';
   logoElement.classList.add('logo-style'); 
   logoAndContactContainer.appendChild(logoElement);
@@ -336,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
       }
       
-      console.log(formData.contactNo);
+      console.log(formData);
       sendData(formData)
     
       // const form = document.getElementById('studentDetailsForm');
@@ -360,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state: formData.state,
         courseSelected: formData.courseSelection,
         neetScore: formData.neetScore,
+        neetAIR: formData.neetAir,
         source: formData.source,
         sourceId: formData.sourceId,
         preffredCollege: formData.preferredCollege
