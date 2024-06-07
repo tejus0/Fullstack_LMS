@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   function initializeForm() {
-    const scriptElement = document.querySelector('script[src="http://156.67.219.231:4000/student-form/form.js"]');
+    const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
   
     if (!scriptElement) {
         console.error('Script element with src="Form.js" not found.');
