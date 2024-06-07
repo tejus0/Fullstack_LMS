@@ -7,12 +7,11 @@ import counsellorModal from '../models/counsellorDetail.js';
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 import councellorToDoModel from '../models/councellorToDoModel.js';
 
-
 export const loginLoad = async (req, res) => {
   try {
     res.json("this is working");
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message,"error");
   }
 };
 
