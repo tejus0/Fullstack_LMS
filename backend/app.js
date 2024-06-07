@@ -50,7 +50,7 @@ app.use("/api/v1", studentDetailRoute);
 //     res.render("./form.js", {})
 //  })
 
- app.use('/student-form', express.static('student-form'))
+ app.use('/api/v1/student-form', express.static('student-form'))
 
 
 

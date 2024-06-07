@@ -8,6 +8,14 @@ import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 import councellorToDoModel from '../models/councellorToDoModel.js';
 
 
+export const loginLoad = async (req, res) => {
+  try {
+    res.json("this is working");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 export async function createStudentProfile(req, res) {
     try {
         const data = await req.body;

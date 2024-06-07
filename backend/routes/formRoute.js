@@ -1,9 +1,10 @@
 import express from "express";
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad} from "../controller/studentForm.js";
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
 const router = express.Router();
 
+router.route("/").get(loginLoad);
 router.route("/form").post(createStudentProfile);
 router.route("/dashboard").get(getAllStudentProfile);
 router.route("/student/:id").get(getStudentProfile);
