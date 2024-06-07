@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   function initializeForm() {
-    const scriptElement = document.querySelector('script[src=""]');
+    const scriptElement = document.querySelector('script[src="http://localhost:4000/student-form/form.js"]');
   
     if (!scriptElement) {
         console.error('Script element with src="Form.js" not found.');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             const styleLink = document.createElement('link');
             styleLink.rel = 'stylesheet';
-            styleLink.href = "style.css";
+            styleLink.href = "http://localhost:4000/student-form/style.css";
             document.head.prepend(styleLink);
         }
     }
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   
   const logoElement = document.createElement('img');
-  logoElement.src = logo || 'Careerkick.png'; 
+  logoElement.src = logo || 'http://localhost:4000/student-form/Careerkick.png'; 
   logoElement.alt = 'Company Logo';
   logoElement.classList.add('logo-style'); 
   logoAndContactContainer.appendChild(logoElement);
