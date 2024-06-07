@@ -23,8 +23,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 
-import bg from "../../assets/signin.svg";
-import bgimg from "../../assets/backimg.jpg";
+import bg from "../../../public/assets/signin.svg";
+import bgimg from "../../../public/assets/backimg.jpg";
 
 // import LoginWithPhone from "./LoginWithPhone";
 

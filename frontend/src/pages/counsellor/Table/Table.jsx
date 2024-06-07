@@ -137,75 +137,73 @@ const Table = () => {
                     </tr>
                   ) : (
                     <React.Fragment key={`accordion-${user._id}`}>
-                      <tr className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <td className="w-4 p-4">
-                          <div className="flex items-center">
-                            {index + 1}
-                          </div>
-                        </td>
-                        <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                          <Accordion>
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls={`panel-${user._id}-content`}
-                              id={`panel-${user._id}-header`}
-                            >
-                              <Typography>{user.name}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                  <tr>
-                                    <th scope="col" className="px-6 py-3">S. No.</th>
-                                    <th scope="col" className="px-6 py-3">Name</th>
-                                    <th scope="col" className="px-6 py-3">Registered ON</th>
-                                    <th scope="col" className="px-6 py-3">Neet Score</th>
-                                    <th scope="col" className="px-6 py-3">State</th>
-                                    <th scope="col" className="px-6 py-3">Course</th>
-                                    <th scope="col" className="px-6 py-3">Contact No</th>
-                                    <th scope="col" className="px-6 py-3">Lead Status</th>
-                                    <th scope="col" className="px-6 py-3">Update Status</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {user.otherResponse.map((otheruser, i) => (
-                                    <tr key={otheruser._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                      <td className="w-4 p-4">
-                                        <div className="flex items-center">
-                                          {i + 1}
-                                        </div>
-                                      </td>
-                                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{otheruser.name}</th>
-                                      <td className="px-6 py-4">{formatDate(otheruser.createdAt)}</td>
-                                      <td className="px-6 py-4">{otheruser.neetScore}</td>
-                                      <td className="px-6 py-4">{otheruser.state}</td>
-                                      <td className="px-6 py-4">{otheruser.courseSelected}</td>
-                                      <td className="px-6 py-4">{otheruser.contactNumber}</td>
-                                      <td className="px-6 py-4">{otheruser.state}</td>
-                                      <td className="px-6 py-4">
-                                        <Button variant="contained">
-                                          <Link to={`/student/${otheruser._id}`} state={{ id: `${otheruser._id}` }}>Edit</Link>
-                                        </Button>
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </AccordionDetails>
-                          </Accordion>
-                        </th>
-                        <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
-                        <td className="px-6 py-4">{user.neetScore}</td>
-                        <td className="px-6 py-4">{user.state}</td>
-                        <td className="px-6 py-4">{user.courseSelected}</td>
-                        <td className="px-6 py-4">{user.contactNumber}</td>
-                        <td className="px-6 py-4">{user.state}</td>
-                        <td className="px-6 py-4">
-                          <Button variant="contained">
-                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>Edit</Link>
-                          </Button>
-                        </td>
-                      </tr>
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls={`panel-${user._id}-content`}
+                          id={`panel-${user._id}-header`}
+                        >
+                          <tr className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td className="w-4 p-4">
+                              <div className="flex items-center">
+                                {index + 1}
+                              </div>
+                            </td>
+                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{user.name}</th>
+                            <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
+                            <td className="px-6 py-4">{user.neetScore}</td>
+                            <td className="px-6 py-4">{user.state}</td>
+                            <td className="px-6 py-4">{user.courseSelected}</td>
+                            <td className="px-6 py-4">{user.contactNumber}</td>
+                            <td className="px-6 py-4">{user.state}</td>
+                            <td className="px-6 py-4">
+                              <Button variant="contained">
+                                <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>Edit</Link>
+                              </Button>
+                            </td>
+                          </tr>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                              <tr>
+                                <th scope="col" className="px-6 py-3">S. No.</th>
+                                <th scope="col" className="px-6 py-3">Name</th>
+                                <th scope="col" className="px-6 py-3">Registered ON</th>
+                                <th scope="col" className="px-6 py-3">Neet Score</th>
+                                <th scope="col" className="px-6 py-3">State</th>
+                                <th scope="col" className="px-6 py-3">Course</th>
+                                <th scope="col" className="px-6 py-3">Contact No</th>
+                                <th scope="col" className="px-6 py-3">Lead Status</th>
+                                <th scope="col" className="px-6 py-3">Update Status</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {user.otherResponse.map((otheruser, i) => (
+                                <tr key={otheruser._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                  <td className="w-4 p-4">
+                                    <div className="flex items-center">
+                                      {i + 1}
+                                    </div>
+                                  </td>
+                                  <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{otheruser.name}</th>
+                                  <td className="px-6 py-4">{formatDate(otheruser.createdAt)}</td>
+                                  <td className="px-6 py-4">{otheruser.neetScore}</td>
+                                  <td className="px-6 py-4">{otheruser.state}</td>
+                                  <td className="px-6 py-4">{otheruser.courseSelected}</td>
+                                  <td className="px-6 py-4">{otheruser.contactNumber}</td>
+                                  <td className="px-6 py-4">{otheruser.state}</td>
+                                  <td className="px-6 py-4">
+                                    <Button variant="contained">
+                                      <Link to={`/student/${otheruser._id}`} state={{ id: `${otheruser._id}` }}>Edit</Link>
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </AccordionDetails>
+                      </Accordion>
                     </React.Fragment>
                   )}
                 </React.Fragment>
