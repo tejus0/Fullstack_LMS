@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // form.reset();
     }
   
-  const url = 'http://156.67.219.231:4000/api/v1/form'
+  const url = 'https://ntechzy.in/api/v1/form'
   
   
   
