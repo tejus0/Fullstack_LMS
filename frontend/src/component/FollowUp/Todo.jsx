@@ -8,7 +8,7 @@ import {
   IconButton,
 } from "@mui/material";
 const Todo = ({ key, title, date, id }) => {
-
+  console.log(date,"date")
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const dateOptions = { year: "numeric", month: "long", day: "numeric" };
@@ -31,7 +31,7 @@ const Todo = ({ key, title, date, id }) => {
               {title}
             </Typography>
             <div >
-              <Typography variant="caption">{formatDate(date)}</Typography>
+              <Typography variant="caption">{date!=undefined ?formatDate(date):formatDate(new Date())}</Typography>
             </div>
           </CardContent>
         </Card>
