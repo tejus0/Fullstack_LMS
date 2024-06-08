@@ -80,12 +80,15 @@ const StudentProfile = ({counsellor_id}) => {
                 <div className="mb-4">
                   <p>Email: {studentData.email}</p>
                   <p>Mobile: <span className="text-green-600">{studentData.contactNumber}</span></p>
-                  <p>Father name: {studentData.fatherName}</p>
-                  <p>City: {studentData.city}</p>
+                  <p>Whatsapp Number: <span className="text-green-600">{studentData.whatsappNumber}</span></p>
+                  <p>Father name: {studentData.guardianName}</p>
+                  <p>City: {studentData.district}</p>
                   <p>State: {studentData.state}</p>
                   <p>Course Selected: {studentData.courseSelected}</p>
                   <p>Preferred College: {studentData.preferredCollege}</p>
+                  <p>Source: {studentData.source}</p>
                   <p>Neet Score: {studentData.neetScore}</p>
+                  <p>Neet AIR: {studentData.neetAIR}</p>
                 </div>
               </div>
             </div>
