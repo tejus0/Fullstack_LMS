@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   function initializeForm() {
-    const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
+    const scriptElement = document.querySelector('script[src="https://lms.ntechzy.in/api/v1/student-form/form.js"]');
   
     if (!scriptElement) {
         console.error('Script element with src="Form.js" not found.');
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // createField(form, { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       // createField(form, { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       
-      if (window.location.hostname === 'abhigyadufare.github.io') {
+      if (window.location.hostname === 'lms.ntechzy.in') {
         createField(form, { labelText: 'Preferred College:', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: true });
     }
     
@@ -343,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // form.reset();
     }
   
-  const url = 'https://ntechzy.in/api/v1/form'
+  const url = 'https://lms.ntechzy.in/api/v1/form'
   
   
   

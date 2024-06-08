@@ -17,7 +17,7 @@ in the Backend folder ther are 4 folder :-
 inside the frontend folder create an .env <b> file name should be .env only </b>
 
         env file contain:-  
-        VITE_API="https://ntechzy.in/api/v1"
+        VITE_API="https://lms.ntechzy.in/api/v1"
 <h2>
   api for table is fetched inside 
 </h2>
