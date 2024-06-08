@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const TodoForm = ({ addTodo, id }) => {
 
+  const baseUrl = import.meta.env.VITE_API;
 const [userId, setUserId] = useState("")
 
 const location = useLocation();   // abhigya has used location.hostname
@@ -28,7 +29,7 @@ const location = useLocation();   // abhigya has used location.hostname
     else{
     console.log(text, "text is here");
     await axios
-      .post(`http://localhost:4000/api/v1/createTodos`, {_id:studId, name: text })
+      .post(`${baseUrl}/createTodos`, {_id:studId, name: text })
       .then((response) => {
         toast.success("task added successfully !", { position: "top-right" });
         console.log()

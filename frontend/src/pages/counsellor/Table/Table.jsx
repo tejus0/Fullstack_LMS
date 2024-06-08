@@ -11,6 +11,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 
 const Table = () => {
+  const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const id = location.state.id;
   const [users, setUsers] = useState([]);
@@ -30,7 +31,7 @@ const Table = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`http://localhost:4000/api/v1/getCounsellorDataList/${id}`).catch(err => {
+      const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
         console.log(err, "error");
       });
       setUsers(response.data);
@@ -39,17 +40,17 @@ const Table = () => {
     fetchData();
   }, [id]);
 
-  const deleteUser = async (userId) => {
-    await axios
-      .delete(`${process.env.REACT_APP_BASE_URL}/delete/${userId}`)
-      .then((response) => {
-        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
-        toast.success(response.data.msg, { position: "top-right" });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const deleteUser = async (userId) => {
+  //   await axios
+  //     .delete(`${process.env.REACT_APP_BASE_URL}/delete/${userId}`)
+  //     .then((response) => {
+  //       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
+  //       toast.success(response.data.msg, { position: "top-right" });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];

@@ -1,9 +1,10 @@
 import React from 'react'
 
 const AssignAuto = () => {
+  const baseUrl = import.meta.env.VITE_API;
   return (
     <div>
-        <button onClick={"http://localhost:4000/api/v1/autoassign"}>Fetch</button>
+        <button onClick={`${baseUrl}/autoassign`}>Fetch</button>
     </div>
   )
 }

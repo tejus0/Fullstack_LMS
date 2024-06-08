@@ -28,6 +28,7 @@ const isEmail = (email) =>
 const auth = getAuth(firebase);
 
 const Registration = () => {
+  const baseUrl = import.meta.env.VITE_API;
   const [employee_id, setEId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -192,7 +193,7 @@ const Registration = () => {
     setSuccess("Form Submitted Successfully");
 
     await axios
-      .post(`http://localhost:4000/api/v1/register`, {
+      .post(`${baseUrl}/register`, {
         employee_id,
         username,
         email,

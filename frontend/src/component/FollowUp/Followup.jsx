@@ -7,13 +7,13 @@ import axios from "axios";
 import { Box, Paper } from "@mui/material";
 
 export default function Followup(props) {
-  console.log(props,"props")
+  const baseUrl = import.meta.env.VITE_API;
   const [todos, setTodos] = useState([]);
   
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `http://localhost:4000/api/v1/getTodos/${props.id}`
+        `${baseUrl}/getTodos/${props.id}`
       )
       setTodos(response.data[0].remarks);
       console.log(response.data[0].remarks,"follwup");
