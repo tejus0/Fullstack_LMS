@@ -5,6 +5,7 @@ import Followup from '../component/FollowUp/Followup';
 import Todolist from "../component/FollowUp/TodoList";
 import Todoform from "../component/FollowUp/Todoform";
 import { Box, Paper, Button } from "@mui/material";
+import SimpleAccordion from '../component/Accordion';
 
 const StudentProfile = ({counsellor_id}) => {
   const [todos, setTodos] = useState([]);
@@ -31,6 +32,7 @@ const StudentProfile = ({counsellor_id}) => {
         setTodos(response.data[0].remarks);
         const studData = await axios.get(`${baseUrl}/student/${id}`);
         setStudentData(studData.data.data[0]);
+        console.log(studentData.otherResponse,"data")
       } catch (e) {
         console.log(e);
       }
@@ -82,35 +84,17 @@ const StudentProfile = ({counsellor_id}) => {
                   <p>City: {studentData.city}</p>
                   <p>State: {studentData.state}</p>
                   <p>Course Selected: {studentData.courseSelected}</p>
-                  <p>Preferred College: {studentData.preffredCollege}</p>
+                  <p>Preferred College: {studentData.preferredCollege}</p>
                   <p>Neet Score: {studentData.neetScore}</p>
                 </div>
               </div>
             </div>
             <div className="w-full md:w-1/2 px-4 mb-4">
-              <div className="border p-4 rounded-lg shadow-lg">
-                <div className="mb-4">
-                  <h2 className="font-bold text-xl">Communication Status</h2>
-                  <p>Whatsapp Number: {studentData.whatsappNumber}</p>
-                </div>
-                <div className="mb-4">
-                  <h2 className="font-bold text-xl">Telephony Status</h2>
-                  <p>Inbound Call - 0</p>
-                  <p>Outbound Call - 1</p>
-                </div>
-                <div className="mb-4">
-                  <h2 className="font-bold text-xl">Assigned Counsellor</h2>
-                  <p>CAREERKICK SERVICES <span className="text-blue-600">+1</span></p>
-                </div>
-                <div className="mb-4">
-                  <h2 className="font-bold text-xl">Lead Source</h2>
-                  <p>****************************</p>
-                </div>
-                <div className="mb-4">
-                  <h2 className="font-bold text-xl">Upcoming Followup</h2>
-                  <p>NA</p>
-                </div>
-              </div>
+              {studentData.otherResponse && studentData.otherResponse.length > 0 ? (
+                <SimpleAccordion otherResp={studentData.otherResponse} />
+              ) : (
+                <p>No data</p>
+              )}
             </div>
           </div>
         </div>

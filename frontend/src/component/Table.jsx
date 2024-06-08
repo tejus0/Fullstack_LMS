@@ -117,7 +117,7 @@ const Table = () => {
                                             <td className="px-6 py-4 whitespace-nowrap"> {item.city}</td>
                                             <td className="px-6 py-4 whitespace-nowrap"> {item.createdAt}</td>
                                             <td className="px-6 py-4 whitespace-nowrap"> {item.source}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap"> {item.preffredCollege}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap"> {item.preferredCollege}</td>
                                             <td className="px-6 py-4 whitespace-nowrap"> {item.courseSelected}</td>
                                             <td className="px-6 py-4 whitespace-nowrap"> {item.assignedCouns.length > 0 ? item.assignedCouns.length : "Not Yet Assigned"}</td>
 
@@ -136,7 +136,7 @@ const Table = () => {
                                                         <td className="px-6 py-4 whitespace-nowrap"> {item.city}</td>
                                                         <td className="px-6 py-4 whitespace-nowrap"> {detail.submitedAt}</td>
                                                         <td className="px-6 py-4 whitespace-nowrap"> {detail.source}</td>
-                                                        <td className="px-6 py-4 whitespace-nowrap"> {detail.preffredCollege}</td>
+                                                        <td className="px-6 py-4 whitespace-nowrap"> {detail.preferredCollege}</td>
                                                         <td className="px-6 py-4 whitespace-nowrap"> {detail.courseSelected}</td>
                                                     </React.Fragment>
                                                 ))}

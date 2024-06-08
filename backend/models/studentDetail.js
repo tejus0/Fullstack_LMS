@@ -2,40 +2,153 @@ import mongoose from "mongoose";
 
 
 const otherResponse = new mongoose.Schema({
+    // name: {
+    //     type: String,
+    //     required: [true, "Please enter your name "]
+    // },
+    // guardianName: {
+    //     type: String,
+    //     required: [true, "Please enter your father's Name "]
+    // },
+
+    // district: {
+    //     type: String,
+    //     required: [true, "Please enter your city "]
+    // },
+
+    // state: {
+    //     type: String,
+    //     required: [true, "Please enter your state "]
+    // },
+    // whatsappNumber: {
+    //     type: String,
+    //     required: [true, 'Phone number is required'],
+    //     match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+    // },
+    
+    // courseSelected: {
+    //     type: String,
+    //     required: [true, "Please Selct Course "]
+    // },
+    // source: {
+    //     type: String,
+    //     required: [true, "Please enter your source "]
+    // },
+    // sourceId: {
+    //     type: String,
+    //     required: [true, "Please enter source Id "]
+    // },
+    // preferredCollege: {
+    //     type: String,
+    //     default:'',
+    //     required: [true, "Please Selct Preffred College "]
+    // },
+    // contactNumber: {
+    //     type: String,
+    //     required: [true, 'Phone number is required'],
+    //     match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+    // },
+    // email: {
+    //     type: String,
+    //     required: [true, "Please enter your email "]
+    // },
+    // isMobileVerified: {
+    //     type: Boolean,
+    //     default: false
+    // },
+    // // isEmailVerified: {
+    // //     type: Boolean,
+    // //     default: false
+    // // },
+    // neetScore: {
+    //     type: String,
+    //     required: [false, 'Marks are required'],
+    //     default: ""
+    // },
+    // neetAIR: {
+    //     type: String,
+    //     required: [false, 'Rank is required'],
+    //     default: ""
+    // },
     name: {
         type: String,
         required: [true, "Please enter your name "]
     },
-    whatsappNumber: {
-        type: String,
-        required: [true, 'Phone number is required'],
-        match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
-    },
-    courseSelected: {
-        type: String,
-        required: [true, "Please Selct Course "]
-    },
-    source: {
-        type: String,
-        required: [true, "Please enter your source "]
-    },
-    sourceId: {
-        type: String,
-        required: [true, "Please enter source Id "]
-    },
-    preffredCollege: {
-        type: String,
-        default:'',
-        required: [true, "Please Selct Preffred College "]
-    },
+
     contactNumber: {
         type: String,
         required: [true, 'Phone number is required'],
         match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
     },
+
+    isMobileVerified: {
+        type: Boolean,
+        default: false
+    },
+
     email: {
         type: String,
         required: [true, "Please enter your email "]
+    },
+
+    // isEmailVerified: {
+    //     type: Boolean,
+    //     default: false
+    // },
+
+    whatsappNumber: {
+        type: String,
+        required: [true, 'Phone number is required'],
+        match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+    },
+
+    guardianName: {
+        type: String,
+        required: [true, "Please enter your father's Name "]
+    },
+
+    district: {
+        type: String,
+        required: [true, "Please enter your city "]
+    },
+
+    state: {
+        type: String,
+        required: [true, "Please enter your state "]
+    },
+
+    courseSelected: {
+        type: String,
+        required: [true, "Please Selct Course "]
+    },
+
+    preferredCollege: {
+        type: String,
+        default:"",
+        required: [true, "Please Selct Preffred College "]
+    },
+
+    source: {
+        type: String,
+        default:"",
+        required: [true, "Please enter your source "]
+    },
+
+    sourceId: {
+        type: String,
+        default:"",
+        required: [true, "Please enter source Id "]
+    },
+
+    neetScore: {
+        type: String,
+        required: [false, 'Marks are required'],
+        default: ""
+    },
+    neetAIR: {
+        type: String,
+        required: [false, 'Rank is required'],
+        default: ""
     },
     submitedAt: {
         type: Date,
@@ -68,10 +181,10 @@ const studentDetailSchema = new mongoose.Schema(
             required: [true, "Please enter your email "]
         },
 
-        isEmailVerified: {
-            type: Boolean,
-            default: false
-        },
+        // isEmailVerified: {
+        //     type: Boolean,
+        //     default: false
+        // },
 
         whatsappNumber: {
             type: String,
@@ -99,22 +212,22 @@ const studentDetailSchema = new mongoose.Schema(
             required: [true, "Please Selct Course "]
         },
 
-        preffredCollege: {
+        preferredCollege: {
             type: String,
-            default:""
-            // required: [true, "Please Selct Preffred College "]
+            default:"",
+            required: [true, "Please Selct Preffred College "]
         },
 
         source: {
             type: String,
-            default:""
-            // required: [true, "Please enter your source "]
+            default:"",
+            required: [true, "Please enter your source "]
         },
 
         sourceId: {
             type: String,
-            default:""
-            // required: [true, "Please enter source Id "]
+            default:"",
+            required: [true, "Please enter source Id "]
         },
 
         neetScore: {

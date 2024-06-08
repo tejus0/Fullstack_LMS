@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
           courseSelection: document.getElementById('courseSelection').value,
           neetScore: document.getElementById('neetScore').value,
           neetAir: document.getElementById('neetAir').value,
-          preferredCollege: document.getElementById('preferredCollege') ? document.getElementById('prefferedCollege').value : source,
+          preferredCollege: document.getElementById('preferredCollege') ? document.getElementById('preferredCollege').value : source,
           agreeCheckbox: document.getElementById('agreeCheckbox').checked,
           source: source,
           sourceId: sourceId
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         neetAIR: formData.neetAir,
         source: formData.source,
         sourceId: formData.sourceId,
-        preffredCollege: formData.preferredCollege
+        preferredCollege: formData.preferredCollege
       }
   
       try {

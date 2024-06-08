@@ -24,9 +24,9 @@ export async function createStudentProfile(req, res) {
 
             const isMail = user.email == data.email
 
-            const isOtherResponseExist = user.otherResponse.find(x => x.courseSelected == data.courseSelected && x.preffredCollege == data.preffredCollege)
+            const isOtherResponseExist = user.otherResponse.find(x => x.courseSelected == data.courseSelected && x.preferredCollege == data.preferredCollege)
 
-            if (user.courseSelected == data.courseSelected && user.preffredCollege == data.preffredCollege || isOtherResponseExist) {
+            if (user.courseSelected == data.courseSelected && user.preferredCollege == data.preferredCollege || isOtherResponseExist) {
 
                 const sameDetail = isMail ? "Email" : "Contact Number"
                 return res.status(400).json(
@@ -45,7 +45,7 @@ export async function createStudentProfile(req, res) {
                 courseSelected: data.courseSelected,
                 source: data.source,
                 sourceId: data.sourceId,
-                preffredCollege: data.preffredCollege,
+                preferredCollege: data.preferredCollege,
                 contactNumber: data.contactNumber,
                 email: data.email
             }
@@ -443,4 +443,20 @@ try {
   //     .then((response) => res.send(response.message))
   //     .catch((error) => res.status(500).send(error.message));
   // };
+
+  export const renameKey = async (req, res) => {
+    try {
+      // Assuming `studentModal` is your Mongoose model for the student collection
+      await studentModal.updateMany({}, { $rename: { preffredCollege: "preferredCollege" } }, { strict: false });
+  
+      // Assuming `students` is defined somewhere in your code, otherwise, you need to fetch it from the database
+      const students = await studentModal.find({});
+  
+      return res.status(200).json({ success: true, message: "Key renamed successfully", students });
+    } catch (error) {
+      console.error("Error in renameKey route:", error); // Log the error for debugging purposes
+      return res.status(500).json({ success: false, error: "Internal server error" });
+    }
+  }
+  
   
