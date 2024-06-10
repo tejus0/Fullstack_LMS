@@ -166,7 +166,7 @@ function removeSendOTPButton() {
       // createField(form, { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       // createField(form, { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       
-      if (window.location.hostname === 'lms.ntechzy.in') {
+      if (window.location.hostname === 'www.ntechzy.in') {
         createField(form, { labelText: 'Preferred College:', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: true });
     }
     
@@ -376,7 +376,7 @@ function removeSendOTPButton() {
       // form.reset();
     }
   
-  const url = 'https://lms.ntechzy.in/api/v1/form'
+  const url = 'https://www.ntechzy.in/api/v1/form'
   
   
   
