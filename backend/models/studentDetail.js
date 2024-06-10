@@ -25,7 +25,7 @@ const otherResponse = new mongoose.Schema({
     //     required: [true, 'Phone number is required'],
     //     match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
     // },
-    
+
     // courseSelected: {
     //     type: String,
     //     required: [true, "Please Selct Course "]
@@ -124,19 +124,19 @@ const otherResponse = new mongoose.Schema({
 
     preferredCollege: {
         type: String,
-        default:"",
+        default: "",
         required: [true, "Please Selct Preffred College "]
     },
 
     source: {
         type: String,
-        default:"",
+        default: "",
         required: [true, "Please enter your source "]
     },
 
     sourceId: {
         type: String,
-        default:"",
+        default: "",
         required: [true, "Please enter source Id "]
     },
 
@@ -214,19 +214,19 @@ const studentDetailSchema = new mongoose.Schema(
 
         preferredCollege: {
             type: String,
-            default:"",
+            default: "",
             required: [true, "Please Selct Preffred College "]
         },
 
         source: {
             type: String,
-            default:"",
+            default: "",
             required: [true, "Please enter your source "]
         },
 
         sourceId: {
             type: String,
-            default:"",
+            default: "",
             required: [true, "Please enter source Id "]
         },
 
@@ -243,20 +243,22 @@ const studentDetailSchema = new mongoose.Schema(
         remarks: [
             {
                 type: Object,
-                subject:{
-                    type:String,
-                    required:true
+                subject: {
+                    type: String,
+                    required: true
                 },
-                updatedAt:{type:String},
+                updatedAt: { type: String },
                 default: {},
             }
         ],
-        assignedCouns: 
-            
-               { type: mongoose.Schema.Types.String,
-                ref: "Counsellor",
+        assignedCouns:
 
-                default:""},
+        {
+            type: mongoose.Schema.Types.String,
+            ref: "Counsellor",
+
+            default: ""
+        },
         otherResponse: [otherResponse]
     }, { timestamps: true }
 )

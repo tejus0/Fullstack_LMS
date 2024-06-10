@@ -11,14 +11,17 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 
 const Table = () => {
+  // change made by Pankaj in line 22  and 40
+
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const id = location.state.id;
   const [users, setUsers] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
   const navigate = useNavigate();
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -39,6 +42,7 @@ const Table = () => {
 
     fetchData();
   }, [id]);
+
 
   // const deleteUser = async (userId) => {
   //   await axios
@@ -83,6 +87,10 @@ const Table = () => {
   };
 
   const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 0)
+
+
+  // console.log(paginatedUsers);
 
   return (
     <div>
@@ -123,7 +131,7 @@ const Table = () => {
                   <td className="px-6 py-4">{user.state}</td>
                   <td className="px-6 py-4">{user.courseSelected}</td>
                   <td className="px-6 py-4">{user.contactNumber}</td>
-                  <td className="px-6 py-4">{user.state}</td>
+                  <td className="px-6 py-4"> {user.remarks.length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td>
                   <td className="px-6 py-4">
                     <Button variant="contained">
                       <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>Edit</Link>
@@ -140,6 +148,7 @@ const Table = () => {
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            disabled={paginationDisabled}
           />
         </div>
       </Box>
