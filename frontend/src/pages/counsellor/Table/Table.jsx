@@ -11,6 +11,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 
 const Table = () => {
+  const [query, setQuery] = useState("");
+  const [data, setData] = useState([]);
+
+
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const id = location.state.id;
@@ -35,22 +39,14 @@ const Table = () => {
         console.log(err, "error");
       });
       setUsers(response.data);
+
+      const res = await axios.get(`${baseUrl}/getCounsellorDataList/?q=${query}`);
+      setData(res.data);
     };
 
-    fetchData();
-  }, [id]);
+    if (query.length === 0 || query.length > 2) fetchData();
+  }, [query,id]);
 
-  // const deleteUser = async (userId) => {
-  //   await axios
-  //     .delete(`${process.env.REACT_APP_BASE_URL}/delete/${userId}`)
-  //     .then((response) => {
-  //       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
-  //       toast.success(response.data.msg, { position: "top-right" });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];
@@ -82,7 +78,8 @@ const Table = () => {
     navigate(`/login`); // Adjust the path as needed
   };
 
-  const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  // const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedUsers = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <div>
@@ -95,6 +92,11 @@ const Table = () => {
           </Tooltip>
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+        <input
+          className="search"
+          placeholder="Search..."
+          onChange={(e) => setQuery(e.target.value.toLowerCase())}
+        />
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>

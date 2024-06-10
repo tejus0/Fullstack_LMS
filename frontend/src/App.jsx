@@ -38,3 +38,7 @@ const App = () => {
 }
 
 export default App
+
+// [{"neetAIR": "","name": "dora","contactNumber": "7895845625","isMobileVerified": false,"email": "1242@asdfrews.com","isEmailVerified": false,"whatsappNumber": "7895845625","guardianName": "pitaji","district": "noida","state": "up","courseSelected": "BUMS","source": null,"sourceId": null,"neetScore": "700","preferredCollege": ""},{"neetAIR": "100","name": "dorami","contactNumber": "2145236589","isMobileVerified": false,"email": "3231@gwalf.com","isEmailVerified": false,"whatsappNumber": "2145236589","guardianName": "pitaji","district": "noida","state": "up","courseSelected": "BUMS","source": null,"sourceId": null,"neetScore": "700","preferredCollege": ""}]
+
+// https://ntechzy.in/?utm_source=facebook?campaign_id=1234

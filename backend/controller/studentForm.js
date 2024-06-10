@@ -458,5 +458,19 @@ try {
       return res.status(500).json({ success: false, error: "Internal server error" });
     }
   }
+
+  export const tableFilter = (req, res) => {
+    const { q } = req.query;
+  
+    const keys = ["name", "state", "email"];
+  
+    const search = (data) => {
+      return data.filter((item) =>
+        keys.some((key) => item[key].toLowerCase().includes(q))
+      );
+    };
+  
+    q ? res.json(search(Users).slice(0, 10)) : res.json(Users.slice(0, 10));
+  };
   
   

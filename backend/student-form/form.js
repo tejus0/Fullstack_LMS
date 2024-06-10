@@ -50,37 +50,37 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(courses);
     console.log(path.includes(currentPath));
 
-    const contactNoInput = document.getElementById('contactNo');
-    contactNoInput.addEventListener('input', () => {
-        const inputValue = contactNoInput.value;
-        // Check if input length is 10 digits
-        if (inputValue.length === 10) {
-            createSendOTPButton();
-        } else {
-            removeSendOTPButton();
-        }
-    });
+    // const contactNoInput = document.getElementById('contactNo');   /// OTP input
+    // contactNoInput.addEventListener('input', () => {
+    //     const inputValue = contactNoInput.value;
+    //     // Check if input length is 10 digits
+    //     if (inputValue.length === 10) {
+    //         createSendOTPButton();
+    //     } else {
+    //         removeSendOTPButton();
+    //     }
+    // });
   }
 
-  function createSendOTPButton() {
-    const sendOTPButton = document.createElement('button');
-    sendOTPButton.textContent = 'Send OTP';
-    sendOTPButton.id = 'sendOTPButton';
-    sendOTPButton.addEventListener('click', () => {
-        // Add your logic to send OTP here
-    });
+//   function createSendOTPButton() {
+//     const sendOTPButton = document.createElement('button');
+//     sendOTPButton.textContent = 'Send OTP';
+//     sendOTPButton.id = 'sendOTPButton';
+//     sendOTPButton.addEventListener('click', () => {
+//         // Add your logic to send OTP here
+//     });
 
-    // Append the button to a container element
-    const buttonContainer = document.getElementById('buttonContainer'); // Assuming you have a container element with id 'buttonContainer'
-    buttonContainer.appendChild(sendOTPButton);
-}
+//     // Append the button to a container element
+//     const buttonContainer = document.getElementById('buttonContainer'); // Assuming you have a container element with id 'buttonContainer'
+//     buttonContainer.appendChild(sendOTPButton);
+// }
 
-function removeSendOTPButton() {
-    const sendOTPButton = document.getElementById('sendOTPButton');
-    if (sendOTPButton) {
-        sendOTPButton.remove();
-    }
-}
+// function removeSendOTPButton() {
+//     const sendOTPButton = document.getElementById('sendOTPButton');
+//     if (sendOTPButton) {
+//         sendOTPButton.remove();
+//     }
+// }
   
   function createFormButton() {
     const button = document.createElement('button');
@@ -317,7 +317,7 @@ function removeSendOTPButton() {
     const source = getUrlParameter('utm_source') !== null ? getUrlParameter('utm_source') : window.location.hostname;
     const sourceId = getUrlParameter('campaign_id') !== null ? getUrlParameter('campaign_id') : window.location.href;
   
-    const mobileOtp = document.getElementById('contactOtp');
+    // const mobileOtp = document.getElementById('contactOtp');   1
   
   
   // mobileOtp.addEventListener('input', function() {
