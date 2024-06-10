@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   function initializeForm() {
-    const scriptElement = document.querySelector('script[src="https://lms.ntechzy.in/api/v1/student-form/form.js"]');
+
+
+    const scriptElement = document.querySelector('script[src="https://www.ntechzy.in/api/v1/student-form/form.js"]');
   
     if (!scriptElement) {
         console.error('Script element with src="Form.js" not found.');
@@ -47,7 +49,38 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(path);
     console.log(courses);
     console.log(path.includes(currentPath));
+
+    const contactNoInput = document.getElementById('contactNo');
+    contactNoInput.addEventListener('input', () => {
+        const inputValue = contactNoInput.value;
+        // Check if input length is 10 digits
+        if (inputValue.length === 10) {
+            createSendOTPButton();
+        } else {
+            removeSendOTPButton();
+        }
+    });
   }
+
+  function createSendOTPButton() {
+    const sendOTPButton = document.createElement('button');
+    sendOTPButton.textContent = 'Send OTP';
+    sendOTPButton.id = 'sendOTPButton';
+    sendOTPButton.addEventListener('click', () => {
+        // Add your logic to send OTP here
+    });
+
+    // Append the button to a container element
+    const buttonContainer = document.getElementById('buttonContainer'); // Assuming you have a container element with id 'buttonContainer'
+    buttonContainer.appendChild(sendOTPButton);
+}
+
+function removeSendOTPButton() {
+    const sendOTPButton = document.getElementById('sendOTPButton');
+    if (sendOTPButton) {
+        sendOTPButton.remove();
+    }
+}
   
   function createFormButton() {
     const button = document.createElement('button');
