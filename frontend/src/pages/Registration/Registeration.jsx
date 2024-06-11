@@ -52,7 +52,7 @@ const Registration = () => {
   // Overall Form Validity
   const [formValid, setFormValid] = useState();
   const [success, setSuccess] = useState();
-  
+
   // Handles Display and Hide Password
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
@@ -246,7 +246,7 @@ const Registration = () => {
             size="small"
           />
         </div>
-        
+
         <div style={{ marginTop: "5px" }}>
           <TextField
             type="text"
