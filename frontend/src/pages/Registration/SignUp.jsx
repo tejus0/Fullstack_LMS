@@ -1,150 +1,89 @@
-import * as React from 'react';
-// import Avatar from '@mui/material/Avatar';
-// import Button from '@mui/material/Button';
-// import CssBaseline from '@mui/material/CssBaseline';
-// import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
-// import Link from '@mui/material/Link';
-// import Grid from '@mui/material/Grid';
-// import Box from '@mui/material/Box';
-// import Typography from '@mui/material/Typography';
-// import Container from '@mui/material/Container';
-import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-import { LockOutlined } from '@mui/icons-material';
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import React from 'react'
+import { useState } from 'react'
+import InputField from '../../component/InputField'
+import validationSchema from '../../FormValidationSchema/SignupSchema'
 
+const SignUp = () => {
+  const [err, setErr] = useState([])
+  const [formdata, setformdata] = useState({
+    employeeId: '',
+    userName: '',
+    emailAddress: '',
+    mobileNumber: '',
+    password: '',
+    confirmPassword: '',
+  })
 
-function Copyright(props) {
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setformdata({ ...formdata, [name]: value })
+  }
+
+  const handleSignup = async (e) => {
+    e.preventDefault()
+    try {
+      await validationSchema.validate(formdata, { abortEarly: false })
+      setErr([])
+      console.log("api called");
+    } catch (error) {
+      const newError = {}
+      error.inner.forEach(elem => {
+        newError[elem.path] = elem.message
+      });
+      setErr(newError)
+    }
+  }
+
+  
   return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
+    <div className='p-4 rounded-lg gap-8 flex flex-col w-full justify-center z-[999] max-w-[12000px]'>
+      <form onSubmit={handleSignup} className='flex flex-col justify-center m-auto w-full rounded-lg md:w-[50%] gap-8 bg-white p-10'>
+
+        {/* name & id field */}
+        <div className='flex md:flex-row flex-col gap-3 md:gap-10 '>
+
+          <div className='w-full'>
+            <InputField label={"Employee ID"} value={formdata.employeeId} name="employeeId" onChange={handleChange} />
+            {err && <p className=" text-red-500">{err.employeeId}</p>}
+          </div>
+
+          <div className='w-full'>
+            <InputField label={"Enter username"} value={formdata.userName} name="userName" onChange={handleChange} />
+            {err && <p className=" text-red-500">{err.userName}</p>}
+          </div>
+
+        </div>
+
+
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Email Email "} value={formdata.emailAddress} name="emailAddress" onChange={handleChange} />
+          {err && <p className=" text-red-500">{err.emailAddress}</p>}
+        </div>
+
+
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Mobile Number"} value={formdata.mobileNumber} name="mobileNumber" onChange={handleChange} />
+          {err && <p className=' text-red-500'>{err.mobileNumber}</p>}
+        </div>
+
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Enter Password"} value={formdata.password} name="password" onChange={handleChange} />
+
+          {err && <p className=' text-red-500'>{err.password}</p>}
+        </div>
+
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Confirm Password"} value={formdata.confirmPassword} name="confirmPassword" onChange={handleChange} />
+
+          {err && <p className=' text-red-500'>{err.confirmPassword}</p>}
+        </div>
+
+        <button type='submit' className='border-2 p-4 rounded-full bg-[#de0000] text-white text-xl font-bold'>
+          Sign Up
+        </button>
+      </form>
+    </div>
+  )
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
-const defaultTheme = createTheme();
-
-export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
-
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlined />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid item xs={12}>
-              <TextField
-            type="text"
-            name="eId"
-            label="Employee ID"
-            fullWidth
-            id="standard-basic"
-            variant="standard"
-            sx={{ width: "100%" }}
-            value={employee_id}
-            onChange={(e) => setEId(e.target.value)}
-            error={employeeIdError}
-            size="small"
-          />
-          </Grid>
-          <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
-  );
-}
+export default SignUp
