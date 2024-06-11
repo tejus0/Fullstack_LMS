@@ -34,14 +34,18 @@ const Table = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
+      // const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
+      //   console.log(err, "error");
+      // });
+      const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
         console.log(err, "error");
       });
-      setUsers(response.data);
+      setUsers(response.data.data);
+      console.log(response.data.data,"data")
     };
 
     fetchData();
-  }, [id]);
+  }, []);
 
 
   // const deleteUser = async (userId) => {
@@ -87,7 +91,7 @@ const Table = () => {
   };
 
   const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 0)
+  const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 20)
 
 
   // console.log(paginatedUsers);
