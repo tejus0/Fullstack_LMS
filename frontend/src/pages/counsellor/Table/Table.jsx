@@ -11,18 +11,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 
 const Table = () => {
-  const [query, setQuery] = useState("");
-  const [data, setData] = useState([]);
-
-
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const id = location.state.id;
   const [users, setUsers] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
   const navigate = useNavigate();
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -34,19 +31,31 @@ const Table = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
+    const fetchData = async () => {  //  this is wrong
+      
+      // const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
+      //   console.log(err, "error");
+      // });
+      const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
         console.log(err, "error");
       });
       setUsers(response.data);
-
-      const res = await axios.get(`${baseUrl}/getCounsellorDataList/?q=${query}`);
-      setData(res.data);
     };
 
-    if (query.length === 0 || query.length > 2) fetchData();
-  }, [query,id]);
+    fetchData();
+  }, [id]);
 
+  // const deleteUser = async (userId) => {
+  //   await axios
+  //     .delete(`${process.env.REACT_APP_BASE_URL}/delete/${userId}`)
+  //     .then((response) => {
+  //       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
+  //       toast.success(response.data.msg, { position: "top-right" });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
 
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];
@@ -78,8 +87,7 @@ const Table = () => {
     navigate(`/login`); // Adjust the path as needed
   };
 
-  // const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const paginatedUsers = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <div>
@@ -125,7 +133,7 @@ const Table = () => {
                   <td className="px-6 py-4">{user.state}</td>
                   <td className="px-6 py-4">{user.courseSelected}</td>
                   <td className="px-6 py-4">{user.contactNumber}</td>
-                  <td className="px-6 py-4">{user.state}</td>
+                  <td className="px-6 py-4"> {user.remarks.length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td>
                   <td className="px-6 py-4">
                     <Button variant="contained">
                       <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>Edit</Link>
@@ -142,6 +150,7 @@ const Table = () => {
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            disabled={paginationDisabled}
           />
         </div>
       </Box>

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const scriptElement = document.querySelector('script[src="https://www.ntechzy.in/api/v1/student-form/form.js"]');
+    // const scriptElement = document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]');
   
     if (!scriptElement) {
         console.error('Script element with src="Form.js" not found.');
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
           { placeholder: "Student's Name:*", inputType: 'text', inputId: 'studentName', inputName: 'studentName', required: true },
           { placeholder: "Guardian Name:*", inputType: 'text', inputId: 'guardianName', inputName: 'guardianName', required: true },
           { placeholder: 'Contact No.:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
-          { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactOtp', inputName: 'contactOtp', required: true },
+          // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactOtp', inputName: 'contactOtp', required: true },
           { placeholder: 'E-mail:', inputType: 'email', inputId: 'email', inputName: 'email', required: true },
           // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
           { placeholder:'Whatsapp No.:', inputType: 'tel', inputId: 'whatsappNo', inputName: 'whatsappNo', required: false },
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
     
       const courseSelectWrapper = document.createElement('div');
-      courseSelectWrapper.className = 'form-group full-width'; 
+      courseSelectWrapper.className = 'form-group'; 
       form.appendChild(courseSelectWrapper);
   
       
@@ -166,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // createField(form, { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       // createField(form, { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       
-      if (window.location.hostname === 'www.ntechzy.in') {
+      if (window.location.hostname === 'ntechzy.in') {
         createField(form, { labelText: 'Preferred College:', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: true });
     }
     

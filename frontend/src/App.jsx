@@ -10,6 +10,7 @@ import StudentProfile from './pages/StudentProfile';
 import { Toaster } from 'react-hot-toast';
 import AssignAuto from './component/AssignAuto';
 import CounsellorDashboard from './pages/counsellor/Dashboard';
+import AdminDashboard from './pages/counsellor/Dashboard';
 import ForgetPass from './pages/Forgot-password/ForgetPass';
 
 // import Table from './pages/Table';
@@ -24,12 +25,13 @@ const App = () => {
           <Route path='/fn' element={<Dashboard />} />
           <Route path='/counsellor-profile/:id' element={<CounsellorDashboard />} />
           <Route path='/profile' element={<Followup />} />
-          <Route path='/registeration' element={<Registration />} />
+          <Route path='/register' element={<Registration />} />
           <Route path='/registerationfinal' element={<SignUp />} />
           <Route path='/login' element={<Login />} />
           <Route path='/student/:id' element={<StudentProfile />} />
           <Route path='/assignAuto' element={<AssignAuto />} />
           <Route path='/forgot-password' element={<ForgetPass />} />
+          <Route path='/showAllLeads' element={<showAllLeads />} />
         </Routes>
 
       </BrowserRouter>
