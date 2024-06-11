@@ -6,6 +6,7 @@ import counsellorModal from '../models/counsellorDetail.js';
 // import nodemailer from "nodemailer";
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 import councellorToDoModel from '../models/councellorToDoModel.js';
+import assignmentConfigModal from '../models/lastAssignedCounsellor.js';
 
 export const loginLoad = async (req, res) => {
   try {
@@ -335,20 +336,17 @@ export const verifyLogin = async (req, res) => {
 export const assignAuto = async (req, res) => {
   // Fetch all counsellor ids
   const counsellors = await counsellorModal.find({});
-  // console.log(counsellors,"councellord")
-  // counsellors= counsellors.toArray();
   const counsellorIds = counsellors.map(c => c._id);  // counsellor_id is changed to id bacause we fetch councellor by id from url.
-
-  // if (counsellorIds.length !== counsellors.length) {
-  //   throw new Error('There should be exactly 5 counsellors in the collection');
-  // }
 
   // Fetch all student documents
   const students = await studentModal.find({ assignedCouns: "" });
   console.log(students, "stude");
 
+  const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
+let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
+
   // Assign counsellor ids in a round-robin fashion
-  let counsellorIndex = 0;
+  // let counsellorIndex = 0;
   for (let i = 0; i < students.length; i++) {
     const student = students[i];
     const newCounsellorId = counsellorIds[counsellorIndex];
@@ -363,6 +361,13 @@ export const assignAuto = async (req, res) => {
     console.log(student._id, "student id", student.assignedCouns, "assigned councellor")
     counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
   }
+
+  // Update the last assigned counsellor index
+  await assignmentConfigModal.updateOne(
+    {},
+    { $set: { lastAssignedCounsellorIndex: counsellorIndex } },
+    { upsert: true }
+  );
 
   console.log('Updated students with counsellor ids successfully.');
   return res.status(200).json(students);
@@ -459,6 +464,45 @@ export const renameKey = async (req, res) => {
   } catch (error) {
     console.error("Error in renameKey route:", error); // Log the error for debugging purposes
     return res.status(500).json({ success: false, error: "Internal server error" });
+  }
+}
+
+export async function getAllLeads(req, res) {
+  try {
+    const { limit, page } = req.query
+
+    const student = await studentModal.find();
+
+    if (limit && page) {
+      const starting = (page - 1) * limit
+      const ending = (page) * limit
+
+
+      const data = student.slice(starting, ending)
+
+      return res.status(200).json(
+        {
+          sucess: true,
+          msg: "Sucessfull Fetched",
+          data
+        }
+      )
+    }
+
+    return res.status(200).json(
+      {
+        sucess: true,
+        msg: "Sucessfull Fetched",
+        data: student
+      }
+    )
+
+  } catch (error) {
+    return res.status(500).json(
+      {
+        sucess: false,
+        message: error.message
+      })
   }
 }
 
