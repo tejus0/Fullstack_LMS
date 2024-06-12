@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeForm() {
 
 
-    const scriptElement = document.querySelector('script[src="https://www.ntechzy.in/api/v1/student-form/form.js"]');
-    // const scriptElement = document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]');
+    // const scriptElement = document.querySelector('script[src="https://www.ntechzy.in/api/v1/student-form/form.js"]');
+    const scriptElement = document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]');
   
     if (!scriptElement) {
         console.error('Script element with src="Form.js" not found.');
@@ -377,7 +377,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // form.reset();
     }
   
-  const url = 'https://www.ntechzy.in/api/v1/form'
+  // const url = 'https://www.ntechzy.in/api/v1/form'
+  const url = 'http://localhost:4000/api/v1/form'
   
   
   
