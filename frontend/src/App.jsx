@@ -12,6 +12,7 @@ import AssignAuto from './component/AssignAuto';
 import CounsellorDashboard from './pages/counsellor/Dashboard';
 import AdminDashboard from './pages/counsellor/Dashboard';
 import ForgetPass from './pages/Forgot-password/ForgetPass';
+import ShowAllleads from './pages/admin/showAllLeads';
 
 // import Table from './pages/Table';
 const App = () => {
@@ -31,7 +32,7 @@ const App = () => {
           <Route path='/student/:id' element={<StudentProfile />} />
           <Route path='/assignAuto' element={<AssignAuto />} />
           <Route path='/forgot-password' element={<ForgetPass />} />
-          <Route path='/showAllLeads' element={<showAllLeads />} />
+          <Route path='/showAllLeads' element={<ShowAllleads />} />
         </Routes>
 
       </BrowserRouter>

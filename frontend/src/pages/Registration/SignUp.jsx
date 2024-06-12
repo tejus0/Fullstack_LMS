@@ -15,6 +15,7 @@ import {
 const auth = getAuth(firebase);
 
 const SignUp = () => {
+  const baseUrl = import.meta.env.VITE_API;
   const [err, setErr] = useState([])
   const [verifyButton, setverifyButton] = useState(false)
   const [verifyOtp, setverifyOtp] = useState(false);
@@ -145,12 +146,12 @@ const SignUp = () => {
         <div className='flex md:flex-row flex-col gap-3 md:gap-10 '>
 
           <div className='w-full'>
-            <InputField label={"Employee ID"} value={formdata.employeeId} name="employeeId" onChange={handleChange} />
+            <InputField label={"User ID"} value={formdata.employeeId} name="employeeId" onChange={handleChange} />
             {err && <p className=" text-red-500">{err.employeeId}</p>}
           </div>
 
           <div className='w-full'>
-            <InputField label={"Enter username"} value={formdata.userName} name="userName" onChange={handleChange} />
+            <InputField label={"Enter Name"} value={formdata.userName} name="userName" onChange={handleChange} />
             {err && <p className=" text-red-500">{err.userName}</p>}
           </div>
 

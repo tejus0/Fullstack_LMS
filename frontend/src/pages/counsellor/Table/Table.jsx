@@ -35,14 +35,14 @@ const Table = () => {
   useEffect(() => {
     const fetchData = async () => {  //  this is wrong
       
-      // const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
-      //   console.log(err, "error");
-      // });
-      const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
+      const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
         console.log(err, "error");
       });
-      setUsers(response.data.data);
-      console.log(response.data.data,"data")
+      // const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
+      //   console.log(err, "error");
+      // });
+      setUsers(response.data);
+      console.log(response.data,"data")
     };
 
     fetchData();

@@ -311,7 +311,7 @@ export const verifyLogin = async (req, res) => {
         // );
         // console.log(token, "token in verify");
         if (res.status(201)) {
-          if (userData.is_admin === 1) {
+          if (userData.is_admin === 0) {
             return res.json({ status: "ok", data: userData._id, type: "admin" });
           } else {
             return res.json({ status: "ok", data: userData._id, type: "user" });
