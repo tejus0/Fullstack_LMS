@@ -1,5 +1,7 @@
 in the Backend folder ther are 4 folder :-
 
+
+for testing this is updated 
   config :- inside this folder there is 2 file one for database and another is Environment Variables (.env ) . After cloning this reps create and .env file inside config folder 
           <b>Note:- name of env should be .env only other wise config it in app.js file in backend </b>
 

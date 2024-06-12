@@ -180,7 +180,7 @@ const SignUp = () => {
           </div>
 
           {
-            verifyButton && <button type="button" onClick={onSignInSubmit}>
+            verifyButton && <button type="button" onClick={onSignInSubmit} className='bg-blue-500 w-[30%] m-auto p-2 text-white'>
               {otpVerified ? "Verified" : "Verify"}
             </button>
           }
@@ -205,7 +205,7 @@ const SignUp = () => {
               <label htmlFor="otp" className=' absolute -top-[11px] text-sm text-blue-500  left-2.5 peer-placeholder-shown:top-2.5 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-gray-600 transition-all  peer-placeholder-shown:text-base peer-placeholder-shown:font-normal px-2 bg-white' >Enter OTP</label>
             </div>
 
-            <button type="button" onClick={verifyCode}>
+            <button type="button" onClick={verifyCode} className='bg-blue-500'>
               Verify OTP
             </button>
 
