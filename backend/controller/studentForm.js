@@ -27,7 +27,7 @@ export async function createStudentProfile(req, res) {
 
       const isOtherResponseExist = user.otherResponse.find(x => x.courseSelected == data.courseSelected && x.preferredCollege == data.preferredCollege)
 
-      if (user.courseSelected == data.courseSelected && user.preferredCollege == data.preferredCollege || isOtherResponseExist) {
+      if (user.courseSelected == data.courseSelected && user.preferredCollege == data.preferredCollege) {
 
         const sameDetail = isMail ? "Email" : "Contact Number"
         return res.status(400).json(
@@ -41,6 +41,9 @@ export async function createStudentProfile(req, res) {
 
 
       const anotherResponse = {
+        guardianName:data.guardianName,
+        district:data.district,
+        state:data.state,
         name: data.name,
         whatsappNumber: data.whatsappNumber,
         courseSelected: data.courseSelected,
@@ -311,7 +314,7 @@ export const verifyLogin = async (req, res) => {
         // );
         // console.log(token, "token in verify");
         if (res.status(201)) {
-          if (userData.is_admin === 0) {
+          if (userData.is_admin === 1) {
             return res.json({ status: "ok", data: userData._id, type: "admin" });
           } else {
             return res.json({ status: "ok", data: userData._id, type: "user" });
