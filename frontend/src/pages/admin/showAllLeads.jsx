@@ -10,6 +10,9 @@ import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 
+
+
+
 const ShowAllleads = () => {
     // change made by Pankaj in line 22  and 40
 
@@ -22,6 +25,11 @@ const ShowAllleads = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
     const navigate = useNavigate();
 
+
+    // search 
+    const [search, setsearch] = useState("")
+    const [SearchBy, setSearchBy] = useState("name")
+    const [filter, setfilter] = useState([])
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -42,7 +50,8 @@ const ShowAllleads = () => {
                 console.log(err, "error");
             });
             setUsers(response.data.data);
-            console.log(response.data.data, "data")
+            setfilter(response.data.data)
+            console.log(response.data, "data")
         };
 
         fetchData();
@@ -91,6 +100,19 @@ const ShowAllleads = () => {
         navigate(`/login`);
     };
 
+    const handelChange = (e) => {
+        setsearch(e.target.value)
+
+        if (e.target.value === "") {
+            setUsers(filter)
+        }
+        else {
+            console.log("ok");
+            setUsers(paginatedUsers.filter((item) => item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())))
+
+        }
+    }
+
     const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 20)
 
@@ -99,7 +121,9 @@ const ShowAllleads = () => {
 
     return (
         <div>
+
             <Box className="flex">
+
                 <div>
                     <Tooltip title="Delete">
                         <IconButton onClick={handleLogout}>
@@ -108,7 +132,20 @@ const ShowAllleads = () => {
                     </Tooltip>
                 </div>
                 <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <div className="flex justify-end">
+                        <select value={SearchBy} onChange={(e) => setSearchBy(e.target.value)} className="border-2 border-black border-r-0 w-[100px]">
+                            {/* <option value="email">Email</option> */}
+                            <option value="name">Name</option>
+                            <option value="neetScore">neetScore</option>
+                            <option value="state">state</option>
+                            <option value="courseSelected">courseSelected</option>
+                            <option value="contactNumber">contactNumber</option>
+                        </select>
+                        <input type="text" placeholder="Search..." value={search} onChange={handelChange} />
+
+                    </div>
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" className="px-6 py-3">S. No.</th>
@@ -157,6 +194,7 @@ const ShowAllleads = () => {
                     />
                 </div>
             </Box >
+
         </div >
     );
 };

@@ -20,7 +20,14 @@ const Table = () => {
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
+  const [search, setsearch] = useState("")
+  const [SearchBy, setSearchBy] = useState("name")
+
+
+  const [filter, setfilter] = useState([])
+
   const navigate = useNavigate();
+
 
 
   const formatDate = (dateString) => {
@@ -34,7 +41,7 @@ const Table = () => {
 
   useEffect(() => {
     const fetchData = async () => {  //  this is wrong
-      
+
       const response = await axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch(err => {
         console.log(err, "error");
       });
@@ -42,7 +49,8 @@ const Table = () => {
       //   console.log(err, "error");
       // });
       setUsers(response.data);
-      console.log(response.data,"data")
+      setfilter(response.data)
+      console.log(response.data, "data")
     };
 
     fetchData();
@@ -91,8 +99,24 @@ const Table = () => {
     navigate(`/login`); // Adjust the path as needed
   };
 
-  const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 20)
+  // for search
+
+  const handelChange = (e) => {
+    setsearch(e.target.value)
+
+    if (e.target.value === "") {
+      setUsers(filter)
+    }
+    else {
+      console.log("ok");
+      setUsers(paginatedUsers.filter((item) => item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())))
+
+    }
+  }
+
+  var paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 0)
+
 
 
   // console.log(paginatedUsers);
@@ -108,6 +132,18 @@ const Table = () => {
           </Tooltip>
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+          <div className="flex justify-end">
+            <select value={SearchBy} onChange={(e) => setSearchBy(e.target.value)} className="border-2 border-black border-r-0 w-[100px]">
+              {/* <option value="email">Email</option> */}
+              <option value="name">Name</option>
+              <option value="neetScore">neetScore</option>
+              <option value="state">state</option>
+              <option value="courseSelected">courseSelected</option>
+              <option value="contactNumber">contactNumber</option>
+            </select>
+            <input type="text" placeholder="Search..." value={search} onChange={handelChange} />
+
+          </div>
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
