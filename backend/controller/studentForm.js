@@ -343,7 +343,7 @@ export const assignAuto = async (req, res) => {
   console.log(students, "stude");
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
-let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
+  let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
 
   // Assign counsellor ids in a round-robin fashion
   // let counsellorIndex = 0;
