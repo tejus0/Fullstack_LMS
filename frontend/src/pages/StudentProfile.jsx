@@ -50,7 +50,7 @@ const StudentProfile = ({counsellor_id}) => {
   };
 
   const handleGoToLeads = () => {
-    navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
+    studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
   };
 
   return (
