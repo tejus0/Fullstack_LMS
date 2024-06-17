@@ -172,16 +172,30 @@ export const getTodos = async (req, res) => {
 
 export const createTodos = async (req, res) => {
   console.log(req.body, "params");
+
   try {
+    const { _id, name, FollowUpStage } = req.body;
+
+    // Construct the update query based on FollowUpStage
+    let updateQuery = {};
+    updateQuery[`remarks.FollowUp1`] = {
+        subject: name,
+        updatedAt: new Date().toISOString() // Assuming updatedAt is a string field
+    };
+
+    // Perform the update operation
     const todo = await studentModal.updateOne(
-      { _id: req.body._id },
-      { $push: { 'remarks': { subject: req.body.name, updatedAt: new Date() } } });
+        { _id },
+        { $push: {
+  subject:"i am hereagain with Abhigya bhai5"},
+updatedAt: "hola" }
+    );
+
     res.status(200).json(todo);
-    // const todo = await studentModal.create(req.body);
-  } catch (error) {
-    res.status(500).json({ error: error });
-  }
-  // return res.status(404).json({ msg: "Sales data not found" });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+}
 };
 
 export const deleteTodos = async (req, res) => {

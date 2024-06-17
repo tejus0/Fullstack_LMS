@@ -33,8 +33,8 @@ const StudentProfile = ({ counsellor_id }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getTodos/${id}`);
-        setTodos(response.data[0].remarks);
+        // const response = await axios.get(`${baseUrl}/getTodos/${id}`);
+        // setTodos(response.data[0].remarks);
         const studData = await axios.get(`${baseUrl}/student/${id}`);
         setStudentData(studData.data.data[0]);
         // console.log(studentData.otherResponse,"data")
@@ -62,17 +62,18 @@ const StudentProfile = ({ counsellor_id }) => {
 
 
   const renderedComponent = useMemo(() => {
+    console.log(studentData._id,"han bhai sahi baat hai");
     switch (selectedValues) {
       case 'Option_one':
         return "Not Yet Implemented";
       case 'Follow_Ups':
-        return <FollowUpSteps />;
+        return <FollowUpSteps  studentId={studentData._id} />;
       case 'Option_two':
         return "Not yet implemented";
       default:
         return null; 
     }
-  }, [selectedValues]);
+  }, [selectedValues,studentData]);
 
   return (
     <>
