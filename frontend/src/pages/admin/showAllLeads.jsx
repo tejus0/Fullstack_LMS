@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 const ShowAllleads = () => {
     // change made by Pankaj in line 22  and 40
 
+
     const baseUrl = import.meta.env.VITE_API;
     const location = useLocation();
     // const id = location.state.id;
@@ -51,7 +52,7 @@ const ShowAllleads = () => {
             });
             setUsers(response.data.data);
             setfilter(response.data.data)
-            console.log(response.data, "data")
+            console.log(response.data, "data");
         };
 
         fetchData();
@@ -114,7 +115,7 @@ const ShowAllleads = () => {
     }
 
     const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-    const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 20)
+    const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 0)
 
 
     // console.log(paginatedUsers);
@@ -132,6 +133,7 @@ const ShowAllleads = () => {
                     </Tooltip>
                 </div>
                 <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+
                     <div className="flex justify-end">
                         <select value={SearchBy} onChange={(e) => setSearchBy(e.target.value)} className="border-2 border-black border-r-0 w-[100px]">
                             {/* <option value="email">Email</option> */}
@@ -144,6 +146,7 @@ const ShowAllleads = () => {
                         <input type="text" placeholder="Search..." value={search} onChange={handelChange} />
 
                     </div>
+                    
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
                         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

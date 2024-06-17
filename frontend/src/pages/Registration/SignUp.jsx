@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useState } from 'react'
 import InputField from '../../component/InputField'
 import validationSchema from '../../FormValidationSchema/SignupSchema'
@@ -14,6 +14,7 @@ import {
 
 const auth = getAuth(firebase);
 
+
 const SignUp = () => {
   const baseUrl = import.meta.env.VITE_API;
   const [err, setErr] = useState([])
@@ -21,7 +22,8 @@ const SignUp = () => {
   const [verifyOtp, setverifyOtp] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
-
+  
+  const navigate = useNavigate();
 
   const [formdata, setformdata] = useState({
     employeeId: '',

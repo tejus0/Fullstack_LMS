@@ -90,25 +90,28 @@ export async function createStudentProfile(req, res) {
 
 export async function getAllStudentProfile(req, res) {
   try {
-    const { limit, page } = req.query
+
+    // const { limit, page } = req.query
 
     const student = await studentModal.find();
+    console.log(student,"stud")
 
-    if (limit && page) {
-      const starting = (page - 1) * limit
-      const ending = (page) * limit
+    // if (limit && page) {
+    //   const starting = (page - 1) * limit
+    //   const ending = (page) * limit
 
 
-      const data = student.slice(starting, ending)
+    //   const data = student.slice(starting, ending)
 
-      return res.status(200).json(
-        {
-          sucess: true,
-          msg: "Sucessfull Fetched",
-          data
-        }
-      )
-    }
+    //   return res.status(200).json(
+    //     {
+    //       sucess: true,
+    //       msg: "Sucessfull Fetched",
+    //       data
+    //     }
+    //   )
+    // }
+
 
     return res.status(200).json(
       {
@@ -244,8 +247,8 @@ export const insertUser = async (req, res) => {
   console.log("Reached");
   try {
 
-    const emp_Id = req.body.employee_id;
-    const olduser = await counsellorModal.findOne({ employee_id: emp_Id });
+    const mobileNo = req.body.mobile;
+    const olduser = await counsellorModal.findOne({ mobile: mobileNo });
     if (olduser) {
       return res.send({ error: "User Exists !" });
     }
@@ -361,7 +364,7 @@ export const assignAuto = async (req, res) => {
       { $set: { 'assignedCouns': newCounsellorId } }
     );
     // }
-    console.log(student._id, "student id", student.assignedCouns, "assigned councellor")
+    console.log("student id :- ",student._id,"assigned councellor:- ",student.assignedCouns)
     counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
   }
 
@@ -393,67 +396,6 @@ export const getCounsellorDataList = async (req, res) => {
     res.status(500).json({ error: error });
   }
 }
-// function sendEmail({ recipient_email, OTP }) {
-//   return new Promise((resolve, reject) => {
-//     var transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.MY_EMAIL,
-//         pass: process.env.MY_PASSWORD,
-//       },
-//     });
-
-//     const mail_configs = {
-//       from: process.env.MY_EMAIL,
-//       to: recipient_email,
-//       subject: "KODING 101 PASSWORD RECOVERY",
-//       html: `<!DOCTYPE html>
-// <html lang="en" >
-// <head>
-//   <meta charset="UTF-8">
-//   <title>CodePen - OTP Email Template</title>
-
-
-// </head>
-// <body>
-// <!-- partial:index.partial.html -->
-// <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-//   <div style="margin:50px auto;width:70%;padding:20px 0">
-//     <div style="border-bottom:1px solid #eee">
-//       <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Koding 101</a>
-//     </div>
-//     <p style="font-size:1.1em">Hi,</p>
-//     <p>Thank you for choosing Koding 101. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
-//     <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
-//     <p style="font-size:0.9em;">Regards,<br />Koding 101</p>
-//     <hr style="border:none;border-top:1px solid #eee" />
-//     <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-//       <p>Koding 101 Inc</p>
-//       <p>1600 Amphitheatre Parkway</p>
-//       <p>California</p>
-//     </div>
-//   </div>
-// </div>
-// <!-- partial -->
-
-// </body>
-// </html>`,
-//     };
-//     transporter.sendMail(mail_configs, function (error, info) {
-//       if (error) {
-//         console.log(error);
-//         return reject({ message: `An error has occured` });
-//       }
-//       return resolve({ message: "Email sent succesfuly" });
-//     });
-//   });
-// }
-
-// export const SendRecoveryMail=  (req, res) => {
-//   sendEmail(req.body)
-//     .then((response) => res.send(response.message))
-//     .catch((error) => res.status(500).send(error.message));
-// };
 
 export const renameKey = async (req, res) => {
   try {
@@ -473,39 +415,66 @@ export const renameKey = async (req, res) => {
 export async function getAllLeads(req, res) {
   try {
     const { limit, page } = req.query
+  
+  const student = await studentModal.find();
 
-    const student = await studentModal.find();
-
-    if (limit && page) {
-      const starting = (page - 1) * limit
-      const ending = (page) * limit
+if (limit && page) {
+  const starting = (page - 1) * limit
+const ending = (page) * limit
 
 
-      const data = student.slice(starting, ending)
+const data = student.slice(starting, ending)
 
-      return res.status(200).json(
-        {
-          sucess: true,
-          msg: "Sucessfull Fetched",
-          data
+return res.status(200).json(
+  {
+    sucess: true,
+  msg: "Sucessfull Fetched",
+data
         }
       )
     }
+  
+  return res.status(200).json(
+    {
+      sucess: true,
+    msg: "Sucessfull Fetched",
+  data: student
+}
+)
 
-    return res.status(200).json(
-      {
-        sucess: true,
-        msg: "Sucessfull Fetched",
-        data: student
-      }
-    )
-
-  } catch (error) {
-    return res.status(500).json(
-      {
+} catch (error) {
+  return res.status(500).json(
+    {
         sucess: false,
         message: error.message
       })
   }
 }
 
+export const cleatAllAssignedCouns = async (req, res) => {
+  try {
+    // Find all students
+    const students = await studentModal.find({});
+
+    // Iterate over each document and update it
+    for (let i = 0; i < students.length; i++) {
+      const student = students[i];
+      // Update the document to unset the key
+      await studentModal.findOneAndUpdate(
+        { _id: student._id },
+        { $set: { assignedCouns: '' } }
+      );
+    }
+
+    console.log('Updated students with counsellor ids successfully.');
+
+    // Optionally, print a message indicating the operation is complete
+    // console.log("Cleared values of key from all documents.");
+
+    // Return a success message
+    return res.status(200).json({ success: true, message: 'Assigned counsellors cleared successfully.' });
+  } catch (error) {
+    console.error("Error in resetting assigned Couns:", error); // Log the error for debugging purposes
+    return res.status(500).json({ success: false, error: "Internal server error" });
+  }
+}
