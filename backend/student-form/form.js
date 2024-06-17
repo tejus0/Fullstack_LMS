@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // createField(form, { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       // createField(form, { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
       
-      if (window.location.hostname === 'ntechzy.in') {
+      if (window.location.hostname === 'ntechzy.in' || window.location.hostname === 'www.ntechzy.in') {
         createField(form, { labelText: 'Preferred College:', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: true });
     }
     
@@ -364,6 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
           sourceId: sourceId
       };
     
+      console.log(formData);
     
       if (formData.courseSelection === "Select Course") {
           alert("Please select a course.");

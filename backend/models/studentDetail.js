@@ -119,13 +119,13 @@ const otherResponse = new mongoose.Schema({
 
     courseSelected: {
         type: String,
-        required: [true, "Please Selct Course "]
+        required: [true, "Please Select Course "]
     },
 
     preferredCollege: {
         type: String,
         default: "",
-        required: [true, "Please Selct Preffred College "]
+        required: [true, "Please Select Preferred College "]
     },
 
     source: {
@@ -209,13 +209,13 @@ const studentDetailSchema = new mongoose.Schema(
 
         courseSelected: {
             type: String,
-            required: [true, "Please Selct Course "]
+            required: [true, "Please Select Course "]
         },
 
         preferredCollege: {
             type: String,
             default: "",
-            required: [true, "Please Selct Preffred College "]
+            required: [true, "Please Select Preferred College "]
         },
 
         source: {
