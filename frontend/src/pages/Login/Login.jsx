@@ -104,7 +104,7 @@ function Login() {
         mobile: mobileInput,
         password,
       });
-
+        console.log(response.data,"arnav")
       if (response.data.status === "ok") {
         toast.success("Login Successful", { position: "top-right" });
         window.localStorage.setItem("token", response.data.data);
@@ -112,10 +112,14 @@ function Login() {
         window.localStorage.setItem("mobile", mobileInput);
         window.localStorage.setItem("user-type", response.data.type);
 
+        if(response.data.token==="6672c48614be596e4ccb3b39"){
+          navigate("/showArnavAllLeads",{ state: { id: response.data.data } })
+        }
         if (response.data.type === "user") {
-          navigate(`/counsellor-profile/${response.data.data}`,{state:{id:response.data.data}});
-        } else {
-          navigate("/admin-page");
+          navigate(`/counsellor-profile/${response.data.data}`, { state: { id: response.data.data } });
+        } 
+        else {
+          navigate("/showAllLeads");
         }
       } else {
         toast.error(response.data.error);
@@ -145,6 +149,9 @@ function Login() {
   // }
 
   return (
+    <>
+    <div className="form_container_NT" id="form_container_NT">
+      </div>
     <div
       style={{
         backgroundImage: `url(${bgimg})`,
@@ -198,7 +205,7 @@ function Login() {
                   >
                     <Grid container spacing={1}>
                       <Grid item xs={12} sx={{ ml: "3em", mr: "3em" }}>
-                        
+
                         <TextField
                           label="Mobile Number"
                           fullWidth
@@ -281,7 +288,7 @@ function Login() {
                             Not registered yet?{" "}
                             <span
                               style={{ color: "#beb4fb", cursor: "pointer" }}
-                              onClick={() => navigate("/register")}
+                              onClick={() => navigate("/registerationfinal")}
                             >
                               Create an Account
                             </span>
@@ -297,6 +304,7 @@ function Login() {
         </Grid>
       </Box>
     </div>
+    </>
   );
 }
 

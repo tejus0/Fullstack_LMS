@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 
 
 
-const ShowAllleads = () => {
+const ArnavLeads = () => {
     // change made by Pankaj in line 22  and 40
 
 
@@ -47,11 +47,11 @@ const ShowAllleads = () => {
             //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
             //     console.log(err, "error");
             //   });
-            const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
+            const response = await axios.get(`${baseUrl}/getCounsellorDataList/6672c48614be596e4ccb3b39`).catch(err => {
                 console.log(err, "error");
             });
-            setUsers(response.data.data);
-            setfilter(response.data.data)
+            setUsers(response.data);
+            setfilter(response.data)
             console.log(response.data, "data");
         };
 
@@ -202,4 +202,4 @@ const ShowAllleads = () => {
     );
 };
 
-export default ShowAllleads;
+export default ArnavLeads

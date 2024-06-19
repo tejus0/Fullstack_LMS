@@ -27,7 +27,7 @@ export async function createStudentProfile(req, res) {
 
       const isOtherResponseExist = user.otherResponse.find(x => x.courseSelected == data.courseSelected && x.preferredCollege == data.preferredCollege)
 
-      if (user.courseSelected == data.courseSelected && user.preferredCollege == data.preferredCollege || isOtherResponseExist) {
+      if (user.courseSelected == data.courseSelected && user.preferredCollege == data.preferredCollege) {
 
         const sameDetail = isMail ? "Email" : "Contact Number"
         return res.status(400).json(
@@ -41,6 +41,9 @@ export async function createStudentProfile(req, res) {
 
 
       const anotherResponse = {
+        guardianName:data.guardianName,
+        district:data.district,
+        state:data.state,
         name: data.name,
         whatsappNumber: data.whatsappNumber,
         courseSelected: data.courseSelected,
@@ -87,25 +90,28 @@ export async function createStudentProfile(req, res) {
 
 export async function getAllStudentProfile(req, res) {
   try {
-    const { limit, page } = req.query
+
+    // const { limit, page } = req.query
 
     const student = await studentModal.find();
+    console.log(student,"stud")
 
-    if (limit && page) {
-      const starting = (page - 1) * limit
-      const ending = (page) * limit
+    // if (limit && page) {
+    //   const starting = (page - 1) * limit
+    //   const ending = (page) * limit
 
 
-      const data = student.slice(starting, ending)
+    //   const data = student.slice(starting, ending)
 
-      return res.status(200).json(
-        {
-          sucess: true,
-          msg: "Sucessfull Fetched",
-          data
-        }
-      )
-    }
+    //   return res.status(200).json(
+    //     {
+    //       sucess: true,
+    //       msg: "Sucessfull Fetched",
+    //       data
+    //     }
+    //   )
+    // }
+
 
     return res.status(200).json(
       {
@@ -153,6 +159,7 @@ export async function getStudentProfile(req, res) {
 export const getTodos = async (req, res) => {
   //    const todos = await Todo.find();
   const id = req.params.id;
+  console.log(id,"id in gettodos")
   try {
     const todos = await studentModal.find({ _id: id });
     if (!todos) {
@@ -166,16 +173,40 @@ export const getTodos = async (req, res) => {
 
 export const createTodos = async (req, res) => {
   console.log(req.body, "params");
+
   try {
-    const todo = await studentModal.updateOne(
-      { _id: req.body._id },
-      { $push: { 'remarks': { subject: req.body.name, updatedAt: new Date() } } });
-    res.status(200).json(todo);
-    // const todo = await studentModal.create(req.body);
-  } catch (error) {
-    res.status(500).json({ error: error });
+    const { _id, name, followUpStage } = req.body;
+
+    // Construct the update query based on FollowUpStage
+    // let updateQuery = {};
+    // updateQuery[`remarks.FollowUp1`] = {
+    //     subject: name,
+    //     updatedAt: new Date().toISOString() // Assuming updatedAt is a string field
+    // };
+
+    // Perform the update operation
+//     const todo = await studentModal.updateOne(
+//         { _id },
+//         { $push: {
+//   subject:"i am hereagain with Abhigya bhai5"},
+// updatedAt: "hola" }
+//     );
+
+const todo = await studentModal.updateOne(
+  { "_id": _id },
+  { 
+    $push: { 
+      [`remarks.${followUpStage}`]: { "subject": name, "updatedAt": new Date()} 
+    } 
   }
-  // return res.status(404).json({ msg: "Sales data not found" });
+);
+
+    
+    res.status(200).json(todo);
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+}
 };
 
 export const deleteTodos = async (req, res) => {
@@ -241,8 +272,8 @@ export const insertUser = async (req, res) => {
   console.log("Reached");
   try {
 
-    const emp_Id = req.body.employee_id;
-    const olduser = await counsellorModal.findOne({ employee_id: emp_Id });
+    const mobileNo = req.body.mobile;
+    const olduser = await counsellorModal.findOne({ mobile: mobileNo });
     if (olduser) {
       return res.send({ error: "User Exists !" });
     }
@@ -343,7 +374,7 @@ export const assignAuto = async (req, res) => {
   console.log(students, "stude");
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
-let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
+  let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
 
   // Assign counsellor ids in a round-robin fashion
   // let counsellorIndex = 0;
@@ -358,7 +389,7 @@ let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellor
       { $set: { 'assignedCouns': newCounsellorId } }
     );
     // }
-    console.log(student._id, "student id", student.assignedCouns, "assigned councellor")
+    console.log("student id :- ",student._id,"assigned councellor:- ",student.assignedCouns)
     counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
   }
 
@@ -377,6 +408,18 @@ export const getCounsellorDataList = async (req, res) => {
   const id = req.params.id;
   console.log(id, "in SalesList");
   try {
+    if(id=="6672c48614be596e4ccb3b39"){
+      const studentList = await studentModal.find({ source: "fb_arnav" });
+          // add here 
+          // console.log(sales[3].remarks);
+      
+          if (!studentList) {
+            return res.status(404).json({ msg: "Students data not found" });
+          }
+          res.status(200).json(studentList);
+          return;
+    }
+    else{
     const sales = await studentModal.find({ assignedCouns: id });
     // add here 
     // console.log(sales[3].remarks);
@@ -386,123 +429,110 @@ export const getCounsellorDataList = async (req, res) => {
     }
     res.status(200).json(sales);
     return;
+  }
   } catch (error) {
     res.status(500).json({ error: error });
   }
 }
-// function sendEmail({ recipient_email, OTP }) {
-//   return new Promise((resolve, reject) => {
-//     var transporter = nodemailer.createTransport({
-//       service: "gmail",
-//       auth: {
-//         user: process.env.MY_EMAIL,
-//         pass: process.env.MY_PASSWORD,
-//       },
-//     });
-
-//     const mail_configs = {
-//       from: process.env.MY_EMAIL,
-//       to: recipient_email,
-//       subject: "KODING 101 PASSWORD RECOVERY",
-//       html: `<!DOCTYPE html>
-// <html lang="en" >
-// <head>
-//   <meta charset="UTF-8">
-//   <title>CodePen - OTP Email Template</title>
-
-
-// </head>
-// <body>
-// <!-- partial:index.partial.html -->
-// <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-//   <div style="margin:50px auto;width:70%;padding:20px 0">
-//     <div style="border-bottom:1px solid #eee">
-//       <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Koding 101</a>
-//     </div>
-//     <p style="font-size:1.1em">Hi,</p>
-//     <p>Thank you for choosing Koding 101. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
-//     <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
-//     <p style="font-size:0.9em;">Regards,<br />Koding 101</p>
-//     <hr style="border:none;border-top:1px solid #eee" />
-//     <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-//       <p>Koding 101 Inc</p>
-//       <p>1600 Amphitheatre Parkway</p>
-//       <p>California</p>
-//     </div>
-//   </div>
-// </div>
-// <!-- partial -->
-
-// </body>
-// </html>`,
-//     };
-//     transporter.sendMail(mail_configs, function (error, info) {
-//       if (error) {
-//         console.log(error);
-//         return reject({ message: `An error has occured` });
-//       }
-//       return resolve({ message: "Email sent succesfuly" });
-//     });
-//   });
-// }
-
-// export const SendRecoveryMail=  (req, res) => {
-//   sendEmail(req.body)
-//     .then((response) => res.send(response.message))
-//     .catch((error) => res.status(500).send(error.message));
-// };
 
 export const renameKey = async (req, res) => {
   try {
     // Assuming `studentModal` is your Mongoose model for the student collection
     await studentModal.updateMany({}, { $rename: { preffredCollege: "preferredCollege" } }, { strict: false });
-
+    
     // Assuming `students` is defined somewhere in your code, otherwise, you need to fetch it from the database
     const students = await studentModal.find({});
-
+    
     return res.status(200).json({ success: true, message: "Key renamed successfully", students });
   } catch (error) {
     console.error("Error in renameKey route:", error); // Log the error for debugging purposes
     return res.status(500).json({ success: false, error: "Internal server error" });
   }
-}
+  }
+  
+  export async function getAllLeads(req, res) {
+    try {
+      const { limit, page } = req.query
+      
+      const student = await studentModal.find();
 
-export async function getAllLeads(req, res) {
-  try {
-    const { limit, page } = req.query
+      if (limit && page) {
+        const starting = (page - 1) * limit
+        const ending = (page) * limit
+        
 
-    const student = await studentModal.find();
-
-    if (limit && page) {
-      const starting = (page - 1) * limit
-      const ending = (page) * limit
-
-
-      const data = student.slice(starting, ending)
-
+        const data = student.slice(starting, ending)
+        
+return res.status(200).json(
+  {
+    sucess: true,
+  msg: "Sucessfull Fetched",
+  data
+  }
+      )
+      }
+  
       return res.status(200).json(
         {
           sucess: true,
-          msg: "Sucessfull Fetched",
-          data
-        }
-      )
+    msg: "Sucessfull Fetched",
+    data: student
     }
-
-    return res.status(200).json(
-      {
-        sucess: true,
-        msg: "Sucessfull Fetched",
-        data: student
-      }
     )
-
-  } catch (error) {
-    return res.status(500).json(
-      {
-        sucess: false,
-        message: error.message
+    
+} catch (error) {
+  return res.status(500).json(
+    {
+      sucess: false,
+      message: error.message
       })
-  }
-}
+      }
+      }
+      
+      export const cleatAllAssignedCouns = async (req, res) => {
+        try {
+    // Find all students
+    const students = await studentModal.find({});
+    
+    // Iterate over each document and update it
+    for (let i = 0; i < students.length; i++) {
+      const student = students[i];
+      // Update the document to unset the key
+      await studentModal.findOneAndUpdate(
+        { _id: student._id },
+        { $set: { assignedCouns: '' } }
+        );
+        }
+        
+        console.log('Updated students with counsellor ids successfully.');
+        
+    // Optionally, print a message indicating the operation is complete
+    // console.log("Cleared values of key from all documents.");
+    
+    // Return a success message
+    return res.status(200).json({ success: true, message: 'Assigned counsellors cleared successfully.' });
+    } catch (error) {
+      console.error("Error in resetting assigned Couns:", error); // Log the error for debugging purposes
+      return res.status(500).json({ success: false, error: "Internal server error" });
+      }
+      }
 
+
+      
+      export const getArnavCounsellorDataList = async (req, res) => {
+        const id = req.params.id;
+        console.log(id, "in ArnavSalesList");
+        try {
+          const studentList = await studentModal.find({ source: "fb_arnav" });
+          // add here 
+          // console.log(sales[3].remarks);
+      
+          if (!studentList) {
+            return res.status(404).json({ msg: "Students data not found" });
+          }
+          res.status(200).json(studentList);
+          return;
+        } catch (error) {
+          res.status(500).json({ error: error });
+        }
+      }

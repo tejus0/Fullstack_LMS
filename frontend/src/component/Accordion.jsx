@@ -6,6 +6,15 @@ import Typography from '@mui/material/Typography';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const dateOptions = { year: "numeric", month: "long", day: "numeric" };
+  const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+  const formattedDate = date.toLocaleDateString(undefined, dateOptions);
+  const formattedTime = date.toLocaleTimeString(undefined, timeOptions);
+  return `${formattedDate}, ${formattedTime}`;
+};
+
 export default function AccordionExpandIcon({otherResp}) {
     console.log(otherResp,"response")
   return (
@@ -29,7 +38,7 @@ export default function AccordionExpandIcon({otherResp}) {
                   <p>Preffered College: {resp.preferredCollege}</p>
                   <p>Contact Number: {resp.contactNumber}</p>
                   <p>Email: {resp.email}</p>
-                  <p>Submitted At: {resp.submitedAt}</p>
+                  <p>Submitted At: {formatDate(resp.submitedAt)}</p>
         </AccordionDetails>
       </Accordion>
       ))}

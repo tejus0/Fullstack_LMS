@@ -1,150 +1,250 @@
-import * as React from 'react';
-// import Avatar from '@mui/material/Avatar';
-// import Button from '@mui/material/Button';
-// import CssBaseline from '@mui/material/CssBaseline';
-// import TextField from '@mui/material/TextField';
-// import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
-// import Link from '@mui/material/Link';
-// import Grid from '@mui/material/Grid';
-// import Box from '@mui/material/Box';
-// import Typography from '@mui/material/Typography';
-// import Container from '@mui/material/Container';
-import { Avatar, Box, Button, Checkbox, Container, CssBaseline, FormControlLabel, Grid, Link, TextField, ThemeProvider, Typography, createTheme } from '@mui/material';
-import { LockOutlined } from '@mui/icons-material';
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+import { useState } from 'react'
+import InputField from '../../component/InputField'
+import validationSchema from '../../FormValidationSchema/SignupSchema'
+import firebase from "../../component/firebase_config";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const auth = getAuth(firebase);
 
-// TODO remove, this demo shouldn't need to reset the theme.
 
-const defaultTheme = createTheme();
+const SignUp = () => {
+  const baseUrl = import.meta.env.VITE_API;
+  const [err, setErr] = useState([])
+  const [verifyButton, setverifyButton] = useState(false)
+  const [verifyOtp, setverifyOtp] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
+  
+  const navigate = useNavigate();
 
-export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  const [formdata, setformdata] = useState({
+    employeeId: '',
+    userName: '',
+    emailAddress: '',
+    mobileNumber: '',
+    password: '',
+    confirmPassword: '',
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setformdata({ ...formdata, [name]: value })
+  }
+
+  // for sending otp to user
+  const changeMobile = (e) => {
+    setformdata({ ...formdata, mobileNumber: e.target.value });
+    if (e.target.value.length === 10) {
+      setverifyButton(true);
+    } else {
+      setverifyButton(false);
+    }
   };
 
+  const onCaptchaVerify = () => {
+    console.log("ok");
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      auth,
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          onSignInSubmit();
+        },
+      }
+    );
+    console.log("ok one");
+  };
+
+  const onSignInSubmit = () => {
+
+    onCaptchaVerify();
+    console.log("ok");
+    console.log(formdata);
+    const phoneNumber = "+91" + formdata.mobileNumber;
+    const appVerifier = window.recaptchaVerifier;
+
+    signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResult = confirmationResult;
+        alert("OTP Sent Successfully !");
+        setverifyOtp(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const verifyCode = () => {
+    window.confirmationResult
+      .confirm(otp)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+        alert("Verification Done !");
+        setOtpVerified(true);
+        setverifyOtp(false);
+      })
+      .catch((error) => {
+        alert("Invalid OTP !");
+      });
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault()
+    try {
+      await validationSchema.validate(formdata, { abortEarly: false })
+      setErr([])
+      if (!otpVerified) {
+        alert("Please verify your mobile number.");
+        return;
+      }
+
+      // calling api to store data  
+      await axios
+        .post(`${baseUrl}/register`, {
+          employee_id: formdata.employeeId,
+          username: formdata.userName,
+          email: formdata.emailAddress,
+          mobile: formdata.mobileNumber,
+          password: formdata.password,
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            if (response.data.error === "User Exists !") {
+              alert("User already exists.");
+            } else {
+              alert("Registration successful!");
+              navigate("/login");
+            }
+          }
+        })
+        .catch((error) => console.log(error.message));
+    } catch (error) {
+      const newError = {}
+      error.inner.forEach(elem => {
+        newError[elem.path] = elem.message
+      });
+      setErr(newError)
+    }
+  }
+
+
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlined />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid item xs={12}>
-              <TextField
-            type="text"
-            name="eId"
-            label="Employee ID"
-            fullWidth
-            id="standard-basic"
-            variant="standard"
-            sx={{ width: "100%" }}
-            value={employee_id}
-            onChange={(e) => setEId(e.target.value)}
-            error={employeeIdError}
-            size="small"
-          />
-          </Grid>
-          <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
-  );
+    <div className=' rounded-lg gap-8 flex flex-col w-full justify-center z-[999] max-w-[12000px]'>
+      <form onSubmit={handleSignup} className='flex flex-col justify-center m-auto w-full rounded-lg md:w-[50%] gap-8 bg-white p-10'>
+        <div id="recaptcha-container"></div>
+
+        {/* name & id field */}
+        <div className='flex md:flex-row flex-col gap-3 md:gap-10 '>
+
+          <div className='w-full'>
+            <InputField label={"User ID"} value={formdata.employeeId} name="employeeId" onChange={handleChange} />
+            {err && <p className=" text-red-500">{err.employeeId}</p>}
+          </div>
+
+          <div className='w-full'>
+            <InputField label={"Enter Name"} value={formdata.userName} name="userName" onChange={handleChange} />
+            {err && <p className=" text-red-500">{err.userName}</p>}
+          </div>
+
+        </div>
+
+        {/* for email  */}
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Enter Email "} value={formdata.emailAddress} name="emailAddress" onChange={handleChange} />
+          {err && <p className=" text-red-500">{err.emailAddress}</p>}
+        </div>
+
+
+        {/* for mobile number */}
+        <div className='flex flex-col w-full gap-3'>
+          <div className='flex flex-col w-full gap-3 relative'>
+
+            <input type="text"
+              id="Mobile Number"
+              name="mobileNumber"
+              className=' p-3 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400 '
+              placeholder="Mobile Number"
+              value={formdata.mobileNumber}
+              onChange={changeMobile}
+            />
+
+            <label htmlFor="Mobile Number" className=' absolute -top-[11px] text-sm text-blue-500  left-2.5 peer-placeholder-shown:top-2.5 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-gray-600 transition-all  peer-placeholder-shown:text-base peer-placeholder-shown:font-normal px-2 bg-white' >Mobile Number</label>
+          </div>
+
+          {
+            verifyButton && <button type="button" onClick={onSignInSubmit} className='bg-blue-500 w-[30%] m-auto p-2 text-white'>
+              {otpVerified ? "Verified" : "Verify"}
+            </button>
+          }
+          {err && <p className=' text-red-500'>{err.mobileNumber}</p>}
+        </div>
+
+        {/* for otp  */}
+
+        {
+          verifyOtp &&
+          <div className='flex flex-col w-full gap-3'>
+            <div className='flex flex-col w-full gap-3 relative'>
+              <input type="text"
+                id="otp"
+                name="otp"
+                className=' p-3 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400 '
+                placeholder="Mobile Number"
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+
+              <label htmlFor="otp" className=' absolute -top-[11px] text-sm text-blue-500  left-2.5 peer-placeholder-shown:top-2.5 peer-placeholder-shown:bg-transparent peer-placeholder-shown:text-gray-600 transition-all  peer-placeholder-shown:text-base peer-placeholder-shown:font-normal px-2 bg-white' >Enter OTP</label>
+            </div>
+
+            <button type="button" onClick={verifyCode} className='bg-blue-500'>
+              Verify OTP
+            </button>
+
+          </div>
+        }
+
+
+        {/* for passsword */}
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Enter Password"} value={formdata.password} name="password" onChange={handleChange} />
+
+          {err && <p className=' text-red-500'>{err.password}</p>}
+        </div>
+
+        {/* for confirm password */}
+        <div className='flex flex-col w-full gap-3'>
+          <InputField label={"Confirm Password"} value={formdata.confirmPassword} name="confirmPassword" onChange={handleChange} />
+
+          {err && <p className=' text-red-500'>{err.confirmPassword}</p>}
+        </div>
+
+        <button type='submit' className='border-2 p-2 bg-blue-500 text-white text-lg'>
+          Sign Up
+        </button>
+
+
+        <Link to="/login" className='text-blue-500 font-normal flex justify-end text-lg'>
+          Already have an account? Sign in
+        </Link>
+
+        <div className='flex justify-center'>
+          Copyright ©<Link to="" className='mx-2 text-blue-700'> Ntechzy </Link> 2024.
+        </div>
+      </form>
+    </div>
+  )
 }
+
+export default SignUp

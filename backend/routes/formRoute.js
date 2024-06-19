@@ -1,5 +1,7 @@
 import express from "express";
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,tableFilter} from "../controller/studentForm.js";
+
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList} from "../controller/studentForm.js";
+
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
 const router = express.Router();
@@ -20,6 +22,10 @@ router.route("/autoassign").post(assignAuto);
 router.route("/renameKey").post(renameKey);
 
 router.route("/getCounsellorDataList/:id").get(getCounsellorDataList);
+router.route("/cleatAllAssignedCouns").get(cleatAllAssignedCouns);
+
+// router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
+
 
 router.route("/").get(tableFilter);
 

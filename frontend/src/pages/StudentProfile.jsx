@@ -6,10 +6,15 @@ import Todolist from "../component/FollowUp/TodoList";
 import Todoform from "../component/FollowUp/Todoform";
 import { Box, Paper, Button } from "@mui/material";
 import SimpleAccordion from '../component/Accordion';
+import SideNavigation from '../component/FollowUp/SideNavigation';
+import { useMemo } from 'react';
+import FollowUpSteps from '../component/FollowUp/FollowUpSteps';
 
-const StudentProfile = ({counsellor_id}) => {
+const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
   const [studentData, setStudentData] = useState([]);
+
+  const [selectedValues, setselectedValues] = useState('Option_one')
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
@@ -28,11 +33,11 @@ const StudentProfile = ({counsellor_id}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getTodos/${id}`);
-        setTodos(response.data[0].remarks);
+        // const response = await axios.get(`${baseUrl}/getTodos/${id}`);
+        // setTodos(response.data[0].remarks);
         const studData = await axios.get(`${baseUrl}/student/${id}`);
         setStudentData(studData.data.data[0]);
-        console.log(studentData.otherResponse,"data")
+        // console.log(studentData.otherResponse,"data")
       } catch (e) {
         console.log(e);
       }
@@ -50,8 +55,25 @@ const StudentProfile = ({counsellor_id}) => {
   };
 
   const handleGoToLeads = () => {
-    navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
+    studentData.source=="fb_arnav"? navigate("/showArnavAllLeads",{state:{id:"6672c48614be596e4ccb3b39"}}): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
   };
+
+  // follow up option
+
+
+  const renderedComponent = useMemo(() => {
+    console.log(studentData._id,"han bhai sahi baat hai");
+    switch (selectedValues) {
+      case 'Option_one':
+        return "Not Yet Implemented";
+      case 'Follow_Ups':
+        return <FollowUpSteps  studentId={studentData._id} />;
+      case 'Option_two':
+        return "Not yet implemented";
+      default:
+        return null; 
+    }
+  }, [selectedValues,studentData]);
 
   return (
     <>
@@ -96,16 +118,30 @@ const StudentProfile = ({counsellor_id}) => {
               {studentData.otherResponse && studentData.otherResponse.length > 0 ? (
                 <SimpleAccordion otherResp={studentData.otherResponse} />
               ) : (
+                // <div id="form_container_NT"></div>
                 <p>No data</p>
               )}
             </div>
           </div>
         </div>
-        <div className='flex justify-center'>
+        {/* todo */}
+        {/* <div className='flex justify-center'>
+
           <Paper style={{ maxHeight: "50vh", overflow: 'auto' }} elevation={20}>
             <Todoform addTodo={addTodo} id={studentData._id} />
             <Todolist todos={todos} />
           </Paper>
+        </div> */}
+
+
+        {/* folow up  */}
+        <div className='flex md:flex-row flex-col gap-[50px] justify-between px-5 h-full'>
+          <div className='flex-initial w-56'>
+            <SideNavigation selectedValues={selectedValues} setselectedValues={setselectedValues} />
+          </div>
+          <div className='flex-1 overflow-hidden'>
+            {renderedComponent}
+          </div>
         </div>
       </Box>
     </>

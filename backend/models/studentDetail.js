@@ -119,13 +119,13 @@ const otherResponse = new mongoose.Schema({
 
     courseSelected: {
         type: String,
-        required: [true, "Please Selct Course "]
+        required: [true, "Please Select Course "]
     },
 
     preferredCollege: {
         type: String,
         default: "",
-        required: [true, "Please Selct Preffred College "]
+        required: [true, "Please Select Preferred College "]
     },
 
     source: {
@@ -209,13 +209,13 @@ const studentDetailSchema = new mongoose.Schema(
 
         courseSelected: {
             type: String,
-            required: [true, "Please Selct Course "]
+            required: [true, "Please Select Course "]
         },
 
         preferredCollege: {
             type: String,
             default: "",
-            required: [true, "Please Selct Preffred College "]
+            required: [true, "Please Select Preferred College "]
         },
 
         source: {
@@ -240,17 +240,40 @@ const studentDetailSchema = new mongoose.Schema(
             required: [false, 'Rank is required'],
             default: ""
         },
-        remarks: [
+        remarks: 
             {
-                type: Object,
+
+                FollowUp1:[{
+                    type: Object,
                 subject: {
                     type: String,
                     required: true
                 },
                 updatedAt: { type: String },
                 default: {},
+                }],
+                FollowUp2:[{
+                    type: Object,
+                subject: {
+                    type: String,
+                    required: true
+                },
+                updatedAt: { type: String },
+                default: {},
+                }],
+                FollowUp3:[{
+                    type: Object,
+                subject: {
+                    type: String,
+                    required: true
+                },
+        //         additionalOption: newItem.additionalOption,
+        //   preBookingAmount: newItem.preBookingAmount,
+                updatedAt: { type: String },
+                default: {},
+                }]
             }
-        ],
+        ,
         assignedCouns:
 
         {
