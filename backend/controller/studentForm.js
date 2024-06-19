@@ -408,6 +408,18 @@ export const getCounsellorDataList = async (req, res) => {
   const id = req.params.id;
   console.log(id, "in SalesList");
   try {
+    if(id=="6672c48614be596e4ccb3b39"){
+      const studentList = await studentModal.find({ source: "fb_arnav" });
+          // add here 
+          // console.log(sales[3].remarks);
+      
+          if (!studentList) {
+            return res.status(404).json({ msg: "Students data not found" });
+          }
+          res.status(200).json(studentList);
+          return;
+    }
+    else{
     const sales = await studentModal.find({ assignedCouns: id });
     // add here 
     // console.log(sales[3].remarks);
@@ -417,6 +429,7 @@ export const getCounsellorDataList = async (req, res) => {
     }
     res.status(200).json(sales);
     return;
+  }
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -426,61 +439,61 @@ export const renameKey = async (req, res) => {
   try {
     // Assuming `studentModal` is your Mongoose model for the student collection
     await studentModal.updateMany({}, { $rename: { preffredCollege: "preferredCollege" } }, { strict: false });
-
+    
     // Assuming `students` is defined somewhere in your code, otherwise, you need to fetch it from the database
     const students = await studentModal.find({});
-
+    
     return res.status(200).json({ success: true, message: "Key renamed successfully", students });
   } catch (error) {
     console.error("Error in renameKey route:", error); // Log the error for debugging purposes
     return res.status(500).json({ success: false, error: "Internal server error" });
   }
-}
-
-export async function getAllLeads(req, res) {
-  try {
-    const { limit, page } = req.query
+  }
   
-  const student = await studentModal.find();
+  export async function getAllLeads(req, res) {
+    try {
+      const { limit, page } = req.query
+      
+      const student = await studentModal.find();
 
-if (limit && page) {
-  const starting = (page - 1) * limit
-const ending = (page) * limit
+      if (limit && page) {
+        const starting = (page - 1) * limit
+        const ending = (page) * limit
+        
 
-
-const data = student.slice(starting, ending)
-
+        const data = student.slice(starting, ending)
+        
 return res.status(200).json(
   {
     sucess: true,
   msg: "Sucessfull Fetched",
-data
-        }
+  data
+  }
       )
-    }
+      }
   
-  return res.status(200).json(
-    {
-      sucess: true,
+      return res.status(200).json(
+        {
+          sucess: true,
     msg: "Sucessfull Fetched",
-  data: student
-}
-)
-
+    data: student
+    }
+    )
+    
 } catch (error) {
   return res.status(500).json(
     {
-        sucess: false,
-        message: error.message
+      sucess: false,
+      message: error.message
       })
-  }
-}
-
-export const cleatAllAssignedCouns = async (req, res) => {
-  try {
+      }
+      }
+      
+      export const cleatAllAssignedCouns = async (req, res) => {
+        try {
     // Find all students
     const students = await studentModal.find({});
-
+    
     // Iterate over each document and update it
     for (let i = 0; i < students.length; i++) {
       const student = students[i];
@@ -488,18 +501,38 @@ export const cleatAllAssignedCouns = async (req, res) => {
       await studentModal.findOneAndUpdate(
         { _id: student._id },
         { $set: { assignedCouns: '' } }
-      );
-    }
-
-    console.log('Updated students with counsellor ids successfully.');
-
+        );
+        }
+        
+        console.log('Updated students with counsellor ids successfully.');
+        
     // Optionally, print a message indicating the operation is complete
     // console.log("Cleared values of key from all documents.");
-
+    
     // Return a success message
     return res.status(200).json({ success: true, message: 'Assigned counsellors cleared successfully.' });
-  } catch (error) {
-    console.error("Error in resetting assigned Couns:", error); // Log the error for debugging purposes
-    return res.status(500).json({ success: false, error: "Internal server error" });
-  }
-}
+    } catch (error) {
+      console.error("Error in resetting assigned Couns:", error); // Log the error for debugging purposes
+      return res.status(500).json({ success: false, error: "Internal server error" });
+      }
+      }
+
+
+      
+      export const getArnavCounsellorDataList = async (req, res) => {
+        const id = req.params.id;
+        console.log(id, "in ArnavSalesList");
+        try {
+          const studentList = await studentModal.find({ source: "fb_arnav" });
+          // add here 
+          // console.log(sales[3].remarks);
+      
+          if (!studentList) {
+            return res.status(404).json({ msg: "Students data not found" });
+          }
+          res.status(200).json(studentList);
+          return;
+        } catch (error) {
+          res.status(500).json({ error: error });
+        }
+      }

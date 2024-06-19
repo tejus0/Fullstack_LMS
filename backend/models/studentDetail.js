@@ -267,6 +267,8 @@ const studentDetailSchema = new mongoose.Schema(
                     type: String,
                     required: true
                 },
+        //         additionalOption: newItem.additionalOption,
+        //   preBookingAmount: newItem.preBookingAmount,
                 updatedAt: { type: String },
                 default: {},
                 }]

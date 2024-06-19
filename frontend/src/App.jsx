@@ -12,6 +12,7 @@ import CounsellorDashboard from "./pages/counsellor/Dashboard";
 // import AdminDashboard from './pages/counsellor/Dashboard';
 import ForgetPass from "./pages/Forgot-password/ForgetPass";
 import ShowAllleads from "./pages/admin/showAllLeads";
+import ArnavLeads from "./pages/arnav/arnavLeads";
 
 // import Table from './pages/Table';
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/assignAuto" element={<AssignAuto />} />
           <Route path="/forgot-password" element={<ForgetPass />} />
           <Route path="/showAllLeads" element={<ShowAllleads />} />
+          <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
         </Routes>
       </BrowserRouter>
     </div>

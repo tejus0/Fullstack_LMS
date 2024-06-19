@@ -112,9 +112,13 @@ function Login() {
         window.localStorage.setItem("mobile", mobileInput);
         window.localStorage.setItem("user-type", response.data.type);
 
+        if(response.data.token==="6672c48614be596e4ccb3b39"){
+          navigate("/showArnavAllLeads")
+        }
         if (response.data.type === "user") {
           navigate(`/counsellor-profile/${response.data.data}`, { state: { id: response.data.data } });
-        } else {
+        } 
+        else {
           navigate("/showAllLeads");
         }
       } else {

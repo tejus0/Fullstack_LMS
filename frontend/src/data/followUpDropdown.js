@@ -31,9 +31,16 @@ export const followUpTwo = [
 
 export const followUpThree = [
     {
-        option: "Expected Conversion",
+        option: "Paid Counselling",
     },
     {
         option: "Associate College"
     }
 ]
+
+export const associateCollegeOptions = [
+    { option: 'Associate college', label: 'Associate College' },
+    { option: 'College A', label: 'College A' },
+    { option: 'College B', label: 'College B' },
+    // Add more options as needed
+  ];

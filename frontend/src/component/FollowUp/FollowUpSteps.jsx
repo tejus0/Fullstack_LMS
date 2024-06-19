@@ -5,6 +5,7 @@ import {
   followUpOne,
   followUpTwo,
   followUpThree,
+  associateCollegeOptions
 } from "../../data/followUpDropdown";
 
 const baseUrl = import.meta.env.VITE_API;
@@ -17,6 +18,11 @@ const FollowUpSteps = ({ studentId }) => {
   const [notesByStage, setNotesByStage] = useState({
     FollowUp1: [],
   });
+
+  const [additionalDropdown, setAdditionalDropdown] = useState([]);
+  const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
+  const [preBookingAmount, setPreBookingAmount] = useState('');
+  const [showPreBookingAmount, setShowPreBookingAmount] = useState(false);
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,6 +70,36 @@ const FollowUpSteps = ({ studentId }) => {
     }
   }, [FolloupStage]); // Include FolloupStage and studentId in the dependency array
 
+  const handleSelectedOption = (option) => {
+    setSelectedOption(option);
+
+    // Reset additional dropdown and input states based on selected option
+    setAdditionalDropdown([]);
+    setShowAdditionalDropdown(false);
+    setPreBookingAmount('');
+    setShowPreBookingAmount(false);
+
+    // Conditionally set additional dropdown and input based on selected option
+    switch (option) {
+      case 'Paid Counselling':
+        setAdditionalDropdown([
+          { option: 'MBBS - 30K' },
+          { option: 'Other(BAMS / BDS/ BUMS/ BHMS) - 25K' },
+          { option: 'Package - 21000' },
+        ]);
+        setShowAdditionalDropdown(true);
+        break;
+      case 'Associate College':
+        // Assuming options are fetched from an external JavaScript file
+        setAdditionalDropdown(associateCollegeOptions); // Replace with your actual options from an external file
+        setShowAdditionalDropdown(true);
+        setShowPreBookingAmount(true);
+        break;
+      default:
+        break;
+    }
+  };
+
   const addFollowUp = async () => {
     // Your existing addFollowUp function remains unchanged
     if (SelectedOption !== "") {
@@ -75,7 +111,24 @@ const FollowUpSteps = ({ studentId }) => {
           FolloupStage === "FollowUp2"
             ? SelectedOption + "+" + text
             : SelectedOption;
-  
+        
+             // Handle different scenarios based on SelectedOption
+      switch (SelectedOption) {
+        case 'Paid Counselling':
+          newItem.additionalOption = additionalDropdown.find(
+            (item) => item.option === SelectedOption
+          );
+          break;
+        case 'Associate college':
+          newItem.additionalOption = additionalDropdown.find(
+            (item) => item.option === SelectedOption
+          );
+          newItem.preBookingAmount = preBookingAmount;
+          break;
+        default:
+          break;
+      }
+
         try {
           await axios.post(`${baseUrl}/createTodos`, {
             _id: studentId,
@@ -150,7 +203,7 @@ const FollowUpSteps = ({ studentId }) => {
         <div className="flex gap-4 justify-center items-start">
           <select
             value={SelectedOption}
-            onChange={(e) => setSelectedOption(e.target.value)}
+           onChange={(e) => handleSelectedOption(e.target.value)}
             className="w-[250px] p-3 rounded-lg"
           >
             {/* Your select options based on dropdown */}
@@ -161,16 +214,51 @@ const FollowUpSteps = ({ studentId }) => {
               </option>
             ))}
           </select>
-          <button
+          {FolloupStage !="FollowUp3" && <button
             className="bg-white p-3 rounded-xl"
             onClick={FolloupStage === "FollowUp2" ? openModal : addFollowUp}
           >
             Add
-          </button>
+          </button>}
         </div>
+
+        {/* Additional dropdown for Paid Counselling or Associate college */}
+        {showAdditionalDropdown && FolloupStage==="FollowUp3" && (
+          <div className="mt-4">
+            <select
+              value={additionalDropdown}
+              onChange={(e) => handleAdditionalOption(e.target.value)}
+              className="w-[250px] p-3 rounded-lg"
+            >
+              <option value="">Select additional option</option>
+              {additionalDropdown.map((item, index) => (
+                <option key={index} value={item.option}>
+                  {item.option}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
+        {/* Input for Pre-Booking Amount */}
+        {showPreBookingAmount && FolloupStage==="FollowUp3" && (
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Pre-Booking Amount
+            </label>
+            <input
+              type="text"
+              value={preBookingAmount}
+              onChange={(e) => setPreBookingAmount(e.target.value)}
+              className="w-[250px] p-3 border rounded-lg"
+              placeholder="Enter pre-booking amount..."
+            />
+          </div>
+        )}
+
 {console.log(notesByStage, "dekho inhe")}
         <div>
-          {
+          { 
         //   notesByStage[FolloupStage].length > 0 && (
             <div className="mt-4">
               <h3 className="text-lg font-bold mb-2">
