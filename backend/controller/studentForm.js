@@ -159,6 +159,7 @@ export async function getStudentProfile(req, res) {
 export const getTodos = async (req, res) => {
   //    const todos = await Todo.find();
   const id = req.params.id;
+  console.log(id,"id in gettodos")
   try {
     const todos = await studentModal.find({ _id: id });
     if (!todos) {

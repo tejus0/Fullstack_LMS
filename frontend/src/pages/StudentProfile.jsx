@@ -14,7 +14,7 @@ const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
   const [studentData, setStudentData] = useState([]);
 
-  const [selectedValues, setselectedValues] = useState('Follow_Ups')
+  const [selectedValues, setselectedValues] = useState('Option_one')
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
@@ -118,7 +118,8 @@ const StudentProfile = ({ counsellor_id }) => {
               {studentData.otherResponse && studentData.otherResponse.length > 0 ? (
                 <SimpleAccordion otherResp={studentData.otherResponse} />
               ) : (
-                <p>No data</p>
+                <div id="form_container_NT"></div>
+                // <p>No data</p>
               )}
             </div>
           </div>

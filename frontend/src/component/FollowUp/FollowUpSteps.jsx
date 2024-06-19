@@ -10,21 +10,44 @@ import {
 const baseUrl = import.meta.env.VITE_API;
 
 const FollowUpSteps = ({ studentId }) => {
+    console.log(studentId,"studid")
   const [FolloupStage, setFolloupStage] = useState("FollowUp1");
   const [dropDown, setDropDown] = useState([]);
   const [SelectedOption, setSelectedOption] = useState("");
   const [notesByStage, setNotesByStage] = useState({
     FollowUp1: [],
-    FollowUp2: [],
-    FollowUp3: [],
   });
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [text, setText] = useState("");
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${baseUrl}/getTodos/${studentId}`);
+        console.log(response,"res")
+        // Assuming response.data is like:
+        // {
+        //   "FollowUp2": [],
+        //   "FollowUp3": [],
+        //   "FollowUp1": [
+        //     {
+        //       "subject": "Not Reachable",
+        //       "updatedAt": "2024-06-19T07:11:13.803Z"
+        //     }
+        //   ]
+        // }
+        setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Failed to fetch data. Please try again.");
+      }
+    };
+
+    fetchData(); // Call the fetchData function
+
+    // Update dropdown based on FolloupStage
     switch (FolloupStage) {
       case "FollowUp1":
         setDropDown(followUpOne);
@@ -39,41 +62,42 @@ const FollowUpSteps = ({ studentId }) => {
         setDropDown(followUpOne);
         break;
     }
-  }, [FolloupStage]);
+  }, [FolloupStage]); // Include FolloupStage and studentId in the dependency array
 
   const addFollowUp = async () => {
+    // Your existing addFollowUp function remains unchanged
     if (SelectedOption !== "") {
-      const newItem = {
-        option: SelectedOption,
-      };
-
-      const subject =
-        FolloupStage === "FollowUp2"
-          ? SelectedOption + "+" + text
-          : SelectedOption;
-
-      try {
-        await axios.post(`${baseUrl}/createTodos`, {
-          _id: studentId,
-          name: subject,
-          followUpStage: FolloupStage,
-        });
-
-        setNotesByStage((prevState) => ({
-          ...prevState,
-          [FolloupStage]: [...prevState[FolloupStage], newItem],
-        }));
-
-        toast.success("Follow Up Added Successfully !");
-        setSelectedOption("");
-        closeModal();
-      } catch (error) {
-        console.error("Error adding follow-up:", error);
-        toast.error("Failed to add follow-up. Please try again.");
+        const newItem = {
+          option: SelectedOption,
+        };
+  
+        const subject =
+          FolloupStage === "FollowUp2"
+            ? SelectedOption + "+" + text
+            : SelectedOption;
+  
+        try {
+          await axios.post(`${baseUrl}/createTodos`, {
+            _id: studentId,
+            name: subject,
+            followUpStage: FolloupStage,
+          });
+  
+          setNotesByStage((prevState) => ({
+            ...prevState,
+            [FolloupStage]: [...prevState[FolloupStage], newItem],
+          }));
+  
+          toast.success("Follow Up Added Successfully !");
+          setSelectedOption("");
+          closeModal();
+        } catch (error) {
+          console.error("Error adding follow-up:", error);
+          toast.error("Failed to add follow-up. Please try again.");
+        }
+      } else {
+        toast.error("Select an option first!");
       }
-    } else {
-      toast.error("Select an option first!");
-    }
   };
 
   const openModal = () => {
@@ -88,6 +112,7 @@ const FollowUpSteps = ({ studentId }) => {
     <div className="flex gap-5 overflow-hidden">
       <div className="flex-initial w-72">
         <ul className="flex md:flex-col md:gap-3 m-auto">
+          {/* Your list items for different FollowUp stages */}
           <li
             onClick={() => setFolloupStage("FollowUp1")}
             className={`${
@@ -128,6 +153,7 @@ const FollowUpSteps = ({ studentId }) => {
             onChange={(e) => setSelectedOption(e.target.value)}
             className="w-[250px] p-3 rounded-lg"
           >
+            {/* Your select options based on dropdown */}
             <option value="">Select</option>
             {dropDown.map((item, index) => (
               <option key={index} value={item.option}>
@@ -142,20 +168,22 @@ const FollowUpSteps = ({ studentId }) => {
             Add
           </button>
         </div>
-
+{console.log(notesByStage, "dekho inhe")}
         <div>
-          {notesByStage[FolloupStage].length > 0 && (
+          {
+        //   notesByStage[FolloupStage].length > 0 && (
             <div className="mt-4">
               <h3 className="text-lg font-bold mb-2">
                 Notes for {FolloupStage}
               </h3>
               {notesByStage[FolloupStage].map((item, index) => (
                 <div key={index} className="mb-2">
-                  {item.option}
+                  {item.subject}
                 </div>
               ))}
             </div>
-          )}
+        //   )
+          }
         </div>
       </div>
 
