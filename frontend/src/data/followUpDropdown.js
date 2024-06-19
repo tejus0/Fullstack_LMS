@@ -31,12 +31,9 @@ export const followUpTwo = [
 
 export const followUpThree = [
     {
-        option: "Cold Call Done",
+        option: "Expected Conversion",
     },
     {
-        option: "Warm"
-    },
-    {
-        option: "Hot Lead"
-    },
+        option: "Associate College"
+    }
 ]

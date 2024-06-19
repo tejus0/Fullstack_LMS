@@ -174,23 +174,33 @@ export const createTodos = async (req, res) => {
   console.log(req.body, "params");
 
   try {
-    const { _id, name, FollowUpStage } = req.body;
+    const { _id, name, followUpStage } = req.body;
 
     // Construct the update query based on FollowUpStage
-    let updateQuery = {};
-    updateQuery[`remarks.FollowUp1`] = {
-        subject: name,
-        updatedAt: new Date().toISOString() // Assuming updatedAt is a string field
-    };
+    // let updateQuery = {};
+    // updateQuery[`remarks.FollowUp1`] = {
+    //     subject: name,
+    //     updatedAt: new Date().toISOString() // Assuming updatedAt is a string field
+    // };
 
     // Perform the update operation
-    const todo = await studentModal.updateOne(
-        { _id },
-        { $push: {
-  subject:"i am hereagain with Abhigya bhai5"},
-updatedAt: "hola" }
-    );
+//     const todo = await studentModal.updateOne(
+//         { _id },
+//         { $push: {
+//   subject:"i am hereagain with Abhigya bhai5"},
+// updatedAt: "hola" }
+//     );
 
+const todo = await studentModal.updateOne(
+  { "_id": _id },
+  { 
+    $push: { 
+      [`remarks.${followUpStage}`]: { "subject": name, "updatedAt": new Date()} 
+    } 
+  }
+);
+
+    
     res.status(200).json(todo);
 } catch (error) {
     console.error(error);

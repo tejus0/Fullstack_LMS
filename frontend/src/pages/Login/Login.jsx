@@ -145,6 +145,9 @@ function Login() {
   // }
 
   return (
+    <>
+    <div className="form_container_NT" id="form_container_NT">
+      </div>
     <div
       style={{
         backgroundImage: `url(${bgimg})`,
@@ -297,6 +300,7 @@ function Login() {
         </Grid>
       </Box>
     </div>
+    </>
   );
 }
 
