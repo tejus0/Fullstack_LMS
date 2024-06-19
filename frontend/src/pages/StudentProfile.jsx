@@ -55,7 +55,7 @@ const StudentProfile = ({ counsellor_id }) => {
   };
 
   const handleGoToLeads = () => {
-    studentData.source==="fb_arnav"? navigate("/counsellor-profile/6672c48614be596e4ccb3b39"): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
+    studentData.source=="fb_arnav"? navigate("/showArnavAllLeads",{state:{id:"6672c48614be596e4ccb3b39"}}): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
   };
 
   // follow up option

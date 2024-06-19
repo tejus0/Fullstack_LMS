@@ -50,8 +50,8 @@ const ArnavLeads = () => {
             const response = await axios.get(`${baseUrl}/getCounsellorDataList/6672c48614be596e4ccb3b39`).catch(err => {
                 console.log(err, "error");
             });
-            setUsers(response.data.data);
-            setfilter(response.data.data)
+            setUsers(response.data);
+            setfilter(response.data)
             console.log(response.data, "data");
         };
 

@@ -104,7 +104,7 @@ function Login() {
         mobile: mobileInput,
         password,
       });
-
+        console.log(response.data,"arnav")
       if (response.data.status === "ok") {
         toast.success("Login Successful", { position: "top-right" });
         window.localStorage.setItem("token", response.data.data);
@@ -113,7 +113,7 @@ function Login() {
         window.localStorage.setItem("user-type", response.data.type);
 
         if(response.data.token==="6672c48614be596e4ccb3b39"){
-          navigate("/showArnavAllLeads")
+          navigate("/showArnavAllLeads",{ state: { id: response.data.data } })
         }
         if (response.data.type === "user") {
           navigate(`/counsellor-profile/${response.data.data}`, { state: { id: response.data.data } });

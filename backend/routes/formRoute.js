@@ -22,7 +22,7 @@ router.route("/renameKey").post(renameKey);
 router.route("/getCounsellorDataList/:id").get(getCounsellorDataList);
 router.route("/cleatAllAssignedCouns").get(cleatAllAssignedCouns);
 
-router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
+// router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 
 
 
