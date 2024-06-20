@@ -115,7 +115,7 @@ const ShowAllleads = () => {
     }
 
     const paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-    const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 0)
+    const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 20)
 
 
     // console.log(paginatedUsers);
