@@ -20,7 +20,7 @@ export async function createStudentProfile(req, res) {
   try {
     const data = await req.body;
     const user = await studentModal.findOne({ $or: [{ email: data.email }, { contactNumber: data.contactNumber }] });
-
+    console.log(user,"otherresp");
     if (user) {
 
       const isMail = user.email == data.email
@@ -94,7 +94,6 @@ export async function getAllStudentProfile(req, res) {
     // const { limit, page } = req.query
 
     const student = await studentModal.find();
-    console.log(student,"stud")
 
     // if (limit && page) {
     //   const starting = (page - 1) * limit

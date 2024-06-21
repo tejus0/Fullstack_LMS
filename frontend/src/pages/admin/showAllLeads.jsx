@@ -109,7 +109,7 @@ const ShowAllleads = () => {
         }
         else {
             console.log("ok");
-            setUsers(paginatedUsers.filter((item) => item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())))
+            setUsers(sortedUsers.filter((item) => item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())))
 
         }
     }

@@ -7,6 +7,7 @@ import {
   followUpThree,
   associateCollegeOptions
 } from "../../data/followUpDropdown";
+import NotesList from "./NotesList";
 
 const baseUrl = import.meta.env.VITE_API;
 
@@ -17,12 +18,15 @@ const FollowUpSteps = ({ studentId }) => {
   const [SelectedOption, setSelectedOption] = useState("");
   const [notesByStage, setNotesByStage] = useState({
     FollowUp1: [],
+    FollowUp2: [],
+    FollowUp3: [],
   });
 
   const [additionalDropdown, setAdditionalDropdown] = useState([]);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
   const [preBookingAmount, setPreBookingAmount] = useState('');
   const [showPreBookingAmount, setShowPreBookingAmount] = useState(false);
+  const [countaa, setCountaa] = useState(0)
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,7 +49,9 @@ const FollowUpSteps = ({ studentId }) => {
         //   ]
         // }
         setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
+        console.log(notesByStage,"remarks");
       } catch (error) {
+
         console.error("Error fetching data:", error);
         toast.error("Failed to fetch data. Please try again.");
       }
@@ -68,7 +74,7 @@ const FollowUpSteps = ({ studentId }) => {
         setDropDown(followUpOne);
         break;
     }
-  }, [FolloupStage]); // Include FolloupStage and studentId in the dependency array
+  }, [FolloupStage, countaa]); // Include FolloupStage and studentId in the dependency array
 
   const handleSelectedOption = (option) => {
     setSelectedOption(option);
@@ -128,21 +134,23 @@ const FollowUpSteps = ({ studentId }) => {
         default:
           break;
       }
-
+        console.log(studentId,subject,FolloupStage,"humara data client side");
         try {
           await axios.post(`${baseUrl}/createTodos`, {
             _id: studentId,
             name: subject,
             followUpStage: FolloupStage,
-          });
+          }); 
   
           setNotesByStage((prevState) => ({
             ...prevState,
             [FolloupStage]: [...prevState[FolloupStage], newItem],
           }));
   
+          setCountaa(prev => prev+1)
           toast.success("Follow Up Added Successfully !");
           setSelectedOption("");
+          setText("")
           closeModal();
         } catch (error) {
           console.error("Error adding follow-up:", error);
@@ -176,7 +184,7 @@ const FollowUpSteps = ({ studentId }) => {
           >
             Follow one
           </li>
-          <li
+          {notesByStage.FollowUp1?.some((person) => person.subject === "First Call Done")?  <li
             onClick={() => setFolloupStage("FollowUp2")}
             className={`${
               FolloupStage === "FollowUp2"
@@ -185,8 +193,18 @@ const FollowUpSteps = ({ studentId }) => {
             } font-medium rounded-lg py-3 px-2 cursor-pointer`}
           >
             Follow Two
-          </li>
-          <li
+          </li> : <li
+            // onClick={() => setFolloupStage("FollowUp2")}
+            className={`${
+              // FolloupStage === "FollowUp2"
+                //  "bg-blue-500 text-white"
+                // :
+                 "bg-gray-300 text-purple-900"
+            } font-medium rounded-lg py-3 px-2 cursor-pointer`}
+          >
+            Follow Two
+          </li>}
+          {notesByStage.FollowUp2?.some((person) => person.subject === "Hot Lead+tej")?<li
             onClick={() => setFolloupStage("FollowUp3")}
             className={`${
               FolloupStage === "FollowUp3"
@@ -195,7 +213,17 @@ const FollowUpSteps = ({ studentId }) => {
             } font-medium rounded-lg py-3 px-2 cursor-pointer`}
           >
             Follow three
-          </li>
+          </li>: <li
+            // onClick={() => setFolloupStage("FollowUp2")}
+            className={`${
+              // FolloupStage === "FollowUp2"
+                //  "bg-blue-500 text-white"
+                // :
+                 "bg-gray-300 text-purple-900"
+            } font-medium rounded-lg py-3 px-2 cursor-pointer`}
+          >
+            Follow Three
+          </li>}
         </ul>
       </div>
 
@@ -255,25 +283,9 @@ const FollowUpSteps = ({ studentId }) => {
             />
           </div>
         )}
-
-{console.log(notesByStage, "dekho inhe")}
-        <div>
-          { 
-        //   notesByStage[FolloupStage].length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-lg font-bold mb-2">
-                Notes for {FolloupStage}
-              </h3>
-              {notesByStage[FolloupStage].map((item, index) => (
-                <div key={index} className="mb-2">
-                  {item.subject}
-                </div>
-              ))}
-            </div>
-        //   )
-          }
+        
+        < NotesList FolloupStage= {FolloupStage} notesByStage={notesByStage} studentId={studentId} countaa={countaa}/>
         </div>
-      </div>
 
       {/* Modal */}
       {FolloupStage === "FollowUp2" && (
@@ -294,11 +306,26 @@ const FollowUpSteps = ({ studentId }) => {
               placeholder="Enter your note..."
             />
             <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              onClick={addFollowUp}
+            className={`px-4 py-2 rounded-lg text-white ${text.trim() === '' ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
+            onClick={addFollowUp}
+            disabled={text.trim() === ''}
+              // className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              // onClick={addFollowUp}
             >
               Submit
             </button>
+            <button
+          className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+          onClick={() => setText('')}
+        >
+          Reset
+        </button>
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded-lg"
+          onClick={() => setIsModalOpen(false)}
+        >
+          Cancel
+        </button>
           </div>
         </div>
       )}

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeForm() {
 
 
-  // const scriptElement = document.querySelector('script[src="https://www.ntechzy.in/api/v1/student-form/form.js"]');
+  //  const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
   const scriptElement = document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]');
 
   if (!scriptElement) {
@@ -21,7 +21,7 @@ function initializeForm() {
   const logo = scriptElement.getAttribute('logo');
   const contact = scriptElement.getAttribute('contact');
   const customStylesheets = scriptElement.getAttribute('customStylesheets');
-  const divID = scriptElement.getAttribute('divID');
+  const divID = scriptElement.getAttribute('divid');
   if (styles) {
       const customStylesheet = document.querySelectorAll('link[rel="stylesheet"]');
       if (customStylesheet > 0) {
@@ -95,6 +95,30 @@ function createFormButton() {
   });
   document.body.appendChild(button);
 }
+
+function populateFormFromLocalStorage() {
+  const savedFormData = localStorage.getItem('formData');
+  if (savedFormData) {
+    const formData = JSON.parse(savedFormData);
+
+    document.getElementById('studentName').value = formData.name;
+    document.getElementById('contactNo').value = formData.contactNumber;
+    document.getElementById('email').value = formData.email;
+    document.getElementById('whatsappNo').value = formData.whatsappNumber;
+    document.getElementById('guardianName').value = formData.guardianName;
+    document.getElementById('district').value = formData.district;
+    document.getElementById('state').value = formData.state;
+    document.getElementById('courseSelection').value = formData.courseSelected;
+    document.getElementById('neetScore').value = formData.neetScore;
+    document.getElementById('neetAir').value = formData.neetAIR;
+    if (document.getElementById('preferredCollege')) {
+      document.getElementById('preferredCollege').value = formData.preferredCollege;
+    }
+    document.getElementById('agreeCheckbox').checked = formData.agreeCheckbox;
+  }
+}
+
+
 function createForm(courseOptions, styles, logo, contact, divID) {
     // const form = document.createElement('form');
     // form.id = 'studentDetailsForm';
@@ -116,85 +140,86 @@ function createForm(courseOptions, styles, logo, contact, divID) {
     // document.body.appendChild(formContainer);
     
     const header = document.createElement('div');
-header.classList.add('formWrapper');
-formContainer.insertBefore(header, formContainer.firstChild);
-const logoAndContactContainer = document.createElement('div');
-logoAndContactContainer.classList.add('logo-contact-container');
-header.appendChild(logoAndContactContainer);
-
-
-const logoElement = document.createElement('img');
-logoElement.src = logo || 'https://abhigyadufare.github.io/dynamicForm/Careerkick.png'; 
-logoElement.alt = 'Company Logo';
-logoElement.classList.add('logo-style'); 
-logoAndContactContainer.appendChild(logoElement);
-
-
-const contactElement = document.createElement('div');
-contactElement.textContent = 'Contact us: ' + contact; 
-contactElement.classList.add('contact-style'); 
-logoAndContactContainer.appendChild(contactElement);
+    header.classList.add('formWrapper');
+    formContainer.insertBefore(header, formContainer.firstChild);
+    const logoAndContactContainer = document.createElement('div');
+    logoAndContactContainer.classList.add('logo-contact-container');
+    header.appendChild(logoAndContactContainer);
+    
+    
+    const logoElement = document.createElement('img');
+    logoElement.src = logo || 'https://abhigyadufare.github.io/dynamicForm/Careerkick.png'; 
+    logoElement.alt = 'Company Logo';
+    logoElement.classList.add('logo-style'); 
+    logoAndContactContainer.appendChild(logoElement);
+    
+    
+    const contactElement = document.createElement('div');
+    contactElement.textContent = 'Contact us: ' + contact; 
+    contactElement.classList.add('contact-style'); 
+    logoAndContactContainer.appendChild(contactElement);
     const form = document.createElement('form');
     form.id = 'studentDetailsForm';
     form.classList.add('formWrapper');
     formContainer.appendChild(form);
-   
-    const fieldOptions = [
-        { placeholder: "Student's Name:*", inputType: 'text', inputId: 'studentName', inputName: 'studentName', required: true },
-        { placeholder: "Guardian Name:*", inputType: 'text', inputId: 'guardianName', inputName: 'guardianName', required: true },
-        { placeholder: 'Contact No.:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
-        // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactOtp', inputName: 'contactOtp', required: true },
-        { placeholder: 'E-mail:', inputType: 'email', inputId: 'email', inputName: 'email', required: true },
-        // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
-        { placeholder:'Whatsapp No.:', inputType: 'tel', inputId: 'whatsappNo', inputName: 'whatsappNo', required: false },
-        { placeholder:'State:', inputType: 'text', inputId: 'state', inputName:'state', required: false },
-        { placeholder:'District:', inputType: 'text', inputId: 'district', inputName:'district', required: false },
-        { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true},
-        { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetAir', inputName: 'neetAir', required: true},
     
+    const fieldOptions = [
+      { placeholder: "Student's Name:*", inputType: 'text', inputId: 'studentName', inputName: 'studentName', required: true },
+      { placeholder: "Guardian Name:*", inputType: 'text', inputId: 'guardianName', inputName: 'guardianName', required: true },
+      { placeholder: 'Contact No.:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
+      // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactOtp', inputName: 'contactOtp', required: true },
+      { placeholder: 'E-mail:', inputType: 'email', inputId: 'email', inputName: 'email', required: true },
+      // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
+      { placeholder:'Whatsapp No.:', inputType: 'tel', inputId: 'whatsappNo', inputName: 'whatsappNo', required: false },
+      { placeholder:'State:', inputType: 'text', inputId: 'state', inputName:'state', required: false },
+      { placeholder:'District:', inputType: 'text', inputId: 'district', inputName:'district', required: false },
+      { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true},
+      { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetAir', inputName: 'neetAir', required: true},
+      
     ];
-  
+    
     fieldOptions.forEach(option => {
-        createField(form, option);
+      createField(form, option);
     });
     // const inlineGroup = document.createElement('div');
     //   inlineGroup.className = 'inline-group';
-  
+    
     //   createField(inlineGroup, { placeholder: 'District:', inputType: 'text', inputId: 'city', inputName: 'city', required: true });
     //   createField(inlineGroup, { placeholder: 'State:', inputType: 'text', inputId: 'state', inputName: 'state', required: true });
-  
+    
     //   form.appendChild(inlineGroup);
-      
-  
+    
+    
     const courseSelectWrapper = document.createElement('div');
     courseSelectWrapper.className = 'form-group'; 
     form.appendChild(courseSelectWrapper);
-
+    
     
     createSelectField(courseSelectWrapper, '', 'courseSelection', 'courseSelection', courseOptions);
-
+    
     // createField(form, { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
     // createField(form, { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
     
     if (window.location.hostname === 'ntechzy.in') {
       createField(form, { labelText: 'Preferred College:', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: true });
-  }
-  
-  const SelectWrapper = document.createElement('div');
-  SelectWrapper.className = 'form-group';
+    }
+    
+    const SelectWrapper = document.createElement('div');
+    SelectWrapper.className = 'form-group';
     createCheckboxField(form, 'I agree to receive information by signing up on Careerkick services', 'agreeCheckbox');
     form.appendChild(SelectWrapper);
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'button-container';
     form.appendChild(buttonContainer);
     const submitButton = document.createElement('button');
-      submitButton.type = 'submit';
-      submitButton.textContent = 'Submit';
-      submitButton.className = 'submit-button';
-      form.appendChild(submitButton);
-      form.addEventListener('submit', submitForm);
-      
-
+    submitButton.type = 'submit';
+    submitButton.textContent = 'Submit';
+    submitButton.className = 'submit-button';
+    form.appendChild(submitButton);
+    form.addEventListener('submit', submitForm);
+    
+    populateFormFromLocalStorage();
+    
   }
   function toggleFormStyle(styles) {
     const formContainer = document.getElementById('formContainer');
@@ -381,19 +406,18 @@ function createField(form, field) {
     
     console.log(formData);
     sendData(formData)
-  
+    
     // const form = document.getElementById('studentDetailsForm');
     // form.reset();
   }
-
-// const url = 'https://www.ntechzy.in/api/v1/form'
-const url = 'http://localhost:4000/api/v1/form'
-
-
-
-
-
-const sendData = async (formData) => {
+  //  const url = 'https://www.ntechzy.in/api/v1/form'
+  const url = 'http://localhost:4000/api/v1/form'
+  
+  
+  
+  
+  
+  const sendData = async (formData) => {
     const Data = {
       name: formData.studentName,
       contactNumber: formData.contactNo,
@@ -407,34 +431,41 @@ const sendData = async (formData) => {
       neetAIR: formData.neetAir,
       source: formData.source,
       sourceId: formData.sourceId,
-      preferredCollege: formData.preferredCollege
+      preferredCollege: formData.preferredCollege,
+      agreeCheckbox: formData.agreeCheckbox
     }
-
+    
+    // window.localStorage.setItem("")
     try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(Data),
-        });
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(Data),
+      });
+      
+      if (!response.ok) {
+        const err = await response.json();
+        const errorData = err.message
+        throw new Error(errorData);
+      }
+      
+      const result = await response.json();
+      const msg = result.msg
+      alert(msg,"other in formjs");
 
-        if (!response.ok) {
-            const err = await response.json();
-            const errorData = err.message
-            throw new Error(errorData);
-        }
+      localStorage['formData']=JSON.stringify(Data);
+      // localStorage.setItem('formData', JSON.stringify(formData)); 
 
-        const result = await response.json();
-        const msg = result.msg
-        alert(msg);
-        const form = document.getElementById('studentDetailsForm');
-        form.reset();
+      const form = document.getElementById('studentDetailsForm');
+      form.reset();
     } catch (errorData) {
-        console.log(errorData);
-        alert(errorData);
+      console.log(errorData);
+      alert(errorData);
     }
-
-}
+    
+  }
+  
   
   

@@ -1,9 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Followup from '../component/FollowUp/Followup';
-import Todolist from "../component/FollowUp/TodoList";
-import Todoform from "../component/FollowUp/Todoform";
 import { Box, Paper, Button } from "@mui/material";
 import SimpleAccordion from '../component/Accordion';
 import SideNavigation from '../component/FollowUp/SideNavigation';
@@ -111,6 +108,9 @@ const StudentProfile = ({ counsellor_id }) => {
                   <p>Source: {studentData.source}</p>
                   <p>Neet Score: {studentData.neetScore}</p>
                   <p>Neet AIR: {studentData.neetAIR}</p>
+                  {/* {console.log( studentData.remarks.FollowUp2, "tejus chatur sujaan")} */}
+                  {/* <p>Neet AIR: {studentData.remarks.FollowUp2.subject}</p> */}
+                  
                 </div>
               </div>
             </div>
