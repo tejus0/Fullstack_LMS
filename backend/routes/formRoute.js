@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3} from "../controller/studentForm.js";
 
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
@@ -14,6 +14,8 @@ router.route('/counsoller').post(createCounsellor)
 
 router.route("/getTodos/:id").get(getTodos)
 router.route("/createTodos").post(createTodos)
+router.route("/createFollowUp3").post(createFollowUp3)
+
 router.route("/deleteTodos/:id").delete(deleteTodos)
 
 router.route("/register").post(insertUser);

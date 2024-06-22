@@ -29,17 +29,6 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
           try {
             const response = await axios.get(`${baseUrl}/getTodos/${studentId}`);
             console.log(response,"res")
-            // Assuming response.data is like:
-            // {
-            //   "FollowUp2": [],
-            //   "FollowUp3": [],
-            //   "FollowUp1": [
-            //     {
-            //       "subject": "Not Reachable",
-            //       "updatedAt": "2024-06-19T07:11:13.803Z"
-            //     }
-            //   ]
-            // }
             setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
             console.log(notesByStage,"remarks");
           } catch (error) {
@@ -83,21 +72,37 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
       <List>
         {notesByStage[FolloupStage]?.length > 0 ? (
           notesByStage[FolloupStage].map((item, index) => {
-            console.log(item)
-            // const [subject, ...remarksArray] = item.subject.split('+');
-
+            console.log(item,"item in noteslist")
+            if(FolloupStage=="FollowUp3"){
+              return(
+                
+                // {console.log(additionalOption,"option")}
+                <ListItemText
+            primary={
+                <Typography variant="subtitle1" className="font-bold">
+                {index + 1}. Subject: {item.subject}
+                </Typography>
+            }
+                secondary={
+                <Typography variant="body2">
+                Remarks: {item.additionalOption}
+                <br />
+                Prebook Amount: {item.preBookingAmount} {/* Replace with your prebook amount */}
+                </Typography>
+            } 
+            />
+          )
+            }
+            else{
             if(item.subject.includes('+')){
                var [subject,remarks] = item.subject.split('+');
             }
             else{
                 var subject = item.subject
             }
-
-            // const remarks = remarksArray.join('+').trim(); // Join remaining parts if any
-
             return (
             <ListItem key={index} className="mb-2">
-            {FolloupStage=="FollowUp2" ?
+            { FolloupStage=="FollowUp2" ?
             <ListItemText
             
             primary={
@@ -119,7 +124,8 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
             />}
             </ListItem>
             );
-          })
+          }
+})
         ) : (
           <Typography variant="body2">No notes available.</Typography>
         )}

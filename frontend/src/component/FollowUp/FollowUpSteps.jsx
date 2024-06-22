@@ -5,7 +5,8 @@ import {
   followUpOne,
   followUpTwo,
   followUpThree,
-  associateCollegeOptions
+  associateCollegeOptions,
+  paidCounselling
 } from "../../data/followUpDropdown";
 import NotesList from "./NotesList";
 
@@ -21,6 +22,8 @@ const FollowUpSteps = ({ studentId }) => {
     FollowUp2: [],
     FollowUp3: [],
   });
+
+  const [secondDropdown, setSecondDropdown] = useState("")
 
   const [additionalDropdown, setAdditionalDropdown] = useState([]);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
@@ -76,8 +79,14 @@ const FollowUpSteps = ({ studentId }) => {
     }
   }, [FolloupStage, countaa]); // Include FolloupStage and studentId in the dependency array
 
+  const handleSecondDropDown=(option)=>{
+    setSecondDropdown(option)
+  }
+
   const handleSelectedOption = (option) => {
     setSelectedOption(option);
+
+    setSecondDropdown("")
 
     // Reset additional dropdown and input states based on selected option
     setAdditionalDropdown([]);
@@ -88,22 +97,19 @@ const FollowUpSteps = ({ studentId }) => {
     // Conditionally set additional dropdown and input based on selected option
     switch (option) {
       case 'Paid Counselling':
-        setAdditionalDropdown([
-          { option: 'MBBS - 30K' },
-          { option: 'Other(BAMS / BDS/ BUMS/ BHMS) - 25K' },
-          { option: 'Package - 21000' },
-        ]);
+        setAdditionalDropdown(paidCounselling);
         setShowAdditionalDropdown(true);
         break;
       case 'Associate College':
         // Assuming options are fetched from an external JavaScript file
         setAdditionalDropdown(associateCollegeOptions); // Replace with your actual options from an external file
         setShowAdditionalDropdown(true);
+        break;
+        default:
+          break;
+        }
+        
         setShowPreBookingAmount(true);
-        break;
-      default:
-        break;
-    }
   };
 
   const addFollowUp = async () => {
@@ -111,6 +117,8 @@ const FollowUpSteps = ({ studentId }) => {
     if (SelectedOption !== "") {
         const newItem = {
           option: SelectedOption,
+          additionalOption:"",
+          preBookingAmount:""
         };
   
         const subject =
@@ -124,6 +132,7 @@ const FollowUpSteps = ({ studentId }) => {
           newItem.additionalOption = additionalDropdown.find(
             (item) => item.option === SelectedOption
           );
+          newItem.preBookingAmount = preBookingAmount;
           break;
         case 'Associate college':
           newItem.additionalOption = additionalDropdown.find(
@@ -136,11 +145,24 @@ const FollowUpSteps = ({ studentId }) => {
       }
         console.log(studentId,subject,FolloupStage,"humara data client side");
         try {
-          await axios.post(`${baseUrl}/createTodos`, {
-            _id: studentId,
-            name: subject,
-            followUpStage: FolloupStage,
-          }); 
+          if(FolloupStage==="FollowUp3"){
+            console.log(SelectedOption,secondDropdown,preBookingAmount,"follow3 hai")
+            await axios.post(`${baseUrl}/createFollowUp3`, {
+              _id: studentId,
+              name: subject,
+              followUpStage: FolloupStage,
+              additionalOption: secondDropdown, // Include additionalOption in API call
+              preBookingAmount: newItem.preBookingAmount, // Include preBookingAmount in API call
+            });
+          }
+          else{
+
+            await axios.post(`${baseUrl}/createTodos`, {
+              _id: studentId,
+              name: subject,
+              followUpStage: FolloupStage,
+            }); 
+          }
   
           setNotesByStage((prevState) => ({
             ...prevState,
@@ -150,6 +172,8 @@ const FollowUpSteps = ({ studentId }) => {
           setCountaa(prev => prev+1)
           toast.success("Follow Up Added Successfully !");
           setSelectedOption("");
+          setSecondDropdown("")
+          setPreBookingAmount("")
           setText("")
           closeModal();
         } catch (error) {
@@ -254,8 +278,8 @@ const FollowUpSteps = ({ studentId }) => {
         {showAdditionalDropdown && FolloupStage==="FollowUp3" && (
           <div className="mt-4">
             <select
-              value={additionalDropdown}
-              onChange={(e) => handleAdditionalOption(e.target.value)}
+              value={secondDropdown}
+              onChange={(e) => handleSecondDropDown(e.target.value)}
               className="w-[250px] p-3 rounded-lg"
             >
               <option value="">Select additional option</option>
@@ -281,6 +305,12 @@ const FollowUpSteps = ({ studentId }) => {
               className="w-[250px] p-3 border rounded-lg"
               placeholder="Enter pre-booking amount..."
             />
+            {FolloupStage ==="FollowUp3" && <button
+            className="bg-white p-3 rounded-xl"
+            onClick={addFollowUp}
+          >
+            Submit
+          </button>}
           </div>
         )}
         
