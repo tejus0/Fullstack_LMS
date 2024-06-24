@@ -72,7 +72,7 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
       <List>
         {notesByStage[FolloupStage]?.length > 0 ? (
           notesByStage[FolloupStage].map((item, index) => {
-            console.log(item,"item in noteslist")
+            // console.log(item,"item in noteslist")
             if(FolloupStage=="FollowUp3"){
               return(
                 

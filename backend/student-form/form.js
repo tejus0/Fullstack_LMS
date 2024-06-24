@@ -1,7 +1,74 @@
+import { districtData } from "./district.js";
 document.addEventListener('DOMContentLoaded', () => {
   // setTimeout(initializeForm, 4000); 
   // createFormButton(); 
   initializeForm();
+});
+
+// Initialize Firebase
+// const firebaseConfig = {
+
+//   apiKey: "AIzaSyAyRCiW3FdjTZN7KpzWirlALYhwNl1cbMU",
+//     authDomain: "lead-9b886.firebaseapp.com",
+//     projectId: "lead-9b886",
+//     storageBucket: "lead-9b886.appspot.com",
+//     messagingSenderId: "299662915818",
+//     appId: "1:299662915818:web:84d51f7f351d088a00ff93",
+//     measurementId: "G-R53YH8CMSL"
+// };
+
+// const firebase= initializeApp(firebaseConfig);
+// const auth = firebase.auth();
+
+document.addEventListener('DOMContentLoaded', () => {
+  const stateSelect = document.getElementById('state');
+
+  // const stateSelect = document.getElementById('state');
+  const districtSelect = document.getElementById('district');
+
+  const defaultStateOption = document.createElement('option');
+  defaultStateOption.textContent = 'Select State';
+  defaultStateOption.value = '';
+  stateSelect.appendChild(defaultStateOption);
+
+  const defaultDistrictOption = document.createElement('option');
+  defaultDistrictOption.textContent = 'Select District';
+  defaultDistrictOption.value = '';
+  districtSelect.appendChild(defaultDistrictOption);
+
+  districtData.states.forEach(stateObj => {
+      const option = document.createElement('option');
+      option.textContent = stateObj.state;
+      option.value = stateObj.state;
+      stateSelect.appendChild(option);
+  });
+
+  // Optional: Add event listener to populate districts based on selected state
+  stateSelect.addEventListener('change', () => {
+      const selectedState = stateSelect.value;
+      // const districtSelect = document.getElementById('district');
+      districtSelect.innerHTML = ''; // Clear previous options
+
+
+      const defaultDistrictOption = document.createElement('option');
+    defaultDistrictOption.textContent = "Select District";
+    defaultDistrictOption.value = "";
+    districtSelect.appendChild(defaultDistrictOption);
+
+    // Populate districts if a state is selected
+    if (selectedState) {
+      const state = districtData.states.find(stateObj => stateObj.state === selectedState);
+
+      if (state) {
+          state.districts.forEach(district => {
+              const option = document.createElement('option');
+              option.textContent = district;
+              option.value = district;
+              districtSelect.appendChild(option);
+          });
+      }
+    }
+  });
 });
 
 function initializeForm() {
@@ -54,37 +121,8 @@ function initializeForm() {
   console.log(courses);
   console.log(path.includes(currentPath));
 
-  // const contactNoInput = document.getElementById('contactNo');   /// OTP input
-  // contactNoInput.addEventListener('input', () => {
-  //     const inputValue = contactNoInput.value;
-  //     // Check if input length is 10 digits
-  //     if (inputValue.length === 10) {
-  //         createSendOTPButton();
-  //     } else {
-  //         removeSendOTPButton();
-  //     }
-  // });
 }
 
-//   function createSendOTPButton() {
-//     const sendOTPButton = document.createElement('button');
-//     sendOTPButton.textContent = 'Send OTP';
-//     sendOTPButton.id = 'sendOTPButton';
-//     sendOTPButton.addEventListener('click', () => {
-//         // Add your logic to send OTP here
-//     });
-
-//     // Append the button to a container element
-//     const buttonContainer = document.getElementById('buttonContainer'); // Assuming you have a container element with id 'buttonContainer'
-//     buttonContainer.appendChild(sendOTPButton);
-// }
-
-// function removeSendOTPButton() {
-//     const sendOTPButton = document.getElementById('sendOTPButton');
-//     if (sendOTPButton) {
-//         sendOTPButton.remove();
-//     }
-// }
 
 function createFormButton() {
   const button = document.createElement('button');
@@ -119,13 +157,9 @@ function populateFormFromLocalStorage() {
 }
 
 
+
 function createForm(courseOptions, styles, logo, contact, divID) {
-    // const form = document.createElement('form');
-    // form.id = 'studentDetailsForm';
-    // document.body.appendChild(form);
-    // const overlay = document.createElement('div');
-    // overlay.classList.add('overlay');
-    // document.body.appendChild(overlay);
+
     const targetDiv = document.getElementById(divID);
     if (!targetDiv) {
       console.error(`Target div with id=${divID} not found.`);
@@ -164,31 +198,23 @@ function createForm(courseOptions, styles, logo, contact, divID) {
     formContainer.appendChild(form);
     
     const fieldOptions = [
-      { placeholder: "Student's Name:*", inputType: 'text', inputId: 'studentName', inputName: 'studentName', required: true },
-      { placeholder: "Guardian Name:*", inputType: 'text', inputId: 'guardianName', inputName: 'guardianName', required: true },
-      { placeholder: 'Contact No.:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
+      { placeholder: "Student's Name*", inputType: 'text', inputId: 'studentName', inputName: 'studentName', required: true },
+      { placeholder: "Guardian Name*", inputType: 'text', inputId: 'guardianName', inputName: 'guardianName', required: true },
+      { placeholder: 'Contact Number*', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
       // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactOtp', inputName: 'contactOtp', required: true },
-      { placeholder: 'E-mail:', inputType: 'email', inputId: 'email', inputName: 'email', required: true },
+      { placeholder: 'E-mail*', inputType: 'email', inputId: 'email', inputName: 'email', required: true },
       // { placeholder: 'OTP:', inputType: 'tel', inputId: 'contactNo', inputName: 'contactNo', required: true },
-      { placeholder:'Whatsapp No.:', inputType: 'tel', inputId: 'whatsappNo', inputName: 'whatsappNo', required: false },
-      { placeholder:'State:', inputType: 'text', inputId: 'state', inputName:'state', required: false },
-      { placeholder:'District:', inputType: 'text', inputId: 'district', inputName:'district', required: false },
-      { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true},
-      { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetAir', inputName: 'neetAir', required: true},
+      { placeholder:'Whatsapp Number*', inputType: 'tel', inputId: 'whatsappNo', inputName: 'whatsappNo', required: true },
+      { placeholder:'State*', inputType: 'select', inputId: 'state', inputName:'state', required: true },
+      { placeholder:'District*', inputType: 'select', inputId: 'district', inputName:'district', required: true },
+      { placeholder: 'NEET Score*', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true},
+      { placeholder: 'NEET AIR*', inputType: 'number', inputId: 'neetAir', inputName: 'neetAir', required: true},
       
     ];
     
     fieldOptions.forEach(option => {
       createField(form, option);
     });
-    // const inlineGroup = document.createElement('div');
-    //   inlineGroup.className = 'inline-group';
-    
-    //   createField(inlineGroup, { placeholder: 'District:', inputType: 'text', inputId: 'city', inputName: 'city', required: true });
-    //   createField(inlineGroup, { placeholder: 'State:', inputType: 'text', inputId: 'state', inputName: 'state', required: true });
-    
-    //   form.appendChild(inlineGroup);
-    
     
     const courseSelectWrapper = document.createElement('div');
     courseSelectWrapper.className = 'form-group'; 
@@ -197,11 +223,8 @@ function createForm(courseOptions, styles, logo, contact, divID) {
     
     createSelectField(courseSelectWrapper, '', 'courseSelection', 'courseSelection', courseOptions);
     
-    // createField(form, { placeholder: 'NEET Score:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
-    // createField(form, { placeholder: 'NEET AIR:', inputType: 'number', inputId: 'neetScore', inputName: 'neetScore', required: true});
-    
-    if (window.location.hostname === 'ntechzy.in') {
-      createField(form, { labelText: 'Preferred College:', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: true });
+    if (window.location.hostname === 'ntechzy.in' || window.location.hostname === 'localhost' ) {
+      createField(form, { placeholder: 'Preferred College', inputType: 'text', inputId: 'preferredCollege', inputName: 'preferredCollege', required: false });
     }
     
     const SelectWrapper = document.createElement('div');
@@ -211,14 +234,40 @@ function createForm(courseOptions, styles, logo, contact, divID) {
     const buttonContainer = document.createElement('div');
     buttonContainer.className = 'button-container';
     form.appendChild(buttonContainer);
+
+
+  //   const sendOtpButton = document.createElement('button');
+  // sendOtpButton.textContent = 'Send OTP';
+  // sendOtpButton.className = 'send-otp-button';
+  // sendOtpButton.addEventListener('click', async () => {
+  //   const phoneNumber = document.getElementById('contactNo').value;
+  //   try {
+  //     await auth.signInWithPhoneNumber(phoneNumber, new firebase.auth.RecaptchaVerifier('recaptcha-container'));
+  //     alert('OTP sent!');
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert('Failed to send OTP');
+  //   }
+  // });
+  // form.appendChild(sendOtpButton);
+
+
     const submitButton = document.createElement('button');
     submitButton.type = 'submit';
     submitButton.textContent = 'Submit';
     submitButton.className = 'submit-button';
     form.appendChild(submitButton);
     form.addEventListener('submit', submitForm);
+
+    const neetAIRInput = document.getElementById('neetAir');
+    neetAIRInput.addEventListener('input', () => {
+      if (neetAIRInput.value < 0) {
+        neetAIRInput.value = 0;
+      }
+    });
     
     populateFormFromLocalStorage();
+
     
   }
   function toggleFormStyle(styles) {
@@ -244,53 +293,36 @@ function createForm(courseOptions, styles, logo, contact, divID) {
     contactElement.classList.add('contact-style'); 
     header.appendChild(contactElement);
 }
-//   function createField(form, field) {
-//     // const { labelText, inputType, inputId, inputName, required } = field;
-  
-//     // const wrapper = document.createElement('div');
-//     // wrapper.className = 'form-group';
-  
-//     // const label = document.createElement('label');
-//     // label.textContent = labelText;
-//     // label.htmlFor = inputId;
-//     // wrapper.appendChild(label);
-  
-//     // let input;
-//     // if (inputType === 'textarea') {
-//     //     input = document.createElement('textarea');
-//     // } else {
-//     //     input = document.createElement('input');
-//     //     input.type = inputType;
-//     // }
-//     // input.id = inputId;
-//     // input.name = inputName;
-//     // input.required = required;
-//     // wrapper.appendChild(input);
-  
-//     // form.appendChild(wrapper);
-    
-//   }
+
 function createField(form, field) {
-    const { placeholder, inputType, inputId, inputName, required } = field;
+  const { placeholder, inputType, inputId, inputName, required } = field;
 
-    const wrapper = document.createElement('div');
-    wrapper.className = 'form-group';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'form-group';
 
-    let input;
-    if (inputType === 'textarea') {
-        input = document.createElement('textarea');
-    } else {
-        input = document.createElement('input');
-        input.type = inputType;
-    }
+  if (inputType === 'select') {
+    const select = document.createElement('select');
+    select.id = inputId;
+    select.name = inputName;
+    select.required = required;
 
+    wrapper.appendChild(select);
+  } else {
+    const input = document.createElement('input');
+    input.type = inputType;
     input.id = inputId;
     input.name = inputName;
-    input.placeholder = placeholder; 
+    input.placeholder = placeholder;
     input.required = required;
 
+    if (inputType === 'number') {
+      input.min = '0';
+    }
+
     wrapper.appendChild(input);
-    form.appendChild(wrapper);
+  }
+
+  form.appendChild(wrapper);
 }
 
   
@@ -298,15 +330,12 @@ function createField(form, field) {
     const wrapper = document.createElement('div');
     wrapper.className = 'form-select';
   
-    // const label = document.createElement('label');
-    // label.textContent = labelText;
-    // label.htmlFor = selectId;
-    // wrapper.appendChild(label);
-  
     const select = document.createElement('select');
     select.id = selectId;
     select.name = selectName;
     select.required = true;
+
+
 
     console.log(options);
     JSON.parse(options).map((optionText) => {
@@ -345,40 +374,11 @@ function createField(form, field) {
     return urlParams.get(name);
   }
 
-  // const utmData = {
-  //   source: getUrlParameter('utm_source') ? getUrlParameter('utm_source') : window.location.hostname,
-  //   sourceId: getUrlParameter('campaign_id') ? getUrlParameter('capaign_id') : window.location.href
-  // };
   const source = getUrlParameter('utm_source') !== null ? getUrlParameter('utm_source') : window.location.hostname;
   const sourceId = getUrlParameter('campaign_id') !== null ? getUrlParameter('campaign_id') : window.location.href;
 
-  // const mobileOtp = document.getElementById('contactOtp');   1
 
-
-// mobileOtp.addEventListener('input', function() {
-
-//   const inputValue = this.value;
-
-//   if (inputValue.length === 6) {
-
-//     // Call the function when 6 numbers are typed
-
-//     myFunction();
-
-//   }
-
-// });
-
-
-// function myFunction() {
-
-//   console.log('6 numbers typed!');
-
-//   // Add your code here
-
-// }
-
-  function submitForm(event) {
+  async function submitForm(event) {
     event.preventDefault(); 
   
     const formData = {
@@ -391,24 +391,39 @@ function createField(form, field) {
         state: document.getElementById('state').value,
         courseSelection: document.getElementById('courseSelection').value,
         neetScore: document.getElementById('neetScore').value,
-        neetAir: document.getElementById('neetAir').value,
+        neetAir:    parseInt(document.getElementById('neetAir').value, 10),
         preferredCollege: document.getElementById('preferredCollege') ? document.getElementById('preferredCollege').value : source,
         agreeCheckbox: document.getElementById('agreeCheckbox').checked,
         source: source,
         sourceId: sourceId
     };
   
+    if (neetAir < 0) {
+      alert('NEET AIR cannot be a negative number.');
+      return;
+    }
   
-    if (formData.courseSelection === "Select Course") {
+  
+    else if (formData.courseSelection === "Select Course") {
         alert("Please select a course.");
         return;
     }
+
+  //   const phoneNumber = document.getElementById('contactNo').value;
+  // const otp = document.getElementById('otp').value;
+  // try {
+  //   const confirmationResult = await auth.signInWithPhoneNumber(phoneNumber, new firebase.auth.RecaptchaVerifier('recaptcha-container'));
+  //   await confirmationResult.confirm(otp);
+  //   alert('OTP verification successful!');
+  //   // Continue with your form submission logic
+  // } catch (error) {
+  //   console.error(error);
+  //   alert('Failed to verify OTP');
+  // }
     
     console.log(formData);
     sendData(formData)
     
-    // const form = document.getElementById('studentDetailsForm');
-    // form.reset();
   }
   //  const url = 'https://www.ntechzy.in/api/v1/form'
   const url = 'http://localhost:4000/api/v1/form'

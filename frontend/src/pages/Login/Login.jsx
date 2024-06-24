@@ -107,7 +107,7 @@ function Login() {
         console.log(response.data,"arnav")
       if (response.data.status === "ok") {
         toast.success("Login Successful", { position: "top-right" });
-        window.localStorage.setItem("token", response.data.data);
+        window.localStorage.setItem("token", true);
         window.localStorage.setItem("loggedIn", true);
         window.localStorage.setItem("mobile", mobileInput);
         window.localStorage.setItem("user-type", response.data.type);

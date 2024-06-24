@@ -134,7 +134,7 @@ const FollowUpSteps = ({ studentId }) => {
           );
           newItem.preBookingAmount = preBookingAmount;
           break;
-        case 'Associate college':
+        case 'Associate College':
           newItem.additionalOption = additionalDropdown.find(
             (item) => item.option === SelectedOption
           );
@@ -143,7 +143,7 @@ const FollowUpSteps = ({ studentId }) => {
         default:
           break;
       }
-        console.log(studentId,subject,FolloupStage,"humara data client side");
+        console.log(studentId,preBookingAmount,"amount data client side");
         try {
           if(FolloupStage==="FollowUp3"){
             console.log(SelectedOption,secondDropdown,preBookingAmount,"follow3 hai")

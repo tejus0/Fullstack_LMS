@@ -20,7 +20,7 @@ export async function createStudentProfile(req, res) {
   try {
     const data = await req.body;
     const user = await studentModal.findOne({ $or: [{ email: data.email }, { contactNumber: data.contactNumber }] });
-    console.log(user,"otherresp");
+    // console.log(user,"otherresp");
     if (user) {
 
       const isMail = user.email == data.email
@@ -59,7 +59,7 @@ export async function createStudentProfile(req, res) {
       return res.status(200).json(
         {
           sucess: true,
-          msg: "Detail Stored Sucessfully",
+          msg: "Form Submitted Succesfully",
         }
       )
     }
@@ -70,7 +70,7 @@ export async function createStudentProfile(req, res) {
       return res.status(201).json(
         {
           sucess: true,
-          msg: "Detail Stored Sucessfully",
+          msg: "Form Submitted Succesfully",
         }
       )
     }
@@ -200,6 +200,7 @@ export const createFollowUp3 = async (req, res) => {
       followUpStage,
       additionalOption, // Include additionalOption in API call
       preBookingAmount } = req.body;
+      console.log(preBookingAmount,"amount")
 
     const todo = await studentModal.updateOne(
       { "_id": _id },
