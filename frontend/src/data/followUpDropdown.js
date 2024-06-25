@@ -48,5 +48,5 @@ export const associateCollegeOptions = [
 export const paidCounselling= [
     { option: 'MBBS - 30K' },
     { option: 'Other(BAMS / BDS/ BUMS/ BHMS) - 25K' },
-    { option: 'Package - 21000' },
+    { option: 'Package - 21K' },
   ];

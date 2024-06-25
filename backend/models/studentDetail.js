@@ -270,12 +270,14 @@ const studentDetailSchema = new mongoose.Schema(
                     type: String,
                     required: true
                 },preBookingAmount: {
-                    type: String,
+                    type: Number,
                     required: true
                 },
+                // pendingAmount: {
+                //     type: Number,
+                //     required: true
+                // },
 
-        //         additionalOption: newItem.additionalOption,
-        //   preBookingAmount: newItem.preBookingAmount,
                 updatedAt: { type: String },
                 default: {},
                 }]
