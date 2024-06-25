@@ -22,3 +22,4 @@ inside the frontend folder create an .env <b> file name should be .env only </b>
   api for table is fetched inside 
 </h2>
     /src/redux/apiCall.js
+hey
