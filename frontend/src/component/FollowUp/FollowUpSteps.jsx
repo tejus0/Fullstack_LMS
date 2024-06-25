@@ -31,8 +31,8 @@ const FollowUpSteps = ({ studentId }) => {
   const [showPreBookingAmount, setShowPreBookingAmount] = useState(false);
   const [countaa, setCountaa] = useState(0)
 
-  const [totalAmount, setTotalAmount] = useState(0); // State to store the total amount
-  const [pendingAmount, setPendingAmount] = useState(0); // State to store the pending amount
+  // const [totalAmount, setTotalAmount] = useState(0); // State to store the total amount
+  // const [pendingAmount, setPendingAmount] = useState(0); // State to store the pending amount
 
 
   // Modal state
@@ -67,16 +67,16 @@ const FollowUpSteps = ({ studentId }) => {
     fetchData(); // Call the fetchData function
 
     // Update dropdown based on FolloupStage
-    if (FolloupStage === "FollowUp3" && notesByStage.FollowUp3.length>0) {
-      const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
-      setDropDown(followUpThree.filter(item => backendOptions.includes(item.option)));
+  //   if (FolloupStage === "FollowUp3" && notesByStage.FollowUp3.length>0) {
+  //     const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
+  //     setDropDown(followUpThree.filter(item => backendOptions.includes(item.option)));
 
-      const total = backendOptions.reduce((acc, curr) => {
-        const amount = parseInt(curr.split('-')[1].replace('K', '000'));
-        return acc + amount;
-      }, 0);
-      setTotalAmount(total);
-  }else{
+  //     const total = backendOptions.reduce((acc, curr) => {
+  //       const amount = parseInt(curr.split('-')[1].replace('K', '000'));
+  //       return acc + amount;
+  //     }, 0);
+  //     setTotalAmount(total);
+  // }else{
     switch (FolloupStage) {
       case "FollowUp1":
         setDropDown(followUpOne);
@@ -90,7 +90,7 @@ const FollowUpSteps = ({ studentId }) => {
       default:
         setDropDown(followUpOne);
         break;
-    }
+    // }
   }
   }, [FolloupStage, countaa]); // Include FolloupStage and studentId in the dependency array
 
