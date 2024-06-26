@@ -21,6 +21,7 @@ export async function createStudentProfile(req, res) {
     const data = await req.body;
     const user = await studentModal.findOne({ $or: [{ email: data.email }, { contactNumber: data.contactNumber }] });
     // console.log(user,"otherresp");
+    console.log(data ,"ersponase on otherresponsew")
     if (user) {
 
       const isMail = user.email == data.email
@@ -39,7 +40,7 @@ export async function createStudentProfile(req, res) {
         )
       }
 
-
+      
       const anotherResponse = {
         guardianName:data.guardianName,
         district:data.district,
@@ -51,9 +52,10 @@ export async function createStudentProfile(req, res) {
         sourceId: data.sourceId,
         preferredCollege: data.preferredCollege,
         contactNumber: data.contactNumber,
-        email: data.email
+        email: data.email,
+        neetScore:data.neetScore,
+        neetAIR: data.neetAIR
       }
-
       user.otherResponse.push(anotherResponse)
       await user.save()
       return res.status(200).json(
@@ -65,7 +67,8 @@ export async function createStudentProfile(req, res) {
     }
 
     else {
-
+      console.log(data.AssignedCouns,"nhi hoga")
+        if(data.AssignedCouns==""){
       await studentModal.create(data);
       return res.status(201).json(
         {
@@ -73,6 +76,17 @@ export async function createStudentProfile(req, res) {
           msg: "Form Submitted Succesfully",
         }
       )
+    }
+    else{
+      
+      data.assignedCouns= data.AssignedCouns;
+
+      await studentModal.create(data);
+      return res.status(201).json({
+        success: true,
+        msg: "Form Submitted Successfully",
+      });
+    }
     }
 
   } catch (error) {

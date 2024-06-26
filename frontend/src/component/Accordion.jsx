@@ -27,7 +27,7 @@ export default function AccordionExpandIcon({otherResp}) {
           aria-controls="panel1-content"
           id="panel1-header"
         >
-          <Typography>{resp.sourceId}</Typography>
+          <Typography>{isNaN(resp.sourceId) ? resp.source : resp.source + " " + resp.sourceId}</Typography>
         </AccordionSummary>
         <AccordionDetails>
                   <p>Name: {resp.name}</p>
