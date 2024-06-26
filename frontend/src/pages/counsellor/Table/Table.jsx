@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import TablePagination from "@mui/material/TablePagination";
 import Button from '@mui/material/Button';
 import Tooltip from "@mui/material/Tooltip";
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
@@ -122,12 +124,23 @@ const Table = () => {
   return (
     <div>
       <Box className="flex">
-        <div>
-          <Tooltip title="Delete">
+        <div className="flex flex-col">
+          <Tooltip title="Logout">
             <IconButton onClick={handleLogout}>
               <LogoutIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Add Quick Lead">
+            <IconButton>
+              <a href={`http://localhost:5173/?counsId=${id}`}><PersonAddAltIcon /></a>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Bulk Upload">
+            <IconButton>
+              <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a>
+            </IconButton>
+          </Tooltip>
+
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
 
@@ -174,9 +187,11 @@ const Table = () => {
                   <td className="px-6 py-4">{user.contactNumber}</td>
                   <td className="px-6 py-4"> {user.remarks.length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td>
                   <td className="px-6 py-4">
+                      <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>
                     <Button variant="contained">
-                      <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>Edit</Link>
+                      Edit
                     </Button>
+                      </Link>
                   </td>
                 </tr>
               ))}

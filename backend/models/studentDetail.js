@@ -146,7 +146,7 @@ const otherResponse = new mongoose.Schema({
         default: ""
     },
     neetAIR: {
-        type: String,
+        type: Number,
         required: [false, 'Rank is required'],
         default: ""
     },
