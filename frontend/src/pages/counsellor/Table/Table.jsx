@@ -132,12 +132,22 @@ const Table = () => {
           </Tooltip>
           <Tooltip title="Add Quick Lead">
             <IconButton>
-              <a href={`http://localhost:5173/?counsId=${id}`}><PersonAddAltIcon /></a>
+            <Link to={`/?counsId=${id}`}
+                            target='_blank'>
+                            <PersonAddAltIcon />
+                        </Link>
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><PersonAddAltIcon /></a> */}
+              {/* <a href={ `http://localhost:5173/?counsId=${id}`}><PersonAddAltIcon /></a> */}
             </IconButton>
           </Tooltip>
           <Tooltip title="Bulk Upload">
             <IconButton>
-              <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a>
+            <Link to={`/?counsId=${id}`}
+                            target='_blank'>
+                            <GroupAddIcon />
+                        </Link>
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
             </IconButton>
           </Tooltip>
 
