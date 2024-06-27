@@ -19,9 +19,9 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
     const [SelectedOption, setSelectedOption] = useState("");
     const [haan, setHaan] = useState(0)
     const [notesByStage, setNotesByStage] = useState({
-      FollowUp1: [],
-      FollowUp2: [],
-      FollowUp3: [],
+      // FollowUp1: [],
+      // FollowUp2: [],
+      // FollowUp3: [],
     });
 
     useEffect(() => {

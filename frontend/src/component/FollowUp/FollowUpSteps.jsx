@@ -17,11 +17,10 @@ const FollowUpSteps = ({ studentId }) => {
   const [FolloupStage, setFolloupStage] = useState("FollowUp1");
   const [dropDown, setDropDown] = useState([]);
   const [SelectedOption, setSelectedOption] = useState("");
-  const [notesByStage, setNotesByStage] = useState({
-    FollowUp1: [],
-    FollowUp2: [],
-    FollowUp3: [],
-  });
+  const [notesByStage, setNotesByStage] = useState({});
+  // FollowUp1: [],
+  // FollowUp2: [],
+  // FollowUp3: [],
 
   const [secondDropdown, setSecondDropdown] = useState("")
 
@@ -68,16 +67,17 @@ const FollowUpSteps = ({ studentId }) => {
 
     // Update dropdown based on FolloupStage
     if (FolloupStage === "FollowUp3" && notesByStage.FollowUp3.length>0) {
-      const backendOptions = notesByStage.FollowUp3.map(note => note.additionalOption);
+      const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
       setDropDown(followUpThree.filter(item => backendOptions.includes(item.option)));
-      console.log(dropDown,"dropdown in formsteps")
+      console.log(dropDown,"dropdown in formsteps", backendOptions)
 
-      const total = backendOptions.reduce((acc, curr) => {
-        const amount = parseInt(curr.split('-')[1].replace('K', '000'));
-        return acc + amount;
-      }, 0);
-      setTotalAmount(total);
-      console.log(totalAmount,"totalAmount")
+      // const total = backendOptions.reduce((acc, curr) => {
+      //   const amount = parseInt(curr.split('-')[1].replace('K', '000'));
+      //   return acc + amount;
+      // }, 0);
+      // setTotalAmount(total);
+      // console.log(totalAmount,"totalAmount")
+
   }else{
     switch (FolloupStage) {
       case "FollowUp1":
@@ -128,6 +128,12 @@ const FollowUpSteps = ({ studentId }) => {
         
         setShowPreBookingAmount(true);
   };
+
+  const keyFollow = (e) => {
+if(e.key == "Enter"){
+  addFollowUp()
+}
+  }
 
   const addFollowUp = async () => {
     // Your existing addFollowUp function remains unchanged
@@ -245,7 +251,7 @@ const FollowUpSteps = ({ studentId }) => {
           >
             Follow Two
           </li>}
-          {notesByStage.FollowUp2?.some((person) => person.subject === "Hot Lead+tej")?<li
+          {notesByStage.FollowUp2?.some((person) => person.subject === "Hot Lead+INTERESTED" || person.subject === "Hot Lead+INTERESTED")?<li
             onClick={() => setFolloupStage("FollowUp3")}
             className={`${
               FolloupStage === "FollowUp3"
@@ -268,12 +274,12 @@ const FollowUpSteps = ({ studentId }) => {
         </ul>
       </div>
 
-      <div className="bg-blue-500 flex-1 py-5 gap-5">
+      <div className="bg-blue-500 flex-1 p-10 gap-5 rounded-md">
         <div className="flex gap-4 justify-center items-start">
           <select
             value={SelectedOption}
            onChange={(e) => handleSelectedOption(e.target.value)}
-            className="w-[250px] p-3 rounded-lg"
+            className="w-[250px] py-3 rounded-lg"
           >
             {/* Your select options based on dropdown */}
             <option value="">Select</option>
@@ -284,7 +290,7 @@ const FollowUpSteps = ({ studentId }) => {
             ))}
           </select>
           {FolloupStage !="FollowUp3" && <button
-            className="bg-white p-3 rounded-xl"
+            className="bg-white py-2 px-6 rounded-xl"
             onClick={FolloupStage === "FollowUp2" ? openModal : addFollowUp}
           >
             Add
@@ -328,6 +334,7 @@ const FollowUpSteps = ({ studentId }) => {
           >
             Submit
           </button>}
+          <div>Pending Amount: {pendingAmount}</div>
           </div>
         )}
         
@@ -348,31 +355,36 @@ const FollowUpSteps = ({ studentId }) => {
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
+              onKeyUp={keyFollow}
               className="w-full p-3 border rounded-lg mb-4"
               rows="4"
               placeholder="Enter your note..."
             />
+            <strong className="mb-2 block text-gray-700">Note : To open follow up 3 add remark <strong>"INTERESTED"</strong> </strong>
+            <div className="flex gap-4">
+
             <button
             className={`px-4 py-2 rounded-lg text-white ${text.trim() === '' ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
             onClick={addFollowUp}
             disabled={text.trim() === ''}
-              // className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              // onClick={addFollowUp}
+            // className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            // onClick={addFollowUp}
             >
               Submit
             </button>
             <button
           className="bg-gray-500 text-white px-4 py-2 rounded-lg"
           onClick={() => setText('')}
-        >
+          >
           Reset
         </button>
         <button
           className="bg-red-500 text-white px-4 py-2 rounded-lg"
           onClick={() => setIsModalOpen(false)}
-        >
+          >
           Cancel
         </button>
+          </div>
           </div>
         </div>
       )}

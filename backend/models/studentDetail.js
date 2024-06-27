@@ -250,7 +250,7 @@ const studentDetailSchema = new mongoose.Schema(
                     required: true
                 },
                 updatedAt: { type: String },
-                default: {},
+                // default: {},
                 }],
                 FollowUp2:[{
                     type: Object,
@@ -259,7 +259,7 @@ const studentDetailSchema = new mongoose.Schema(
                     required: true
                 },
                 updatedAt: { type: String },
-                default: {},
+                // default: {},
                 }],
                 FollowUp3:[{
                     type: Object,
@@ -279,7 +279,7 @@ const studentDetailSchema = new mongoose.Schema(
                 // },
 
                 updatedAt: { type: String },
-                default: {},
+                // default: {},
                 }]
             }
         ,

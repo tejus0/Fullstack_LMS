@@ -11,6 +11,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
+import { object } from "yup";
 
 const Table = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -115,7 +116,8 @@ const Table = () => {
   }
 
   var paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 0)
+  const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
+  // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
 
 
 
@@ -184,6 +186,7 @@ const Table = () => {
             <tbody>
               {paginatedUsers.map((user, index) => (
                 <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  {console.log(user.remarks, "user.remarkls")}
                   <td className="w-4 p-4">
                     <div className="flex items-center">
                       {index + 1}
@@ -195,7 +198,10 @@ const Table = () => {
                   <td className="px-6 py-4">{user.state}</td>
                   <td className="px-6 py-4">{user.courseSelected}</td>
                   <td className="px-6 py-4">{user.contactNumber}</td>
-                  <td className="px-6 py-4"> {user.remarks.length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td>
+                  {/* <td className="px-6 py-4"> {object.keys(user.remarks).length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td> */}
+                  <td className="px-6 py-4">
+         {user.remarks.FollowUp3.length > 0 ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject: user.remarks.FollowUp2.length > 0 ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject: user.remarks.FollowUp1.length > 0 ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject: "No Remarks "}
+    </td>
                   <td className="px-6 py-4">
                       <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}>
                     <Button variant="contained">

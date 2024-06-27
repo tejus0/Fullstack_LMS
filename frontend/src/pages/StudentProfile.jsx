@@ -84,10 +84,12 @@ const StudentProfile = ({ counsellor_id }) => {
           Go To Leads
         </Button>
         <div className="container mx-auto p-4">
-          <div className="flex flex-wrap -mx-4">
-            <div className="w-full md:w-1/2 px-4 mb-4">
-              <div className="border p-4 rounded-lg shadow-lg">
-                <div className="flex items-center mb-4">
+          <div className="flex flex-wrap flex-col -mx-4">
+            <div className="w-full px-4 mb-4">
+              <div className="border p-10 rounded-lg shadow-lg">
+                <div className="flex items-center mb-4 justify-between">
+                  <div className='flex ml-4'>
+
                   <div className="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center">
                     S
                   </div>
@@ -95,19 +97,29 @@ const StudentProfile = ({ counsellor_id }) => {
                     <h2 className="font-bold text-xl">{studentData.name}</h2>
                     <span className="text-blue-600">{formatDate(studentData.createdAt)}</span>
                   </div>
+                  </div>
+                  <p className='text-orange-600 font-bold'>Source: {studentData.source}</p>
                 </div>
-                <div className="mb-4">
-                  <p>Email: {studentData.email}</p>
+                <div className="mb-4 flex justify-between">
+                  <div>
                   <p>Mobile: <span className="text-green-600">{studentData.contactNumber}</span></p>
+                  <p>Email: {studentData.email}</p>
                   <p>Whatsapp Number: <span className="text-green-600">{studentData.whatsappNumber}</span></p>
+
+                  </div>
+                  <div>
+                  <p>Neet AIR: {studentData.neetAIR}</p>
+                  <p>Neet Score: {studentData.neetScore}</p>
+                  <p>Preferred College: {studentData.preferredCollege}</p>
+                  <p>Course Selected: {studentData.courseSelected}</p>
+
+                  </div>
+                  <div>
                   <p>Father name: {studentData.guardianName}</p>
                   <p>City: {studentData.district}</p>
                   <p>State: {studentData.state}</p>
-                  <p>Course Selected: {studentData.courseSelected}</p>
-                  <p>Preferred College: {studentData.preferredCollege}</p>
-                  <p>Source: {studentData.source}</p>
-                  <p>Neet Score: {studentData.neetScore}</p>
-                  <p>Neet AIR: {studentData.neetAIR}</p>
+
+                  </div>
                   {/* {console.log( studentData.remarks.FollowUp2, "tejus chatur sujaan")} */}
                   {/* <p>Neet AIR: {studentData.remarks.FollowUp2.subject}</p> */}
                   

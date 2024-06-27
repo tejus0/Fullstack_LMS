@@ -381,7 +381,7 @@ export const verifyLogin = async (req, res) => {
         // res.redirect("/admin-page");
         // }
       } else {
-        return res.json({ error: " ID and Passsword are incoreect !" });
+        return res.json({ error: " ID and Password are incorrect !" });
       }
     } else {
       return res.json({ error: "No username exists !" });
@@ -393,7 +393,7 @@ export const verifyLogin = async (req, res) => {
 
 export const assignAuto = async (req, res) => {
   // Fetch all counsellor ids
-  const counsellors = await counsellorModal.find({});
+  const counsellors = await counsellorModal.find({allLeads:0});
   const counsellorIds = counsellors.map(c => c._id);  // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
   // Fetch all student documents
@@ -428,7 +428,7 @@ export const assignAuto = async (req, res) => {
   );
 
   console.log('Updated students with counsellor ids successfully.');
-  return res.status(200).json(students);
+  return res.status(200).json(counsellorIds);
 }
 
 export const getCounsellorDataList = async (req, res) => {
@@ -449,13 +449,13 @@ export const getCounsellorDataList = async (req, res) => {
     else{
     const sales = await studentModal.find({ assignedCouns: id });
     // add here 
-    // console.log(sales[3].remarks);
+    console.log("here it is");
 
     if (!sales) {
       return res.status(404).json({ msg: "Sales data not found" });
     }
-    res.status(200).json(sales);
-    return;
+    return res.status(200).json(sales);
+    
   }
   } catch (error) {
     res.status(500).json({ error: error });
