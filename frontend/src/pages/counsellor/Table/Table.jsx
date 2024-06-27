@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 import { object } from "yup";
+import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 
 const Table = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -92,7 +93,7 @@ const Table = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    // setPage(0);
   };
 
   const handleLogout = () => {
@@ -116,7 +117,11 @@ const Table = () => {
   }
 
   var paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
+  // const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
+  const paginationDisabled = {
+    next: paginatedUsers.some(item => item.remarks.FollowUp1.length === 0),
+    previous: false // Always enable Previous button
+  };
   // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
 
 
@@ -213,15 +218,46 @@ const Table = () => {
               ))}
             </tbody>
           </table>
-          <TablePagination
+          {/* <TablePagination
             component="div"
             count={sortedUsers.length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            disabled={paginationDisabled}
-          />
+            // disabled={paginationDisabled}
+            nextIconButtonProps={{ disabled: paginationDisabled.next }}
+  backButtonProps={{ disabled: paginationDisabled.previous }} // Ensure Previous button is always enabled
+          /> */}
+          <TablePagination
+
+component="div"
+
+count={sortedUsers.length}
+
+page={page}
+
+onPageChange={handleChangePage}
+
+rowsPerPage={rowsPerPage}
+
+onRowsPerPageChange={handleChangeRowsPerPage}
+
+ActionsComponent={(props) => (
+
+  <TablePaginationActions
+
+    {...props}
+
+    nextIconButtonProps={{ disabled: paginationDisabled.next }}
+
+    backIconButtonProps={{ disabled: false }} // Always enable the back button
+
+  />
+
+)}
+
+/>
         </div>
       </Box>
     </div>
