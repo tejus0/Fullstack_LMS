@@ -93,7 +93,12 @@ const Table = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    // setPage(0);
+    setPage(0);
+  };
+
+  const handleSearchChange = (e) => {
+    // setsearch(e.target.value);
+    setPage(0); // Reset to first page when changing search term
   };
 
   const handleLogout = () => {
@@ -112,11 +117,12 @@ const Table = () => {
     else {
       console.log("ok");
       setUsers(paginatedUsers.filter((item) => item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())))
-
+      
     }
   }
 
   var paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  console.log(paginatedUsers,"usersall")
   // const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
   const paginationDisabled = {
     next: paginatedUsers.some(item => item.remarks.FollowUp1.length === 0),
@@ -218,7 +224,7 @@ const Table = () => {
               ))}
             </tbody>
           </table>
-          {/* <TablePagination
+          <TablePagination
             component="div"
             count={sortedUsers.length}
             page={page}
@@ -228,8 +234,8 @@ const Table = () => {
             // disabled={paginationDisabled}
             nextIconButtonProps={{ disabled: paginationDisabled.next }}
   backButtonProps={{ disabled: paginationDisabled.previous }} // Ensure Previous button is always enabled
-          /> */}
-          <TablePagination
+          />
+          {/* <TablePagination
 
 component="div"
 
@@ -257,7 +263,7 @@ ActionsComponent={(props) => (
 
 )}
 
-/>
+/> */}
         </div>
       </Box>
     </div>
