@@ -13,7 +13,7 @@ import NotesList from "./NotesList";
 const baseUrl = import.meta.env.VITE_API;
 
 const FollowUpSteps = ({ studentId }) => {
-    console.log(studentId,"studid")
+    // console.log(studentId,"studid")
   const [FolloupStage, setFolloupStage] = useState("FollowUp1");
   const [dropDown, setDropDown] = useState([]);
   const [SelectedOption, setSelectedOption] = useState("");
@@ -42,20 +42,8 @@ const FollowUpSteps = ({ studentId }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${baseUrl}/getTodos/${studentId}`);
-        console.log(response,"res")
-        // Assuming response.data is like:
-        // {
-        //   "FollowUp2": [],
-        //   "FollowUp3": [],
-        //   "FollowUp1": [
-        //     {
-        //       "subject": "Not Reachable",
-        //       "updatedAt": "2024-06-19T07:11:13.803Z"
-        //     }
-        //   ]
-        // }
         setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
-        console.log(notesByStage,"remarks");
+        // console.log(notesByStage,"remarks");
       } catch (error) {
 
         console.error("Error fetching data:", error);
@@ -67,16 +55,18 @@ const FollowUpSteps = ({ studentId }) => {
 
     // Update dropdown based on FolloupStage
     if (FolloupStage === "FollowUp3" && notesByStage.FollowUp3.length>0) {
-      const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
-      setDropDown(followUpThree.filter(item => backendOptions.includes(item.option)));
+      // const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
+      const backendOptions = notesByStage.FollowUp3;
+      setDropDown(followUpThree.filter(item => backendOptions[0].subject.includes(item.option)));
+      setSecondDropdown(followUpThree.filter(item=> backendOptions))
       console.log(dropDown,"dropdown in formsteps", backendOptions)
 
-      // const total = backendOptions.reduce((acc, curr) => {
-      //   const amount = parseInt(curr.split('-')[1].replace('K', '000'));
-      //   return acc + amount;
-      // }, 0);
-      // setTotalAmount(total);
-      // console.log(totalAmount,"totalAmount")
+      const total = backendOptions.reduce((acc, pendingAmount) => {
+        const amount = parseInt(curr.split('-')[1].replace('K', '000'));
+        return acc + amount;
+      }, 0);
+      setTotalAmount(total);
+      console.log(totalAmount,"totalAmount")
 
   }else{
     switch (FolloupStage) {
@@ -166,10 +156,10 @@ if(e.key == "Enter"){
         default:
           break;
       }
-        console.log(studentId,preBookingAmount,"amount data client side");
+        // console.log(studentId,preBookingAmount,"amount data client side");
         try {
           if(FolloupStage==="FollowUp3"){
-            console.log(SelectedOption,secondDropdown,preBookingAmount,"follow3 hai")
+            // console.log(SelectedOption,secondDropdown,preBookingAmount,"follow3 hai")
             await axios.post(`${baseUrl}/createFollowUp3`, {
               _id: studentId,
               name: subject,
@@ -261,11 +251,7 @@ if(e.key == "Enter"){
           >
             Follow three
           </li>: <li
-            // onClick={() => setFolloupStage("FollowUp2")}
             className={`${
-              // FolloupStage === "FollowUp2"
-                //  "bg-blue-500 text-white"
-                // :
                  "bg-gray-300 text-purple-900"
             } font-medium rounded-lg py-3 px-2 cursor-pointer`}
           >
@@ -367,8 +353,6 @@ if(e.key == "Enter"){
             className={`px-4 py-2 rounded-lg text-white ${text.trim() === '' ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-500'}`}
             onClick={addFollowUp}
             disabled={text.trim() === ''}
-            // className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-            // onClick={addFollowUp}
             >
               Submit
             </button>

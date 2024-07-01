@@ -59,17 +59,6 @@ const Table = () => {
     fetchData();
   }, [id]);
 
-  // const deleteUser = async (userId) => {
-  //   await axios
-  //     .delete(`${process.env.REACT_APP_BASE_URL}/delete/${userId}`)
-  //     .then((response) => {
-  //       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
-  //       toast.success(response.data.msg, { position: "top-right" });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];
@@ -235,35 +224,6 @@ const Table = () => {
             nextIconButtonProps={{ disabled: paginationDisabled.next }}
   backButtonProps={{ disabled: paginationDisabled.previous }} // Ensure Previous button is always enabled
           />
-          {/* <TablePagination
-
-component="div"
-
-count={sortedUsers.length}
-
-page={page}
-
-onPageChange={handleChangePage}
-
-rowsPerPage={rowsPerPage}
-
-onRowsPerPageChange={handleChangeRowsPerPage}
-
-ActionsComponent={(props) => (
-
-  <TablePaginationActions
-
-    {...props}
-
-    nextIconButtonProps={{ disabled: paginationDisabled.next }}
-
-    backIconButtonProps={{ disabled: false }} // Always enable the back button
-
-  />
-
-)}
-
-/> */}
         </div>
       </Box>
     </div>
