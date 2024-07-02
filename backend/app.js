@@ -3,7 +3,7 @@ import bodyParser from "body-parser"
 import cors from "cors"
 import helmet from "helmet"
 import dotenv from "dotenv"
-// import path from "path"
+import path from "path"
 
 // importing all routes here 
 import studentDetailRoute from "./routes/formRoute.js"; // Path to your router file
@@ -50,9 +50,7 @@ app.use("/api/v1", studentDetailRoute);
 //     res.render("./form.js", {})
 //  })
 
- app.use('/api/v1/student-form', express.static('student-form'))
-
-
+app.use('/api/v1/student-form', express.static('student-form'))
 
 
 if (process.env.NODE_ENV !== "production ") {

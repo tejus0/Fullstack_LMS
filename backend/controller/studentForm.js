@@ -402,33 +402,32 @@ export const assignAuto = async (req, res) => {
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
   let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
-
+  
   // Assign counsellor ids in a round-robin fashion
-  // let counsellorIndex = 0;
   for (let i = 0; i < students.length; i++) {
-    const student = students[i];
-    const newCounsellorId = counsellorIds[counsellorIndex];
-    console.log(newCounsellorId, typeof (newCounsellorId))
-
-    // if(student.assignedCouns == ""){
-    await studentModal.updateOne(
-      { _id: student._id },
-      { $set: { 'assignedCouns': newCounsellorId } }
-    );
-    // }
-    console.log("student id :- ",student._id,"assigned councellor:- ",student.assignedCouns)
-    counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
-  }
-
-  // Update the last assigned counsellor index
-  await assignmentConfigModal.updateOne(
-    {},
-    { $set: { lastAssignedCounsellorIndex: counsellorIndex } },
-    { upsert: true }
-  );
-
-  console.log('Updated students with counsellor ids successfully.');
-  return res.status(200).json(counsellorIds);
+      const student = students[i];
+      const newCounsellorId = counsellorIds[counsellorIndex];
+      console.log(newCounsellorId, typeof (newCounsellorId))
+    
+      // if(student.assignedCouns == ""){
+        await studentModal.updateOne(
+            { _id: student._id },
+            { $set: { 'assignedCouns': newCounsellorId } }
+          );
+          // }
+          console.log("student id :- ",student._id,"assigned councellor:- ",student.assignedCouns)
+          counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
+        }
+        
+        // Update the last assigned counsellor index
+        await assignmentConfigModal.updateOne(
+            {},
+            { $set: { lastAssignedCounsellorIndex: counsellorIndex } },
+            { upsert: true }
+          );
+          
+          console.log('Updated students with counsellor ids successfully.');
+          return res.status(200).json(counsellorIds);
 }
 
 export const getCounsellorDataList = async (req, res) => {

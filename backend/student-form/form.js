@@ -73,10 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initializeForm() {
-   const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
-  // const scriptElement = document.querySelector(
-    // 'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
-  // );
+  //  const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
+  const scriptElement = document.querySelector(
+    'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
+  );
 
   if (!scriptElement) {
     console.error('Script element with src="Form.js" not found.');
@@ -94,16 +94,18 @@ function initializeForm() {
     const customStylesheet = document.querySelectorAll(
       'link[rel="stylesheet"]'
     );
-    if (customStylesheet > 0) {
+    if (customStylesheet.length > 0) {
       const styleLink = document.createElement("link");
       styleLink.rel = "stylesheet";
       styleLink.href = "testStyle.css";
       document.head.prepend(styleLink);
     } else {
+      console.log("style in formjs")
       const styleLink = document.createElement("link");
       styleLink.rel = "stylesheet";
       // styleLink.href = "https://abhigyadufare.github.io/dynamicForm/style.css";
-      styleLink.href = "https://tejus0.github.io/lmsFormStyle/index.css";
+      // styleLink.href = "https://tejus0.github.io/lmsFormStyle/index.css";
+      styleLink.href = "http://localhost:4000/api/v1/student-form/style.css";
 
       document.head.prepend(styleLink);
     }
