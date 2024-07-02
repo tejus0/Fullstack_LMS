@@ -22,8 +22,6 @@ const FollowUpSteps = ({ studentId }) => {
   // FollowUp2: [],
   // FollowUp3: [],
 
-  const [backendOptions, setBackendOptions] = useState([])
-
   const [secondDropdown, setSecondDropdown] = useState("")
 
   const [additionalDropdown, setAdditionalDropdown] = useState([]);
@@ -55,8 +53,7 @@ const FollowUpSteps = ({ studentId }) => {
       // Update dropdown based on FolloupStage
       if (FolloupStage === "FollowUp3" && notesByStage.FollowUp3.length>0) {
         // const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
-        // const backendOptions = notesByStage.FollowUp3;
-        setBackendOptions(notesByStage.FollowUp3);
+        const backendOptions = notesByStage.FollowUp3;
         console.log( backendOptions," backendOptions");
         setDropDown(followUpThree.filter(item => backendOptions[0].subject.includes(item.option)));
         setAdditionalDropdown(followUpThree.filter(item=> backendOptions[0].additionalOption.includes(item.option)))
@@ -117,10 +114,7 @@ const FollowUpSteps = ({ studentId }) => {
     setSecondDropdown("")
 
     // Reset additional dropdown and input states based on selected option
-    if (backendOptions.FollowUp3.length>0) {
-      setAdditionalDropdown()
-    } else {
-      setAdditionalDropdown([]);
+    setAdditionalDropdown([]);
     setShowAdditionalDropdown(false);
     setPreBookingAmount('');
     setShowPreBookingAmount(false);
@@ -138,7 +132,7 @@ const FollowUpSteps = ({ studentId }) => {
         break;
         default:
           break;
-        }}
+        }
         
         setShowPreBookingAmount(true);
   };

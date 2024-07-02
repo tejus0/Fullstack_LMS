@@ -22,7 +22,9 @@ const Table = () => {
   // const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
   const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'asc' });
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
+  // const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
+  const [rowsPerPage] = useState(10); // Fixed rows per page to 10
+
   const [search, setsearch] = useState("")
   const [SearchBy, setSearchBy] = useState("name")
 
@@ -81,10 +83,10 @@ const Table = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+  // const handleChangeRowsPerPage = (event) => {
+  //   setRowsPerPage(parseInt(event.target.value, 10));
+  //   setPage(0);
+  // };
 
   const handleSearchChange = (e) => {
     // setsearch(e.target.value);
@@ -220,7 +222,8 @@ const Table = () => {
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            rowsPerPageOptions={[]}
+            // onRowsPerPageChange={handleChangeRowsPerPage}
             // disabled={paginationDisabled}
             nextIconButtonProps={{ disabled: paginationDisabled.next }}
   backButtonProps={{ disabled: paginationDisabled.previous }} // Ensure Previous button is always enabled
