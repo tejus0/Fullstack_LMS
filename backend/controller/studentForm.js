@@ -3,6 +3,7 @@ import Todo from '../models/councellorToDoModel.js';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import counsellorModal from '../models/counsellorDetail.js';
+import agentModal from '../models/agentModel.js';
 // import nodemailer from "nodemailer";
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 import councellorToDoModel from '../models/councellorToDoModel.js';
@@ -98,6 +99,21 @@ export async function createStudentProfile(req, res) {
   }
 
 }
+
+
+export const insertAgent= async(req,res)=>{
+  const agent_data= req.params;
+  console.log(agent_data,"button click of agent");
+
+await agentModal.create(agent_data);
+      return res.status(201).json({
+        success: true,
+        msg: "Agent Created Successfully",
+      });
+
+}
+
+
 
 
 // gettiing all data for dashboard
