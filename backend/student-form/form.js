@@ -2,7 +2,11 @@ import { districtData } from "./district.js";
 document.addEventListener("DOMContentLoaded", () => {
   // setTimeout(initializeForm, 4000);
   // createFormButton();
-  initializeForm();
+  // const nameId =
+  // getUrlParameter("name_id") !== null
+  //   ? clickAgentButton()
+    // :
+     initializeForm();
 });
 
 // Initialize Firebase
@@ -72,10 +76,69 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+function clickAgentButton(name,password) {
+  // Create a button element
+  var button = document.createElement('button');
+  
+  // Set button text
+  button.textContent = 'Click me to call API';
+
+  
+  // Add click event listener to the button
+  button.addEventListener('click', async function() {
+
+      // Define the API endpoint
+      // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+      var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // body: JSON.stringify(Data),
+        });
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Error calling API");
+        }
+    
+        const result = await response.json();
+        const msg = result.msg;
+
+        // Update the message div with the success message
+      messageDiv.textContent = "lelo sir";
+
+      // Close the window after 2 seconds (adjust timing as needed)
+      setTimeout(function() {
+        window.close();
+      }, 2000); // Close after 2 seconds
+      } catch (errorData) {
+        console.error('Error calling API:', error);
+      }
+  });
+  
+  // Append the button to a container in the DOM
+  document.body.appendChild(button);
+
+  // Create a div element for displaying the response message
+  var messageDiv = document.createElement('div');
+  messageDiv.id = 'responseMessage'; // Set id for the div
+  messageDiv.textContent = ''; // Initially empty
+
+  // Append the message div to the document body
+  document.body.appendChild(messageDiv);
+}
+
+
+
+
 function initializeForm() {
    const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
   // const scriptElement = document.querySelector(
-    // 'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
+  //   'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
   // );
 
   if (!scriptElement) {
@@ -83,6 +146,13 @@ function initializeForm() {
     return;
   }
 
+  const agent_name_id = getUrlParameter("u_name") ;
+  const agent_pass = getUrlParameter("u_pass") ;
+
+  if(agent_name_id!=null){
+    clickAgentButton(agent_name_id,agent_pass);
+  }
+  else{
   const path = scriptElement.getAttribute("path");
   const courses = scriptElement.getAttribute("courses");
   const styles = scriptElement.getAttribute("styles");
@@ -123,6 +193,7 @@ function initializeForm() {
   console.log(path);
   console.log(courses);
   console.log(path.includes(currentPath));
+}
 }
 
 function createFormButton() {
@@ -443,6 +514,11 @@ const sourceId =
     : window.location.href;
     const assignedCouns = getUrlParameter("counsId");
     console.log(assignedCouns, "global couns");
+  // const nameId =
+  // getUrlParameter("name_id") !== null
+  //   ? getUrlParameter("name_id")
+  //   : null;
+
 
 async function submitForm(event) {
   event.preventDefault();
