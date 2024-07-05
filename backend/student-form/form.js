@@ -90,7 +90,7 @@ function clickAgentButton(name,password) {
   // button.addEventListener('click', async function() {
 
       // Define the API endpoint
-      const apiUrl = window.location.href.includes('localhost') ? "hhttp://localhost:4000/api/v1/insertAgent/${name}/${password}" : "https://ntechzy.in/api/v1/insertAgent/${name}/${password}"
+      const apiUrl = window.location.href.includes('localhost') ? `http://localhost:4000/api/v1/insertAgent/${name}/${password}` : `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`
       // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
       // var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
 
