@@ -90,7 +90,8 @@ function clickAgentButton(name,password) {
   // button.addEventListener('click', async function() {
 
       // Define the API endpoint
-      var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+      const apiUrl = window.location.href.includes('localhost') ? "hhttp://localhost:4000/api/v1/insertAgent/${name}/${password}" : "https://ntechzy.in/api/v1/insertAgent/${name}/${password}"
+      // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
       // var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
 
       try {
@@ -140,9 +141,14 @@ function clickAgentButton(name,password) {
 
 function initializeForm() {
   //  const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
-  const scriptElement = document.querySelector(
+  // const scriptElement = document.querySelector(
+  //   'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
+  // );
+
+  const scriptElement = window.location.href.includes('localhost') ? document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]') : document.querySelector(
     'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
   );
+  
 
   if (!scriptElement) {
     console.error('Script element with src="Form.js" not found.');
