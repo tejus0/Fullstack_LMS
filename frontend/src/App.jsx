@@ -12,6 +12,7 @@ import ForgetPass from "./pages/Forgot-password/ForgetPass";
 import ShowAllleads from "./pages/admin/showAllLeads";
 import ArnavLeads from "./pages/arnav/arnavLeads";
 import ProtectedRoutes from "../ProtectedRoutes";
+import TableShowSpecificLeads from "./pages/SpecificLeads/TableSpecificLeads";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgetPass />} />
           <Route path="/showAllLeads" element={ <ShowAllleads/>} />
           <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
+          <Route path="/showSpecificLeads" element={<TableShowSpecificLeads />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
         </Routes>

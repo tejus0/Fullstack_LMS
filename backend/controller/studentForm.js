@@ -356,31 +356,74 @@ export const verifyLogin = async (req, res) => {
     // const email = req.body.email;
     // console.log(email,"email is here");
 
-    const userData = await counsellorModal.findOne({
-      // employee_id: employee_id,
-      // email: email,
-      mobile: mobileInput,
-    });
 
-    if (userData) {
-      const passwordMatch = await bcrypt.compare(passwordInput, userData.password);
 
-      // if(res.status(201)){
-      //    res.json({status:"ok",data:token});
-      // }
-      // else{
-      //    res.json({error:"error"});
-      // }
-      console.log(passwordMatch, "match");
-      if (passwordMatch) {
-        // if (userData.is_verified === 0) {
-        //   return res.json({ error: "Email not verified !" });
+    // const userData = agentModal.find({name:})
+
+    const regexPattern = new RegExp(`_${mobileInput}$`);
+    const userData = await agentModal.find({ name: { $regex: regexPattern } }).exec();
+
+    if(userData){
+      console.log(userData,"data in AGENT");
+      const nameField=userData[0].name;
+      const password= userData[0].password;
+      // Splitting the name field value by underscore to extract category and name
+    const parts = nameField.split('_');
+
+    // Assuming the format is consistent and contains exactly three parts
+    const category = parts[0]; // First part is the category
+    const name = parts[1]; // Second part is the name
+    const mobileNumber = parts[2]; // Third part is the mobile number
+
+    console.log('Category:', category); // Output: business
+    console.log('Name:', name); // Output: restaurant
+    console.log('Mobile Number:', mobileNumber); // Output: 1234567890 
+
+    // Assuming the format is consistent and contains exactly three parts
+    const category_name = parts.slice(0, 2).join('_');
+
+    if(mobileInput==mobileNumber && password===passwordInput){
+      if (res.status(201)) {
+        // if (userData.is_admin === 1) {
+        //   return res.json({ status: "ok", data: userData._id, type: "admin" });
         // } else {
-        // const token = jwt.sign(
-        //   { counsellor_id: userData.counsellor_id }, //error maybe
-        //   process.env.SECRET_KEY
-        //   {
-        //     expiresIn: 10,
+          return res.json({ status: "ok", data: category_name, type: "agent" });
+
+        // }
+      } else {
+        return res.json({ error: "error" });
+      }
+    } else {
+      return res.json({ error: " ID and Password are incorrect !" });
+    }
+     } 
+  
+    else{
+
+      const userData = await counsellorModal.findOne({
+        // employee_id: employee_id,
+        // email: email,
+        mobile: mobileInput,
+      });
+      if (userData) {
+        const passwordMatch = await bcrypt.compare(passwordInput, userData.password);
+        
+        // if(res.status(201)){
+          //    res.json({status:"ok",data:token});
+          // }
+          // else{
+            //    res.json({error:"error"});
+            // }
+            console.log(passwordMatch, "match");
+            if (passwordMatch) {
+              // if (userData.is_verified === 0) {
+                //   return res.json({ error: "Email not verified !" });
+                // } else {
+                  // const token = jwt.sign(
+                    //   { counsellor_id: userData.counsellor_id }, //error maybe
+                    //   process.env.SECRET_KEY
+                    //   {
+                      //     expiresIn: 10,
         //   }
         // );
         // console.log(token, "token in verify");
@@ -389,6 +432,7 @@ export const verifyLogin = async (req, res) => {
             return res.json({ status: "ok", data: userData._id, type: "admin" });
           } else {
             return res.json({ status: "ok", data: userData._id, type: "user" });
+
           }
         } else {
           return res.json({ error: "error" });
@@ -402,7 +446,8 @@ export const verifyLogin = async (req, res) => {
     } else {
       return res.json({ error: "No username exists !" });
     }
-  } catch (error) {
+  }
+ }catch (error) {
     console.log(error.message);
   }
 };
@@ -577,4 +622,32 @@ return res.status(200).json(
         } catch (error) {
           res.status(500).json({ error: error });
         }
+      }
+      export const showSpecificLeads = async (req, res) => {
+        console.log(req.params.categoryName,"name in showspecific");
+        const cat_name=req.params.categoryName;
+
+        const sales = await studentModal.find({ source: cat_name });
+        // add here 
+        console.log("here it is");
+    
+        if (!sales) {
+          return res.status(404).json({ msg: "Sales data not found" });
+        }
+        return res.status(200).json(sales);
+        // const id = req.params.id;
+        // console.log(id, "in ArnavSalesList");
+        // try {
+        //   const studentList = await studentModal.find({ source: "fb_arnav" });
+        //   // add here 
+        //   // console.log(sales[3].remarks);
+      
+        //   if (!studentList) {
+        //     return res.status(404).json({ msg: "Students data not found" });
+        //   }
+        //   res.status(200).json(studentList);
+        //   return;
+        // } catch (error) {
+        //   res.status(500).json({ error: error });
+        // }
       }

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,showSpecificLeads} from "../controller/studentForm.js";
 
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
@@ -26,6 +26,8 @@ router.route("/renameKey").post(renameKey);
 
 router.route("/getCounsellorDataList/:id").get(getCounsellorDataList);
 router.route("/cleatAllAssignedCouns").get(cleatAllAssignedCouns);
+
+router.route("/showSpecificLeads/:categoryName").get(showSpecificLeads);
 
 // router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 

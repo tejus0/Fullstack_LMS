@@ -145,9 +145,8 @@ function initializeForm() {
   //   'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
   // );
 
-  const scriptElement = window.location.href.includes('localhost') ? document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]') : document.querySelector(
-    'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
-  );
+  const scriptElement = window.location.href.includes('localhost') ? document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]') :  document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]')
+
   
 
   if (!scriptElement) {

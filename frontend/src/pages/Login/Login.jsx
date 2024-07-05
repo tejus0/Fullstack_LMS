@@ -118,6 +118,9 @@ function Login() {
         if (response.data.type === "user") {
           navigate(`/counsellor-profile/${response.data.data}`, { state: { id: response.data.data } });
         } 
+        if(response.data.type==="agent"){
+          navigate(`/showSpecificLeads`,{state:{name:response.data.data}})
+        }
         else {
           navigate("/showAllLeads");
         }
