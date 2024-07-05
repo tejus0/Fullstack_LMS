@@ -93,7 +93,7 @@ function clickAgentButton(name,password) {
       const apiUrl = window.location.href.includes('localhost') ? `http://localhost:4000/api/v1/insertAgent/${name}/${password}` : `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`
       // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
       // var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
-
+      console.log(apiUrl,"url in clcik");
       try {
         const response = fetch(apiUrl, {
           method: "GET",
