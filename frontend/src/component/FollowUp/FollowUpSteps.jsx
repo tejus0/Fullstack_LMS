@@ -57,65 +57,6 @@ const FollowUpSteps = ({ studentId }) => {
         console.error("Error fetching data:", error);
         toast.error("Failed to fetch data. Please try again.");
       }
-<<<<<<< HEAD
-      
-      // Update dropdown based on FolloupStage
-      if (FolloupStage === "FollowUp3" && notesByStage.FollowUp3.length>0) {
-        // const backendOptions = notesByStage.FollowUp3.map(note => note.subject);
-        const backendOptions = notesByStage.FollowUp3;
-        console.log( backendOptions," backendOptions");
-        setDropDown(followUpThree.filter(item => backendOptions[0].subject.includes(item.option)));
-        setAdditionalDropdown(followUpThree.filter(item=> backendOptions[0].additionalOption.includes(item.option)))
-        console.log(secondDropdown,"dropdown in formsteps")
-        
-        // const preBookingTotal = backendOptions[0].preBookingAmount?.reduce((acc, curr) => {
-          //   return acc + parseInt(curr.preBookingAmount || 0);
-          // }, 0) || 0;
-          // setPendingAmount(totalAmount - preBookingTotal); // Calculate pending amount
-          
-          
-          // const total = backendOptions.reduce((acc, curr) => {
-            //   const amount = parseInt(curr.split('-')[1].replace('K', '000'));
-            //   return acc + amount;
-            // }, 0);
-            // setTotalAmount(total);
-            // console.log(totalAmount,"totalAmount")
-            
-          }else{
-            switch (FolloupStage) {
-              case "FollowUp1":
-                setDropDown(followUpOne);
-                break;
-                case "FollowUp2":
-                  setDropDown(followUpTwo);
-                  break;
-                  case "FollowUp3":
-                    setDropDown(followUpThree);
-                    break;
-                    default:
-                      setDropDown(followUpOne);
-                      break;
-                    }
-                  }
-                };
-              
-                fetchData(); // Call the fetchData function
-                }, [FolloupStage, countaa]); // Include FolloupStage and studentId in the dependency array
-                
-                const handleSecondDropDown=(option)=>{
-    setSecondDropdown(option)
-
-    const price = parseInt(option.split('-')[1].replace('K', '000'));
-    setTotalAmount(price);
-    setPendingAmount(price + parseInt(preBookingAmount || 0));
-
-    // Calculate the sum of preBookingAmount from backendOptions
-    // const preBookingTotal = backendOptions.reduce((acc, curr) => {
-    //   return acc + parseInt(curr.preBookingAmount || 0);
-    // }, 0);
-    // setPendingAmount(price - preBookingTotal);
-
-=======
     };
 
     fetchData(); // Call the fetchData function
@@ -165,7 +106,6 @@ const FollowUpSteps = ({ studentId }) => {
       return acc + parseInt(curr.preBookingAmount || 0);
     }, 0);
     setPendingAmount(price - preBookingTotal);
->>>>>>> dev
   }
 
   const handleSelectedOption = (option) => {
@@ -407,7 +347,6 @@ if(e.key == "Enter"){
             Submit
           </button>}
           <div>Pending Amount: {pendingAmount}</div>
-          <div>Total Amount: {totalAmount}</div>
           </div>
         )}
         
