@@ -2,10 +2,11 @@ import { districtData } from "./district.js";
 document.addEventListener("DOMContentLoaded", () => {
   // setTimeout(initializeForm, 4000);
   // createFormButton();
-  // const nameId =
-  // getUrlParameter("name_id") !== null
-  //   ? clickAgentButton()
-    // :
+  const nameId =
+  getUrlParameter("u_name") !== null && getUrlParameter("u_pass") !== null
+    ? 
+    clickAgentButton(getUrlParameter("u_name"),getUrlParameter("u_pass"))
+    :
      initializeForm();
 });
 
@@ -77,69 +78,71 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function clickAgentButton(name,password) {
+  console.log("first")
   // Create a button element
-  var button = document.createElement('button');
+  // var button = document.createElement('button');
   
-  // Set button text
-  button.textContent = 'Click me to call API';
+  // // Set button text
+  // button.textContent = 'Click me to call API';
 
   
   // Add click event listener to the button
-  button.addEventListener('click', async function() {
+  // button.addEventListener('click', async function() {
 
       // Define the API endpoint
-      // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
-      var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+      var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+      // var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
 
       try {
-        const response = await fetch(apiUrl, {
+        const response = fetch(apiUrl, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
           // body: JSON.stringify(Data),
         });
-    
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Error calling API");
-        }
-    
-        const result = await response.json();
-        const msg = result.msg;
-
-        // Update the message div with the success message
-      messageDiv.textContent = "lelo sir";
-
-      // Close the window after 2 seconds (adjust timing as needed)
-      setTimeout(function() {
         window.close();
-      }, 2000); // Close after 2 seconds
+    
+      //   if (!response.ok) {
+      //     const errorData = await response.json();
+      //     throw new Error(errorData.message || "Error calling API");
+      //   }
+    
+      //   const result = await response.json();
+      //   const msg = result.msg;
+
+      //   // Update the message div with the success message
+      // messageDiv.textContent = "lelo sir";
+
+      // // Close the window after 2 seconds (adjust timing as needed)
+      // setTimeout(function() {
+      //   window.close();
+      // }, 2000); // Close after 2 seconds
       } catch (errorData) {
         console.error('Error calling API:', error);
       }
-  });
+  // });
   
   // Append the button to a container in the DOM
-  document.body.appendChild(button);
+  // document.body.appendChild(button);
 
-  // Create a div element for displaying the response message
-  var messageDiv = document.createElement('div');
-  messageDiv.id = 'responseMessage'; // Set id for the div
-  messageDiv.textContent = ''; // Initially empty
+  // // Create a div element for displaying the response message
+  // var messageDiv = document.createElement('div');
+  // messageDiv.id = 'responseMessage'; // Set id for the div
+  // messageDiv.textContent = ''; // Initially empty
 
-  // Append the message div to the document body
-  document.body.appendChild(messageDiv);
+  // // Append the message div to the document body
+  // document.body.appendChild(messageDiv);
 }
 
 
 
 
 function initializeForm() {
-   const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
-  // const scriptElement = document.querySelector(
-  //   'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
-  // );
+  //  const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
+  const scriptElement = document.querySelector(
+    'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
+  );
 
   if (!scriptElement) {
     console.error('Script element with src="Form.js" not found.');
