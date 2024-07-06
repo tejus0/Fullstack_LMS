@@ -58,7 +58,8 @@ export async function createStudentProfile(req, res) {
         neetAIR: data.neetAIR
       }
       user.otherResponse.push(anotherResponse)
-      await user.save()
+      const saved_data= await user.save()
+      
       return res.status(200).json(
         {
           sucess: true,
@@ -579,3 +580,42 @@ return res.status(200).json(
           res.status(500).json({ error: error });
         }
       }
+
+      export const slotBook = async (req, res) => {
+        console.log(req.body, "params in slotbook");
+      
+        try {
+          const { _id, visitDate } = req.body;
+      
+          const update = await studentModal.updateOne(
+            { "_id": _id },
+            { 
+              $set: { 
+                "DateToVisit": visitDate 
+              } 
+            }
+          );
+      
+          if (update.nModified === 0) {
+            return res.status(404).json({ message: 'Student not found or data not modified' });
+          }
+      
+          res.status(200).json({ message: 'Visit date updated successfully' });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: error.message });
+        }
+      }; 
+      
+      export const bookedSlot = async (req, res) => {
+        try {
+          const students = await studentModal.find({
+            DateToVisit: { $exists: true, $ne: '' }
+          });
+      
+          res.status(200).json(students);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: error.message });
+        }
+      };

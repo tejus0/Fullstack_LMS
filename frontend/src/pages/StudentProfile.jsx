@@ -6,6 +6,7 @@ import SimpleAccordion from '../component/Accordion';
 import SideNavigation from '../component/FollowUp/SideNavigation';
 import { useMemo } from 'react';
 import FollowUpSteps from '../component/FollowUp/FollowUpSteps';
+import SlotBooking from '../component/TimeSlot/SlotBooking';
 
 const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
@@ -62,7 +63,7 @@ const StudentProfile = ({ counsellor_id }) => {
     console.log(studentData._id,"han bhai sahi baat hai");
     switch (selectedValues) {
       case 'Option_one':
-        return "Not Yet Implemented";
+        return <SlotBooking studentId={studentData._id}/>;
       case 'Follow_Ups':
         return <FollowUpSteps  studentId={studentData._id} />;
       case 'Option_two':
