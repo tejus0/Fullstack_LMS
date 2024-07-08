@@ -354,16 +354,17 @@ export const verifyLogin = async (req, res) => {
     const mobileInput = req.body.mobile;
     const passwordInput = req.body.password;
     // const email = req.body.email;
-    // console.log(email,"email is here");
+    // console.log(mobileInput,"email is here");
 
 
 
     // const userData = agentModal.find({name:})
 
     const regexPattern = new RegExp(`_${mobileInput}$`);
+    console.log(regexPattern,"pattern")
     const userData = await agentModal.find({ name: { $regex: regexPattern } }).exec();
-
-    if(userData){
+    console.log(userData,"data in agent")
+    if(Object.keys(userData).length){
       console.log(userData,"data in AGENT");
       const nameField=userData[0].name;
       const password= userData[0].password;
