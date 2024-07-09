@@ -386,21 +386,6 @@ function createForm(courseOptions, styles, logo, contact, divID) {
   buttonContainer.className = "button-container";
   form.appendChild(buttonContainer);
 
-  //   const sendOtpButton = document.createElement('button');
-  // sendOtpButton.textContent = 'Send OTP';
-  // sendOtpButton.className = 'send-otp-button';
-  // sendOtpButton.addEventListener('click', async () => {
-  //   const phoneNumber = document.getElementById('contactNo').value;
-  //   try {
-  //     await auth.signInWithPhoneNumber(phoneNumber, new firebase.auth.RecaptchaVerifier('recaptcha-container'));
-  //     alert('OTP sent!');
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert('Failed to send OTP');
-  //   }
-  // });
-  // form.appendChild(sendOtpButton);
-
   const submitButton = document.createElement("button");
   submitButton.type = "submit";
   submitButton.textContent = "Submit";
@@ -524,10 +509,7 @@ const sourceId =
     : window.location.href;
     const assignedCouns = getUrlParameter("counsId");
     console.log(assignedCouns, "global couns");
-  // const nameId =
-  // getUrlParameter("name_id") !== null
-  //   ? getUrlParameter("name_id")
-  //   : null;
+
 
 
 async function submitForm(event) {
@@ -563,18 +545,6 @@ async function submitForm(event) {
     return;
   }
 
-  //   const phoneNumber = document.getElementById('contactNo').value;
-  // const otp = document.getElementById('otp').value;
-  // try {
-  //   const confirmationResult = await auth.signInWithPhoneNumber(phoneNumber, new firebase.auth.RecaptchaVerifier('recaptcha-container'));
-  //   await confirmationResult.confirm(otp);
-  //   alert('OTP verification successful!');
-  //   // Continue with your form submission logic
-  // } catch (error) {
-  //   console.error(error);
-  //   alert('Failed to verify OTP');
-  // }
-
   console.log(formData);
   sendData(formData);
 }
@@ -582,7 +552,9 @@ async function submitForm(event) {
 // const url = "http://localhost:4000/api/v1/form";
 
 
-const url = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/form" : "https://ntechzy.in/api/v1/form"
+const url = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/form" : "https://ntechzy.in/api/v1/form";
+
+const DataToSheet = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/formToSheet" : "https://ntechzy.in/api/v1/formToSheet";
 
 const sendData = async (formData) => {
   const carlos   = getUrlParameter("counsId");
@@ -614,6 +586,13 @@ const sendData = async (formData) => {
       },
       body: JSON.stringify(Data),
     });
+    const SheetResponse = await fetch(DataToSheet, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(Data),
+    });
 
     if (!response.ok) {
       const err = await response.json();
@@ -621,9 +600,12 @@ const sendData = async (formData) => {
       throw new Error(errorData);
     }
 
+     // Read the existing data from the JSON file
+  
+
     const result = await response.json();
     const msg = result.msg;
-    alert(msg, "other in formjs");
+    alert(msg);
 
     localStorage["formData"] = JSON.stringify(Data);
     // localStorage.setItem('formData', JSON.stringify(formData));

@@ -21,7 +21,7 @@ const ArnavLeads = () => {
     const location = useLocation();
     // const id = location.state.id;
     const [users, setUsers] = useState([]);
-    const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+    const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'asc' });
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
     const navigate = useNavigate();

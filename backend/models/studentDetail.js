@@ -172,6 +172,8 @@ const studentDetailSchema = new mongoose.Schema(
             required: [false, 'Rank is required'],
             default: ""
         },
+        DateToVisit:{type:String},
+        location:{type:String},
         remarks: 
             {
 
