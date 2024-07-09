@@ -12,6 +12,7 @@ import ForgetPass from "./pages/Forgot-password/ForgetPass";
 import ShowAllleads from "./pages/admin/showAllLeads";
 import ArnavLeads from "./pages/arnav/arnavLeads";
 import ProtectedRoutes from "../ProtectedRoutes";
+// import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
 const App = () => {
   return (
@@ -19,7 +20,6 @@ const App = () => {
       <BrowserRouter>
         <Toaster />
         <Routes>
-          {/* <Route element={<ProtectedRoutes/>}> */}
           <Route path="/" element={<Form />} exact />
           <Route
             path="/counsellor-profile/:id"
@@ -33,6 +33,7 @@ const App = () => {
           <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
+          {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>
     </div>

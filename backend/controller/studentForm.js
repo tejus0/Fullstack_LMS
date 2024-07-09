@@ -8,6 +8,9 @@ import agentModal from '../models/agentModel.js';
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 import councellorToDoModel from '../models/councellorToDoModel.js';
 import assignmentConfigModal from '../models/lastAssignedCounsellor.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 export const loginLoad = async (req, res) => {
   try {
@@ -585,13 +588,14 @@ return res.status(200).json(
         console.log(req.body, "params in slotbook");
       
         try {
-          const { _id, visitDate } = req.body;
+          const { _id, visitDate,office } = req.body;
       
           const update = await studentModal.updateOne(
             { "_id": _id },
             { 
               $set: { 
-                "DateToVisit": visitDate 
+                "DateToVisit": visitDate ,
+                "location":office
               } 
             }
           );
@@ -619,3 +623,74 @@ return res.status(200).json(
           res.status(500).json({ error: error.message });
         }
       };
+
+// export const formToSheet = async(req,res)=>{
+//   try {
+    
+//     const sheetData= await studentModal.find();
+//     console.log(sheetData,"sheetdata")
+//     res.status(200).json(sheetData);
+//   } catch (error) {
+//     console.error(error);
+//           res.status(500).json({ error: error.message });
+//   }
+// }
+
+export const formToSheet = async (req, res) => {
+  try {
+
+    // Get the directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+    const sheetData = await studentModal.find();
+    console.log(sheetData, "sheetdata");
+
+    // Define the path to the JSON file
+    const filePath = path.join(__dirname, 'sheetData.json');
+
+    // Check if file exists
+    if (fs.existsSync(filePath)) {
+      // Read the existing data
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          console.error('Error reading file:', err);
+          return res.status(500).json({ error: 'Error reading file' });
+        }
+
+        // Parse the existing data
+        let existingData = JSON.parse(data);
+        if (!Array.isArray(existingData)) {
+          existingData = [];
+        }
+
+        // Append the new data
+        const updatedData = existingData.concat(sheetData);
+
+        // Write the updated data back to the file
+        fs.writeFile(filePath, JSON.stringify(updatedData, null, 2), (err) => {
+          if (err) {
+            console.error('Error writing to file:', err);
+            return res.status(500).json({ error: 'Error writing to file' });
+          }
+
+          console.log('Data successfully updated in file');
+          res.status(200).json({ message: 'Data successfully updated in file', data: updatedData });
+        });
+      });
+    } else {
+      // File does not exist, create it and write the new data
+      fs.writeFile(filePath, JSON.stringify(sheetData, null, 2), (err) => {
+        if (err) {
+          console.error('Error writing to file:', err);
+          return res.status(500).json({ error: 'Error writing to file' });
+        }
+
+        console.log('Data successfully saved to new file');
+        res.status(200).json({ message: 'Data successfully saved to new file', data: sheetData });
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+};

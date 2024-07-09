@@ -173,6 +173,7 @@ const studentDetailSchema = new mongoose.Schema(
             default: ""
         },
         DateToVisit:{type:String},
+        location:{type:String},
         remarks: 
             {
 

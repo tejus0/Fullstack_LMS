@@ -504,6 +504,7 @@ const sourceId =
     console.log(assignedCouns, "global couns");
 
 
+
 async function submitForm(event) {
   event.preventDefault();
   // const counsId = getUrlParameter("counsId");
@@ -544,7 +545,9 @@ async function submitForm(event) {
 // const url = "http://localhost:4000/api/v1/form";
 
 
-const url = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/form" : "https://ntechzy.in/api/v1/form"
+const url = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/form" : "https://ntechzy.in/api/v1/form";
+
+const DataToSheet = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/formToSheet" : "https://ntechzy.in/api/v1/formToSheet";
 
 const sendData = async (formData) => {
   const carlos   = getUrlParameter("counsId");
@@ -575,6 +578,13 @@ const sendData = async (formData) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(Data),
+    });
+    const SheetResponse = await fetch(DataToSheet, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(Data),
     });
 
     if (!response.ok) {

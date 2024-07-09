@@ -19,7 +19,7 @@ const Table = () => {
   const location = useLocation();
   const id = location.state.id;
   const [users, setUsers] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'asc' });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
   const [search, setsearch] = useState("")
@@ -176,6 +176,7 @@ const Table = () => {
                 <th scope="col" className="px-6 py-3">Name</th>
                 <th scope="col" className="px-6 py-3">Registered ON</th>
                 <th scope="col" className="px-6 py-3">Neet Score</th>
+                <th scope="col" className="px-6 py-3">Slot Date</th>
                 <th scope="col" className="px-6 py-3">State</th>
                 <th scope="col" className="px-6 py-3">Course</th>
                 <th scope="col" className="px-6 py-3">Contact No</th>
@@ -195,6 +196,7 @@ const Table = () => {
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{user.name}</th>
                   <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
                   <td className="px-6 py-4">{user.neetScore}</td>
+                  <td className="px-6 py-4">{formatDate(user.DateToVisit)}</td>
                   <td className="px-6 py-4">{user.state}</td>
                   <td className="px-6 py-4">{user.courseSelected}</td>
                   <td className="px-6 py-4">{user.contactNumber}</td>
