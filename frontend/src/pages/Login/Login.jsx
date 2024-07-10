@@ -112,10 +112,13 @@ function Login() {
         window.localStorage.setItem("mobile", mobileInput);
         window.localStorage.setItem("user-type", response.data.type);
 
-        if(response.data.token==="6672c48614be596e4ccb3b39"){
+        if(response.data.type=="agent"){
+          navigate("/agentLeads",{state: { id: response.data.data}})
+        }
+        else if(response.data.token==="6672c48614be596e4ccb3b39"){
           navigate("/showArnavAllLeads",{ state: { id: response.data.data } })
         }
-        if (response.data.type === "user") {
+        else if (response.data.type === "user") {
           navigate(`/counsellor-profile/${response.data.data}`, { state: { id: response.data.data } });
         } 
         else {
@@ -288,7 +291,7 @@ function Login() {
                             Not registered yet?{" "}
                             <span
                               style={{ color: "#beb4fb", cursor: "pointer" }}
-                              onClick={() => navigate("/registerationfinal")}
+                              onClick={() => navigate("/registration")}
                             >
                               Create an Account
                             </span>

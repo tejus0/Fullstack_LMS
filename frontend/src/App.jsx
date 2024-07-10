@@ -11,6 +11,7 @@ import CounsellorDashboard from "./pages/counsellor/Dashboard";
 import ForgetPass from "./pages/Forgot-password/ForgetPass";
 import ShowAllleads from "./pages/admin/showAllLeads";
 import ArnavLeads from "./pages/arnav/arnavLeads";
+import AgentLeads from "./pages/agent/AgentLeads";
 import ProtectedRoutes from "../ProtectedRoutes";
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
@@ -25,12 +26,13 @@ const App = () => {
             path="/counsellor-profile/:id"
             element={<CounsellorDashboard />}
           />
-          <Route path="/registerationfinal" element={<SignUp />} />
+          <Route path="/registration" element={<SignUp />} />
           <Route path="/student/:id" element={<StudentProfile />} />
           <Route path="/assignAuto" element={<AssignAuto />} />
           <Route path="/forgot-password" element={<ForgetPass />} />
           <Route path="/showAllLeads" element={ <ShowAllleads/>} />
-          <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
+          <Route path="/showAllLeads" element={ <ShowAllleads/>} />
+          <Route path="/agentLeads" element={<AgentLeads />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
