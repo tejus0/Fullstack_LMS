@@ -94,11 +94,13 @@ const studentDetailSchema = new mongoose.Schema(
     {
         name: {
             type: String,
+            default:""
             // required: [true, "Please enter your name "]
         },
 
         contactNumber: {
             type: String,
+            default:"",
             // required: [true, 'Phone number is required'],
             match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
@@ -110,6 +112,7 @@ const studentDetailSchema = new mongoose.Schema(
 
         email: {
             type: String,
+            default:"",
             // required: [true, "Please enter your email "]
         },
 
@@ -120,27 +123,32 @@ const studentDetailSchema = new mongoose.Schema(
 
         whatsappNumber: {
             type: String,
+            default:"",
             // required: [true, 'Phone number is required'],
             match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
         guardianName: {
             type: String,
+            default:"",
             // required: [true, "Please enter your father's Name "]
         },
 
         district: {
             type: String,
+            default:"",
             // required: [true, "Please enter your city "]
         },
 
         state: {
             type: String,
+            default:"",
             // required: [true, "Please enter your state "]
         },
 
         courseSelected: {
             type: String,
+            default:"",
             // required: [true, "Please Select Course "]
         },
 
