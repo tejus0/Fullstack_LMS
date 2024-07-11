@@ -890,5 +890,722 @@
     "createdAt": "2024-07-08T13:01:55.034Z",
     "updatedAt": "2024-07-08T13:01:55.034Z",
     "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [
+        {
+          "subject": "First Call Done",
+          "updatedAt": "2024-07-06T10:10:34.912Z"
+        },
+        {
+          "subject": "First Call Done",
+          "updatedAt": "2024-07-10T11:57:17.827Z"
+        }
+      ],
+      "FollowUp2": [
+        {
+          "subject": "Hot Lead+INTERESTED",
+          "updatedAt": "2024-07-06T10:10:53.145Z"
+        },
+        {
+          "subject": "Cold Call Done+sdfgh",
+          "updatedAt": "2024-07-06T10:26:16.957Z"
+        }
+      ],
+      "FollowUp3": [
+        {
+          "subject": "Paid Counselling",
+          "updatedAt": "2024-07-09T09:25:54.529Z",
+          "additionalOption": "MBBS - 30K",
+          "preBookingAmount": "1000"
+        },
+        {
+          "subject": "Paid Counselling",
+          "updatedAt": "2024-07-09T09:26:08.458Z",
+          "additionalOption": "MBBS - 30K",
+          "preBookingAmount": "2000"
+        },
+        {
+          "subject": "Paid Counselling",
+          "updatedAt": "2024-07-09T09:47:18.383Z",
+          "additionalOption": "MBBS - 30K",
+          "preBookingAmount": "4000"
+        },
+        {
+          "subject": "Paid Counselling",
+          "updatedAt": "2024-07-09T12:04:31.850Z",
+          "additionalOption": "MBBS - 30K",
+          "preBookingAmount": "2000"
+        },
+        {
+          "subject": "Paid Counselling",
+          "updatedAt": "2024-07-09T12:45:05.197Z",
+          "additionalOption": "MBBS - 30K",
+          "preBookingAmount": "5000"
+        }
+      ]
+    },
+    "_id": "66890651fe0c45ed1435e472",
+    "name": "eeww",
+    "contactNumber": "1234567899",
+    "isMobileVerified": false,
+    "email": "ety@gmail.com",
+    "whatsappNumber": "1234567899",
+    "guardianName": "papa",
+    "district": "Chandigarh",
+    "state": "Chandigarh (UT)",
+    "courseSelected": "BUMS",
+    "preferredCollege": "2345",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "4356",
+    "neetAIR": "1",
+    "assignedCouns": "668917d8fe0c45ed1435e475",
+    "otherResponse": [],
+    "createdAt": "2024-07-06T08:54:41.406Z",
+    "updatedAt": "2024-07-10T11:57:17.827Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-17T09:38:27.000Z",
+    "location": "Noida"
+  },
+  {
+    "remarks": {
+      "FollowUp1": [
+        {
+          "subject": "First Call Done",
+          "updatedAt": "2024-07-10T11:52:40.345Z"
+        },
+        {
+          "subject": "First Call Done",
+          "updatedAt": "2024-07-10T11:57:34.848Z"
+        }
+      ],
+      "FollowUp2": [
+        {
+          "subject": "Hot Lead+hmmm bc\n",
+          "updatedAt": "2024-07-10T11:53:24.578Z"
+        },
+        {
+          "subject": "Warm+hn",
+          "updatedAt": "2024-07-10T11:58:19.406Z"
+        }
+      ],
+      "FollowUp3": []
+    },
+    "_id": "66892962b44fe10d0463ce0c",
+    "name": "casino",
+    "contactNumber": "2343456567",
+    "isMobileVerified": false,
+    "email": "dfg@gmail.com",
+    "whatsappNumber": "2343456567",
+    "guardianName": "papa",
+    "district": "East Kameng",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "MBBS",
+    "preferredCollege": "234",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "123",
+    "neetAIR": "1",
+    "assignedCouns": "668917d8fe0c45ed1435e475",
+    "otherResponse": [],
+    "createdAt": "2024-07-06T11:24:18.158Z",
+    "updatedAt": "2024-07-10T11:58:19.406Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-18T09:38:27.000Z",
+    "location": "Noida"
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668939e2cbb660eb53a70467",
+    "name": "casino",
+    "contactNumber": "2345465534",
+    "isMobileVerified": false,
+    "email": "dw43fg@gmail.com",
+    "whatsappNumber": "2345465534",
+    "guardianName": "papa",
+    "district": "West Kameng",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "MBBS",
+    "preferredCollege": "234",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "123",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-06T12:34:42.283Z",
+    "updatedAt": "2024-07-09T10:01:42.226Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-11T10:01:42.226+00:00",
+    "location": "Noida"
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668939f9cbb660eb53a7046a",
+    "name": "casino",
+    "contactNumber": "2345465535",
+    "isMobileVerified": false,
+    "email": "dw3fg@gmail.com",
+    "whatsappNumber": "2345465535",
+    "guardianName": "papa",
+    "district": "Kurung Kumey",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "MBBS",
+    "preferredCollege": "234",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "123",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-06T12:35:05.865Z",
+    "updatedAt": "2024-07-09T10:01:53.146Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-13T10:01:42.226+00:00",
+    "location": "Noida"
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "66893a15cbb660eb53a7046d",
+    "name": "casino",
+    "contactNumber": "2345465536",
+    "isMobileVerified": false,
+    "email": "dwq3fg@gmail.com",
+    "whatsappNumber": "2345465536",
+    "guardianName": "papa",
+    "district": "Kra Daadi",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "MBBS",
+    "preferredCollege": "234",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "123",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-06T12:35:33.721Z",
+    "updatedAt": "2024-07-09T10:02:04.400Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-09T13:01:55.034+00:00",
+    "location": "Noida"
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "66893a2acbb660eb53a70470",
+    "name": "casino",
+    "contactNumber": "2345465537",
+    "isMobileVerified": false,
+    "email": "dwr3fg@gmail.com",
+    "whatsappNumber": "2345465536",
+    "guardianName": "papa",
+    "district": "East Siang",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "MBBS",
+    "preferredCollege": "234",
+    "source": "localhost",
+    "sourceId": "https://apexims.in/apply-now",
+    "neetScore": "123",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-06T12:35:54.783Z",
+    "updatedAt": "2024-07-06T12:40:31.092Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668be2ced27c457b886a2318",
+    "name": "qwe",
+    "contactNumber": "1234565430",
+    "isMobileVerified": false,
+    "email": "oiuytrew@asdfgh.com",
+    "whatsappNumber": "1234567890",
+    "guardianName": "papa",
+    "district": "Anantapur",
+    "state": "Andhra Pradesh",
+    "courseSelected": "BAMS",
+    "preferredCollege": "e",
+    "source": "localhost",
+    "sourceId": "https://apexims.in/apply-now",
+    "neetScore": "0",
+    "neetAIR": "0",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-08T12:59:58.512Z",
+    "updatedAt": "2024-07-09T10:16:25.779Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-09T13:01:55.034+00:00",
+    "location": "Kanpur"
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668be343214e620a91dd21e1",
+    "name": "qwe",
+    "contactNumber": "5534565430",
+    "isMobileVerified": false,
+    "email": "qqoiuytrew@asdfgh.com",
+    "whatsappNumber": "1234567890",
+    "guardianName": "papa",
+    "district": "East Kameng",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "BAMS",
+    "preferredCollege": "e",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "0",
+    "neetAIR": "0",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-08T13:01:55.034Z",
+    "updatedAt": "2024-07-09T10:16:00.981Z",
+    "__v": 0,
+    "DateToVisit": "2024-07-08T13:01:55.034+00:00",
+    "location": "Kanpur"
+  },
+  {
+    "remarks": {
+      "FollowUp2": [],
+      "FollowUp3": [],
+      "FollowUp1": [
+        {
+          "subject": "First Call Done",
+          "updatedAt": "2024-07-10T06:56:12.953Z"
+        }
+      ]
+    },
+    "isMobileVerified": false,
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "assignedCouns": "",
+    "_id": "668e3020af0a0c189361ac3b",
+    "name": "Mohd shujahat",
+    "contactNumber": "6307707305",
+    "whatsappNumber": "6307707305",
+    "district": "Up barei",
+    "neetScore": "112",
+    "courseSelected": "BAMS",
+    "neetAIR": "1522988",
+    "updatedAt": "2024-07-10T06:56:12.953Z",
+    "otherResponse": []
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e323fd54a01d6afed835e",
+    "name": "Saurav Ranjan",
+    "contactNumber": "6299252827",
+    "isMobileVerified": false,
+    "email": "bharo@gmail.com",
+    "whatsappNumber": "6299252827",
+    "guardianName": "papa",
+    "district": "Gaya",
+    "state": "Bihar",
+    "courseSelected": "BAMS",
+    "preferredCollege": "2345",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "114",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:03:27.975Z",
+    "updatedAt": "2024-07-10T07:03:27.975Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e32a1d54a01d6afed8361",
+    "name": "Saurav Ranjan",
+    "contactNumber": "6299662827",
+    "isMobileVerified": false,
+    "email": "-",
+    "whatsappNumber": "6299252827",
+    "guardianName": "papa",
+    "district": "Gaya",
+    "state": "Bihar",
+    "courseSelected": "BAMS",
+    "preferredCollege": "2345",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "114",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:05:05.052Z",
+    "updatedAt": "2024-07-10T07:05:05.052Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [
+        {
+          "subject": "Switch Off",
+          "updatedAt": "2024-07-10T07:45:25.939Z"
+        },
+        {
+          "subject": "First Call Done",
+          "updatedAt": "2024-07-10T07:45:31.450Z"
+        }
+      ],
+      "FollowUp2": [
+        {
+          "subject": "Hot Lead+INTERESTED",
+          "updatedAt": "2024-07-10T07:45:43.684Z"
+        }
+      ],
+      "FollowUp3": [
+        {
+          "subject": "Paid Counselling",
+          "updatedAt": "2024-07-10T07:45:53.073Z",
+          "additionalOption": "MBBS - 30K",
+          "preBookingAmount": "1200"
+        }
+      ]
+    },
+    "_id": "668e3aadfa35545eb138893c",
+    "name": "Krutika ",
+    "contactNumber": "9619000799",
+    "isMobileVerified": false,
+    "whatsappNumber": "9619000799",
+    "district": "Maharashtra Mumbai ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "120",
+    "neetAIR": "1458867",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:39:25.259Z",
+    "updatedAt": "2024-07-10T07:45:53.074Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e3aadfa35545eb138893a",
+    "name": "Kajal Patel ",
+    "contactNumber": "8818825526",
+    "isMobileVerified": false,
+    "whatsappNumber": "8818825526",
+    "district": " Madhya Pradesh/ jabalpur ",
+    "courseSelected": "MBBS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "117",
+    "neetAIR": "1481391",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:39:25.259Z",
+    "updatedAt": "2024-07-10T07:39:25.259Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e3aadfa35545eb138893b",
+    "name": "Bharti ",
+    "contactNumber": "7232899275",
+    "isMobileVerified": false,
+    "whatsappNumber": "7232899275",
+    "district": "Rajasthan , udaipur ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "120",
+    "neetAIR": "",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:39:25.259Z",
+    "updatedAt": "2024-07-10T07:39:25.259Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e3b8c424e95449003c091",
+    "name": "Kajal Patel ",
+    "contactNumber": "8818825526",
+    "isMobileVerified": false,
+    "whatsappNumber": "8818825526",
+    "district": " Madhya Pradesh/ jabalpur ",
+    "courseSelected": "MBBS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "117",
+    "neetAIR": "1481391",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:43:08.211Z",
+    "updatedAt": "2024-07-10T07:43:08.211Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e3b8c424e95449003c093",
+    "name": "Krutika ",
+    "contactNumber": "9619000799",
+    "isMobileVerified": false,
+    "whatsappNumber": "9619000799",
+    "district": "Maharashtra Mumbai ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "120",
+    "neetAIR": "1458867",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:43:08.212Z",
+    "updatedAt": "2024-07-10T07:43:08.212Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e3b8c424e95449003c092",
+    "name": "Bharti ",
+    "contactNumber": "7232899275",
+    "isMobileVerified": false,
+    "whatsappNumber": "7232899275",
+    "district": "Rajasthan , udaipur ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "https://naiminath-ayurveda.vercel.app/apply-now",
+    "neetScore": "120",
+    "neetAIR": "",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T07:43:08.212Z",
+    "updatedAt": "2024-07-10T07:43:08.212Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e439f424e95449003c0b2",
+    "name": "Humera Shaikh",
+    "contactNumber": "7709630080",
+    "isMobileVerified": false,
+    "whatsappNumber": "7709630080",
+    "district": "Maharashtra , Alibaug ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "123",
+    "neetAIR": "0",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T08:17:35.870Z",
+    "updatedAt": "2024-07-10T08:17:35.870Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e439f424e95449003c0b1",
+    "name": "Shivam Byahut",
+    "contactNumber": "9835036729",
+    "isMobileVerified": false,
+    "whatsappNumber": "9835036729",
+    "district": "Bihar",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "120",
+    "neetAIR": "1457520",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T08:17:35.870Z",
+    "updatedAt": "2024-07-10T08:17:35.870Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e439f424e95449003c0b3",
+    "name": "Hiteshri tala ",
+    "contactNumber": "7575047350",
+    "isMobileVerified": false,
+    "whatsappNumber": "7575047350",
+    "district": "Gujarat, jamnagar ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "125",
+    "neetAIR": "",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T08:17:35.871Z",
+    "updatedAt": "2024-07-10T08:17:35.871Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e450f424e95449003c0b7",
+    "name": "Anamika Gautam ",
+    "contactNumber": "9555900735",
+    "isMobileVerified": false,
+    "email": "undefined",
+    "whatsappNumber": "9555900735",
+    "district": "Lakhimpur kheri uttar pradesh ",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "127",
+    "neetAIR": "",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T08:23:43.176Z",
+    "updatedAt": "2024-07-10T08:23:43.176Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e450f424e95449003c0b9",
+    "name": "Dipali jaybhaye",
+    "contactNumber": "9373241312",
+    "isMobileVerified": false,
+    "email": "undefined",
+    "whatsappNumber": "9373241312",
+    "district": "Maharashtra",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "130",
+    "neetAIR": "",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T08:23:43.176Z",
+    "updatedAt": "2024-07-10T08:23:43.176Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e450f424e95449003c0b8",
+    "name": "Ashish Chauhan",
+    "contactNumber": "9816138881",
+    "isMobileVerified": false,
+    "email": "undefined",
+    "whatsappNumber": "9816138881",
+    "district": "Himachal Pradesh Shillai",
+    "courseSelected": "BAMS",
+    "preferredCollege": "",
+    "source": "",
+    "sourceId": "",
+    "neetScore": "130",
+    "neetAIR": "",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T08:23:43.176Z",
+    "updatedAt": "2024-07-10T08:23:43.176Z",
+    "__v": 0
+  },
+  {
+    "remarks": {
+      "FollowUp1": [],
+      "FollowUp2": [],
+      "FollowUp3": []
+    },
+    "_id": "668e86219509b0499989cfc7",
+    "name": "qer",
+    "contactNumber": "1324456567",
+    "isMobileVerified": false,
+    "email": "sedg@gmail.com",
+    "whatsappNumber": "1324456567",
+    "guardianName": "papa",
+    "district": "East Kameng",
+    "state": "Arunachal Pradesh",
+    "courseSelected": "BAMS",
+    "preferredCollege": "4",
+    "source": "localhost",
+    "sourceId": "http://localhost:5173/",
+    "neetScore": "23",
+    "neetAIR": "1",
+    "assignedCouns": "",
+    "otherResponse": [],
+    "createdAt": "2024-07-10T13:01:21.423Z",
+    "updatedAt": "2024-07-10T13:01:21.423Z",
+    "__v": 0
   }
 ]

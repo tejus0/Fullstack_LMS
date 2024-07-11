@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import counsellorModal from '../models/counsellorDetail.js';
 import agentModal from '../models/agentModel.js';
+import { Types } from 'mongoose';
 // import nodemailer from "nodemailer";
 import { sessionSecret, emailUser, emailPass } from "../config/config.js";
 import councellorToDoModel from '../models/councellorToDoModel.js';
@@ -116,6 +117,40 @@ await agentModal.create(agent_data);
       });
 
 }
+// export const insertFromSheet= async(req,res)=>{
+//   const agent_data= req.body;
+//   console.log(agent_data,"api call of multiple students");
+
+// await studentModal.create(agent_data);
+//       return res.status(201).json({
+//         success: true,
+//         msg: "Multiple Students Created Successfully",
+//       });
+
+// }
+
+export const insertFromSheet = async (req, res) => {
+  try {
+    const agent_data = req.body;
+    console.log(agent_data, "API call of multiple students");
+
+    // Assuming studentModal is your Mongoose model
+    const insertedStudents = await studentModal.create(agent_data);
+
+    return res.status(201).json({
+      success: true,
+      msg: "Multiple Students Created Successfully",
+      data: insertedStudents, // Optionally, return inserted data
+    });
+  } catch (err) {
+    console.error("Error inserting students:", err);
+    return res.status(500).json({
+      success: false,
+      msg: "Failed to create multiple students",
+      error: err.message,
+    });
+  }
+};
 
 
 
@@ -336,6 +371,7 @@ export const insertUser = async (req, res) => {
       // image: "image",
       password: spassword,
       is_admin: 0,
+      college_website:req.body.college_website
     });
 
     const userData = await user.save();
@@ -436,8 +472,12 @@ export const verifyLogin = async (req, res) => {
           if (userData.is_admin === 1) {
             return res.json({ status: "ok", data: userData._id, type: "admin" });
           } else {
+            if(userData.college_website!=""){
+              return res.json({ status: "ok", data: userData._id, type: "agent" });
+            }
+            else{
             return res.json({ status: "ok", data: userData._id, type: "user" });
-
+            }
           }
         } else {
           return res.json({ error: "error" });
@@ -522,6 +562,27 @@ export const getCounsellorDataList = async (req, res) => {
     return res.status(200).json(sales);
     
   }
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+}
+export const getAgentLeads = async (req, res) => {
+  const id = req.params.id;
+  console.log(id, "in AgentLeads");
+  try {
+    const agentName= await counsellorModal.find({_id:id});
+    console.log(agentName,"agent")
+    const collegeWebsite= agentName[0].college_website;
+    console.log(collegeWebsite,"website")
+
+    const studentList = await studentModal.find({ sourceId: { $regex: collegeWebsite, $options: 'i' } });
+    // $regex is used for case-insensitive substring matching
+
+    if (studentList.length === 0) {
+      return res.status(404).json({ msg: "Students data not found" });
+    }
+
+    res.status(200).json(studentList);
   } catch (error) {
     res.status(500).json({ error: error });
   }
