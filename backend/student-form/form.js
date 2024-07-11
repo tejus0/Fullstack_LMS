@@ -2,17 +2,12 @@ import { districtData } from "./district.js";
 document.addEventListener("DOMContentLoaded", () => {
   // setTimeout(initializeForm, 4000);
   // createFormButton();
-  
-  // function loadExtraFiles(){
-    const nameId =
-    getUrlParameter("u_name") !== null && getUrlParameter("u_pass") !== null
+  const nameId =
+  getUrlParameter("u_name") !== null && getUrlParameter("u_pass") !== null
     ? 
     clickAgentButton(getUrlParameter("u_name"),getUrlParameter("u_pass"))
     :
-    initializeForm();
-  // }
-//   var delay = 5;
-// setTimeout("loadExtraFiles();", delay * 1000);
+     initializeForm();
 });
 
 // Initialize Firebase

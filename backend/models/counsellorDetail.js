@@ -23,9 +23,6 @@ const counsellorDetail = mongoose.Schema({
     type: String,
     // required: true,
   },
-  college_website:{
-    type:String
-  },
   assignedStudents: [
     {
         type: Array,

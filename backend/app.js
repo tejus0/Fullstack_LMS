@@ -52,11 +52,9 @@ app.use("/api/v1", studentDetailRoute);
 
 app.use('/api/v1/student-form', express.static('student-form'))
 
-dotenv.config({path:".env"})
 
-
-// if (process.env.NODE_ENV !== "production ") {
-//     dotenv.config({ path: "./config/.env" });
-// }
+if (process.env.NODE_ENV !== "production ") {
+    dotenv.config({ path: "./config/.env" });
+}
 
 export default app;

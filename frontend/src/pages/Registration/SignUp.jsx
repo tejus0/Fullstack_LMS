@@ -10,7 +10,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
-import { CollegeNames } from './CollegeNames';
+
 
 const auth = getAuth(firebase);
 
@@ -22,8 +22,6 @@ const SignUp = () => {
   const [verifyOtp, setverifyOtp] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedCollege, setSelectedCollege] = useState(null);
   
   const navigate = useNavigate();
 
@@ -110,21 +108,15 @@ const SignUp = () => {
         return;
       }
 
-      let requestBody = {
-        employee_id: formdata.employeeId,
-        username: formdata.userName,
-        email: formdata.emailAddress,
-        mobile: formdata.mobileNumber,
-        password: formdata.password,
-      };
-
-      if (selectedCollege) {
-        requestBody.college_website = selectedCollege.website;
-      }
-
       // calling api to store data  
       await axios
-        .post(`${baseUrl}/register`, requestBody)
+        .post(`${baseUrl}/register`, {
+          employee_id: formdata.employeeId,
+          username: formdata.userName,
+          email: formdata.emailAddress,
+          mobile: formdata.mobileNumber,
+          password: formdata.password,
+        })
         .then((response) => {
           console.log(response);
           if (response.status === 200) {
@@ -223,40 +215,6 @@ const SignUp = () => {
           </div>
         }
 
-         {/* Checkbox for Counselor */}
-         <div className='flex items-center gap-2'>
-          <input
-            type="checkbox"
-            id="counselorCheckbox"
-            name="counselorCheckbox"
-            onChange={() => setShowDropdown(!showDropdown)}
-            checked={showDropdown}
-          />
-          <label htmlFor="counselorCheckbox">Are you a counselor of a particular college?</label>
-        </div>
-
-        {/* Dropdown for Colleges */}
-        {showDropdown && (
-          <div className='flex flex-col w-full gap-3'>
-            <label htmlFor="collegeDropdown">Select College</label>
-            <select
-              id="collegeDropdown"
-              name="collegeDropdown"
-              value={selectedCollege ? selectedCollege.name : ''}
-              onChange={(e) => {
-                const selectedCollegeName = e.target.value;
-                const college = CollegeNames.find(college => college.name === selectedCollegeName);
-                setSelectedCollege(college);
-              }}
-              className='p-3 focus:border-blue-500 w-full placeholder-transparent rounded-md text-blue-900 border-2 outline-none peer border-gray-400'
-            >
-              <option value="">Select College</option>
-              {CollegeNames.map((college, index) => (
-                <option key={index} value={college.name}>{college.name}</option>
-              ))}
-            </select>
-          </div>
-        )}
 
         {/* for passsword */}
         <div className='flex flex-col w-full gap-3'>
