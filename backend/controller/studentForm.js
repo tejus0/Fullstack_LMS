@@ -134,8 +134,16 @@ export const insertFromSheet = async (req, res) => {
     const agent_data = req.body;
     console.log(agent_data, "API call of multiple students");
 
+        // Modify agent_data to add "wrongEntry" field for entries with incorrect whatsappnumber
+        const dataToInsert = agent_data.map(entry => {
+          if (entry.whatsappnumber && entry.whatsappnumber.length < 10) {
+            return { ...entry, wrongEntry: true };
+          }
+          return entry;
+        });
+
     // Assuming studentModal is your Mongoose model
-    const insertedStudents = await studentModal.create(agent_data);
+    const insertedStudents = await studentModal.create(dataToInsert);
 
     return res.status(201).json({
       success: true,
@@ -566,6 +574,7 @@ export const getCounsellorDataList = async (req, res) => {
     res.status(500).json({ error: error });
   }
 }
+
 export const getAgentLeads = async (req, res) => {
   const id = req.params.id;
   console.log(id, "in AgentLeads");

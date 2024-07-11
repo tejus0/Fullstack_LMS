@@ -102,7 +102,7 @@ const studentDetailSchema = new mongoose.Schema(
             type: String,
             default:"",
             // required: [true, 'Phone number is required'],
-            match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+            // match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
         isMobileVerified: {
@@ -125,7 +125,7 @@ const studentDetailSchema = new mongoose.Schema(
             type: String,
             default:"",
             // required: [true, 'Phone number is required'],
-            match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+            // match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
         guardianName: {

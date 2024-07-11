@@ -112,6 +112,8 @@ const Table = () => {
     }
   }
 
+  const isDesktop = window.innerWidth > 768; // Adjust breakpoint as needed
+
   var paginatedUsers = sortedUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   console.log(paginatedUsers,"usersall")
   // const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
@@ -232,6 +234,7 @@ const Table = () => {
         </div>
       </Box>
     </div>
+ 
   );
 };
 
