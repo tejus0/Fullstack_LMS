@@ -11,26 +11,22 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 
 
-
-
 const ShowAllleads = () => {
-    // change made by Pankaj in line 22  and 40
-
 
     const baseUrl = import.meta.env.VITE_API;
     const location = useLocation();
-    // const id = location.state.id;
     const [users, setUsers] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'asc' });
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(location.state?.page || 0); 
     const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
     const navigate = useNavigate();
 
 
-    // search 
     const [search, setsearch] = useState("")
     const [SearchBy, setSearchBy] = useState("name")
     const [filter, setfilter] = useState([])
+
+    const [counsellors, setCounsellors] = useState([]);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -50,26 +46,30 @@ const ShowAllleads = () => {
             const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
                 console.log(err, "error");
             });
+            console.log(response.data.data)
             setUsers(response.data.data);
             setfilter(response.data.data)
-            console.log(response.data, "data");
+
         };
 
         fetchData();
     }, []);
 
 
-    // const deleteUser = async (userId) => {
-    //   await axios
-    //     .delete(${process.env.REACT_APP_BASE_URL}/delete/${userId})
-    //     .then((response) => {
-    //       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
-    //       toast.success(response.data.msg, { position: "top-right" });
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // };
+    const getCounsellorData = async () =>{
+        try {
+            const res = await axios.get(`${baseUrl}/getCounsellorInfo`);
+            setCounsellors(res.data.data);
+        } catch (error) {
+            console.log(error);
+            setCounsellors([]);
+        }
+    }
+
+    useEffect(() =>{
+        getCounsellorData();
+    }, [])
+
 
     const sortedUsers = React.useMemo(() => {
         let sortableUsers = [...users];
@@ -118,8 +118,6 @@ const ShowAllleads = () => {
     const paginationDisabled = paginatedUsers.some(item => item.remarks.length === 20)
 
 
-    // console.log(paginatedUsers);
-
     return (
         <div>
 
@@ -158,6 +156,7 @@ const ShowAllleads = () => {
                                 <th scope="col" className="px-6 py-3">State</th>
                                 <th scope="col" className="px-6 py-3">Course</th>
                                 <th scope="col" className="px-6 py-3">Contact No</th>
+                                <th scope="col" className="px-6 py-3">Counsellor</th>
                                 <th scope="col" className="px-6 py-3">Lead Status</th>
                                 <th scope="col" className="px-6 py-3">Update Status</th>
                             </tr>
@@ -176,10 +175,11 @@ const ShowAllleads = () => {
                                     <td className="px-6 py-4">{user.state}</td>
                                     <td className="px-6 py-4">{user.courseSelected}</td>
                                     <td className="px-6 py-4">{user.contactNumber}</td>
+                                    <td className="px-6 py-4">{counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}</td>
                                     <td className="px-6 py-4"> {user.remarks.length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td>
                                     <td className="px-6 py-4">
                                         <Button variant="contained">
-                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}` }}> Edit </Link>
+                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page }}> Edit </Link>
                                         </Button>
                                     </td>
                                 </tr>

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,slotBook,bookedSlot,formToSheet,insertFromSheet,getAgentLeads,showSpecificLeads} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,slotBook,bookedSlot,formToSheet,insertFromSheet,getAgentLeads,showSpecificLeads, getCounsellorInfo} from "../controller/studentForm.js";
 
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
@@ -26,6 +26,7 @@ router.route("/autoassign").post(assignAuto);
 router.route("/renameKey").post(renameKey);
 
 router.route("/getCounsellorDataList/:id").get(getCounsellorDataList);
+router.route("/getCounsellorInfo").get(getCounsellorInfo);
 router.route("/getAgentLeads/:id").get(getAgentLeads);
 router.route("/cleatAllAssignedCouns").get(cleatAllAssignedCouns);
 router.route("/slotBook").post(slotBook);

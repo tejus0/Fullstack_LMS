@@ -34,7 +34,8 @@ const Table = () => {
   const [filter, setfilter] = useState([]);
 
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
-  const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] = useState(false);
+  const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -230,7 +231,8 @@ const Table = () => {
                   <div className="flex items-center">
                     Name
                     <FaSort
-                      onClick={() => handleSort("name")}f
+                      onClick={() => handleSort("name")}
+                      f
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                     />
                   </div>
@@ -290,7 +292,7 @@ const Table = () => {
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
-                    <div className="flex items-center relative">
+                  <div className="flex items-center relative">
                     Lead Status
                     {isLeadStatusDropdownOpen ? (
                       <FaChevronUp
@@ -304,13 +306,13 @@ const Table = () => {
                       />
                     )}
                     {isLeadStatusDropdownOpen && (
-                      <div className="absolute z-10 top-8 bg-white border border-gray-300 rounded shadow-lg">
+                      <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
                         <button
                           onClick={() => {
                             setLeadStatusFilter("All");
                             toggleLeadStatusDropdown();
                           }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           All
                         </button>
@@ -319,7 +321,7 @@ const Table = () => {
                             setLeadStatusFilter("Hot Lead");
                             toggleLeadStatusDropdown();
                           }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Hot Leads
                         </button>
@@ -328,7 +330,7 @@ const Table = () => {
                             setLeadStatusFilter("Warm");
                             toggleLeadStatusDropdown();
                           }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Warm
                         </button>
@@ -337,7 +339,7 @@ const Table = () => {
                             setLeadStatusFilter("Cold Call Done");
                             toggleLeadStatusDropdown();
                           }}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         >
                           Cold Call Done
                         </button>
@@ -415,7 +417,6 @@ const Table = () => {
         </div>
       </Box>
     </div>
- 
   );
 };
 
