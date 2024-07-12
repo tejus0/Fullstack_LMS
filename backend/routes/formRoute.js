@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,slotBook,bookedSlot,formToSheet,insertFromSheet,getAgentLeads,showSpecificLeads} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,slotBook,bookedSlot,formToSheet,insertFromSheet,getAgentLeads,showSpecificLeads,updateAdminAvailableDays,getAdminAvailableDays} from "../controller/studentForm.js";
 
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
@@ -31,6 +31,8 @@ router.route("/cleatAllAssignedCouns").get(cleatAllAssignedCouns);
 router.route("/slotBook").post(slotBook);
 router.route("/bookedSlot").get(bookedSlot);
 router.route("/insertFromSheet").post(insertFromSheet);
+router.route("/updateAdminAvailableDays").post(updateAdminAvailableDays);
+router.route("/getAdminAvailableDays").get(getAdminAvailableDays);
 
 router.route("/showSpecificLeads/:categoryName").get(showSpecificLeads);
 

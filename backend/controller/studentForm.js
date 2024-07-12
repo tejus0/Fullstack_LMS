@@ -516,12 +516,13 @@ export const assignAuto = async (req, res) => {
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
   let counsellorIndex = assignmentConfig ? assignmentConfig.lastAssignedCounsellorIndex : 0;
+  console.log(counsellorIndex,"index")
   
   // Assign counsellor ids in a round-robin fashion
   for (let i = 0; i < students.length; i++) {
       const student = students[i];
       const newCounsellorId = counsellorIds[counsellorIndex];
-      console.log(newCounsellorId, typeof (newCounsellorId))
+      console.log(newCounsellorId, "typeof (newCounsellorId)")
     
       // if(student.assignedCouns == ""){
         await studentModal.updateOne(
@@ -838,3 +839,28 @@ const __dirname = path.dirname(__filename);
     res.status(500).json({ error: error.message });
   }
 };
+
+export const updateAdminAvailableDays= async(req,res)=>{
+  const { startDate, endDate } = req.body;
+  console.log(startDate,endDate,"endAdmin");
+  try {
+    const result = await counsellorModal.updateOne(
+        { is_admin: 1 }, // Filter to find the document
+        { $set: { startDate, endDate } } // Use $set to update the fields
+    );
+
+    if (result.nModified === 0) {
+        return res.status(404).json({ message: "Counselor not found or no changes made." });
+    }
+
+    res.json({ message: "Dates updated successfully." });
+} catch (error) {
+    console.error("Error updating counselor:", error);
+    res.status(500).json({ message: "Internal server error." });
+}
+}
+
+export const getAdminAvailableDays= async(req,res)=>{
+  const counselor = await counsellorModal.findOne({ is_admin: 1 });
+  res.json(counselor);
+}

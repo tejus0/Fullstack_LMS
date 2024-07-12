@@ -7,6 +7,8 @@ import SideNavigation from '../component/FollowUp/SideNavigation';
 import { useMemo } from 'react';
 import FollowUpSteps from '../component/FollowUp/FollowUpSteps';
 import SlotBooking from '../component/TimeSlot/SlotBooking';
+import DaysAvaialble from './admin/DaysAvailable';
+
 
 const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
@@ -67,7 +69,7 @@ const StudentProfile = ({ counsellor_id }) => {
       case 'Follow_Ups':
         return <FollowUpSteps  studentId={studentData._id} />;
       case 'Option_two':
-        return "Not yet implemented";
+        return <DaysAvaialble  />;
       default:
         return null; 
     }
