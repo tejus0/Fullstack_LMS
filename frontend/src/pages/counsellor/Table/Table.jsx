@@ -12,7 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
 import { object } from "yup";
-import { FaSort } from "react-icons/fa";
+import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 
 const Table = () => {
@@ -32,6 +32,9 @@ const Table = () => {
   const [SearchBy, setSearchBy] = useState("name");
 
   const [filter, setfilter] = useState([]);
+
+  const [leadStatusFilter, setLeadStatusFilter] = useState("All");
+  const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,7 +67,6 @@ const Table = () => {
       // });
       setUsers(response.data);
       setfilter(response.data);
-      console.log(response.data, "data");
     };
 
     fetchData();
@@ -130,7 +132,27 @@ const Table = () => {
     setSortConfig({ key, direction });
   };
 
-  var paginatedUsers = sortedUsers.slice(
+  const filteredUsers = React.useMemo(() => {
+    if (leadStatusFilter === "All") {
+      return sortedUsers;
+    } else {
+      return sortedUsers.filter((user) => {
+        const latestRemark = user.remarks.FollowUp3.length
+          ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject
+          : user.remarks.FollowUp2.length
+          ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
+          : user.remarks.FollowUp1.length
+          ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
+          : "No Remarks";
+        const leadStatus = `${latestRemark}`;
+        return leadStatus
+          .toLowerCase()
+          .includes(leadStatusFilter.toLowerCase());
+      });
+    }
+  }, [sortedUsers, leadStatusFilter]);
+
+  var paginatedUsers = filteredUsers.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
@@ -143,6 +165,10 @@ const Table = () => {
   // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
 
   // console.log(paginatedUsers);
+
+  const toggleLeadStatusDropdown = () => {
+    setIsLeadStatusDropdownOpen((prev) => !prev);
+  };
 
   return (
     <div>
@@ -204,7 +230,7 @@ const Table = () => {
                   <div className="flex items-center">
                     Name
                     <FaSort
-                      onClick={() => handleSort("name")}
+                      onClick={() => handleSort("name")}f
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                     />
                   </div>
@@ -264,7 +290,60 @@ const Table = () => {
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
-                  Lead Status
+                    <div className="flex items-center relative">
+                    Lead Status
+                    {isLeadStatusDropdownOpen ? (
+                      <FaChevronUp
+                        onClick={toggleLeadStatusDropdown}
+                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                      />
+                    ) : (
+                      <FaChevronDown
+                        onClick={toggleLeadStatusDropdown}
+                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                      />
+                    )}
+                    {isLeadStatusDropdownOpen && (
+                      <div className="absolute z-10 top-8 bg-white border border-gray-300 rounded shadow-lg">
+                        <button
+                          onClick={() => {
+                            setLeadStatusFilter("All");
+                            toggleLeadStatusDropdown();
+                          }}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          All
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLeadStatusFilter("Hot Lead");
+                            toggleLeadStatusDropdown();
+                          }}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Hot Leads
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLeadStatusFilter("Warm");
+                            toggleLeadStatusDropdown();
+                          }}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Warm
+                        </button>
+                        <button
+                          onClick={() => {
+                            setLeadStatusFilter("Cold Call Done");
+                            toggleLeadStatusDropdown();
+                          }}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Cold Call Done
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   Update Status
