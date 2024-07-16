@@ -26,7 +26,11 @@ const counsellorDetail = mongoose.Schema({
   college_website:{
     type:String
   },
-  startDate:{type:String}, endDate:{type:String},
+  // startDate:{type:String}, endDate:{type:String},
+  kanpurStartDate:{type:String},
+  kanpurEndDate:{type:String},
+  noidaEndDate:{type:String},
+  noidaStartDate:{type:String},
   assignedStudents: [
     {
         type: Array,

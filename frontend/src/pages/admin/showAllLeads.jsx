@@ -9,6 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
+import Navbar from "../../component/navbar/Navbar";
 
 
 const ShowAllleads = () => {
@@ -123,14 +124,9 @@ const ShowAllleads = () => {
 
             <Box className="flex">
 
-                <div>
-                    <Tooltip title="Delete">
-                        <IconButton onClick={handleLogout}>
-                            <LogoutIcon />
-                        </IconButton>
-                    </Tooltip>
-                </div>
-                <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
+               
+                <Navbar/>
+                <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
 
                     <div className="flex justify-end">
                         <select value={SearchBy} onChange={(e) => setSearchBy(e.target.value)} className="border-2 border-black border-r-0 w-[100px]">

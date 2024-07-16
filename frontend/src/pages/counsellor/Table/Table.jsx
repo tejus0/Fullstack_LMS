@@ -230,65 +230,65 @@ const Table = () => {
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     Name
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("name")}
                       f
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     Registered ON
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("createdAt")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     Neet Score
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("neetScore")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     Slot Date
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("DateToVisit")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     State
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("state")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     Course
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("courseSelected")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center">
                     Contact No
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("contactNumber")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div>
                 </th>
                 <th scope="col" className="px-6 py-3">

@@ -125,7 +125,7 @@ function Login() {
           navigate(`/showSpecificLeads`,{state:{name:response.data.data}})
         }
         else {
-          navigate("/showAllLeads");
+          navigate("/adminDashboard");
         }
       } else {
         toast.error(response.data.error);

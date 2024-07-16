@@ -862,12 +862,15 @@ export const formToSheet = async (req, res) => {
 };
 
 export const updateAdminAvailableDays= async(req,res)=>{
-  const { startDate, endDate } = req.body;
-  console.log(startDate,endDate,"endAdmin");
+  // const { startDate, endDate } = req.body;
+  // console.log(startDate,endDate,"endAdmin");
+
+  const {kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate}=req.body;
+  
   try {
     const result = await counsellorModal.updateOne(
         { is_admin: 1 }, // Filter to find the document
-        { $set: { startDate, endDate } } // Use $set to update the fields
+        { $set: { kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate} } // Use $set to update the fields
     );
 
     if (result.nModified === 0) {

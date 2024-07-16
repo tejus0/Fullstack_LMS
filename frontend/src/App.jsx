@@ -14,6 +14,10 @@ import ArnavLeads from "./pages/arnav/arnavLeads";
 import AgentLeads from "./pages/agent/AgentLeads";
 import ProtectedRoutes from "../ProtectedRoutes";
 import TableShowSpecificLeads from "./pages/SpecificLeads/TableSpecificLeads";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import SlotBooking from "./component/TimeSlot/SlotBooking";
+import DaysAvaialble from "./pages/admin/DaysAvailable";
+
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
 const App = () => {
@@ -37,6 +41,9 @@ const App = () => {
           <Route path="/agentLeads" element={<AgentLeads />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
+          <Route path="/adminDashboard" element={<AdminDashboard />} />
+          <Route path="/adminAvailableDays" element={<DaysAvaialble />} />
+
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>

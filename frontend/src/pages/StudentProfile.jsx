@@ -14,7 +14,7 @@ const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
   const [studentData, setStudentData] = useState([]);
 
-  const [selectedValues, setselectedValues] = useState('Option_one')
+  const [selectedValues, setselectedValues] = useState('Office Visit')
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
@@ -57,7 +57,7 @@ const StudentProfile = ({ counsellor_id }) => {
 
   const handleGoToLeads = () => {
     // studentData.source=="fb_arnav"? navigate("/showArnavAllLeads",{state:{id:"6672c48614be596e4ccb3b39"}}): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
-    navigate('/showAllLeads', { state: { page } });
+    navigate(-1);
 
   };
 
@@ -67,12 +67,12 @@ const StudentProfile = ({ counsellor_id }) => {
   const renderedComponent = useMemo(() => {
     console.log(studentData._id,"han bhai sahi baat hai");
     switch (selectedValues) {
-      case 'Option_one':
+      case 'Office Visit':
         return <SlotBooking studentId={studentData._id}/>;
       case 'Follow_Ups':
         return <FollowUpSteps  studentId={studentData._id} />;
       case 'Option_two':
-        return <DaysAvaialble  />;
+        return "";
       default:
         return null; 
     }
@@ -105,6 +105,7 @@ const StudentProfile = ({ counsellor_id }) => {
                   </div>
                   </div>
                   <p className='text-orange-600 font-bold'>Source: {studentData.source}</p>
+                  <p className='text-orange-600 font-bold'>SourceId: {studentData.sourceId}</p>
                 </div>
                 <div className="mb-4 flex justify-between">
                   <div>
