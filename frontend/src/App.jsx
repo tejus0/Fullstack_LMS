@@ -13,6 +13,7 @@ import ShowAllleads from "./pages/admin/showAllLeads";
 import ArnavLeads from "./pages/arnav/arnavLeads";
 import AgentLeads from "./pages/agent/AgentLeads";
 import ProtectedRoutes from "../ProtectedRoutes";
+import SchedulePicker from "./pages/admin-date-picker/SchedulePicker";
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
 const App = () => {
@@ -30,9 +31,10 @@ const App = () => {
           <Route path="/student/:id" element={<StudentProfile />} />
           <Route path="/assignAuto" element={<AssignAuto />} />
           <Route path="/forgot-password" element={<ForgetPass />} />
-          <Route path="/showAllLeads" element={ <ShowAllleads/>} />
-          <Route path="/showAllLeads" element={ <ShowAllleads/>} />
+          <Route path="/showAllLeads" element={<ShowAllleads />} />
+          <Route path="/showAllLeads" element={<ShowAllleads />} />
           <Route path="/agentLeads" element={<AgentLeads />} />
+          <Route path="/hashed/codic/main/schedule" element={<SchedulePicker />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}

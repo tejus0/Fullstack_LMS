@@ -59,8 +59,7 @@ const StudentProfile = ({ counsellor_id }) => {
   // follow up option
 
 
-  const renderedComponent = useMemo(() => {
-    console.log(studentData._id,"han bhai sahi baat hai");
+  const renderedComponent = useMemo(() => { 
     switch (selectedValues) {
       case 'Option_one':
         return <SlotBooking studentId={studentData._id}/>;
