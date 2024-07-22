@@ -24,7 +24,9 @@ const Table = () => {
     key: "createdAt",
     direction: "asc",
   });
-  const [page, setPage] = useState(0);
+  console.log(location.state,"state hai yeh")
+  const [page, setPage] = useState(location.state?.page || 0);
+  // const [page, setPage] = useState(0);
   // const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
   const [rowsPerPage] = useState(10); // Fixed rows per page to 10
 
@@ -391,9 +393,9 @@ const Table = () => {
                       : "No Remarks "}
                   </td>
                   <td className="px-6 py-4">
-                    <Link
+                    <Link target="_blank"
                       to={`/student/${user._id}`}
-                      state={{ id: `${user._id}` }}
+                      state={{ id: `${user._id}` , page:page}}
                     >
                       <Button variant="contained">Edit</Button>
                     </Link>

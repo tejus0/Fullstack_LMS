@@ -13,6 +13,7 @@ import ShowAllleads from "./pages/admin/showAllLeads";
 import ArnavLeads from "./pages/arnav/arnavLeads";
 import AgentLeads from "./pages/agent/AgentLeads";
 import ProtectedRoutes from "../ProtectedRoutes";
+import SchedulePicker from "./pages/admin-date-picker/SchedulePicker";
 import TableShowSpecificLeads from "./pages/SpecificLeads/TableSpecificLeads";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import SlotBooking from "./component/TimeSlot/SlotBooking";
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
           <Route path="/showSpecificLeads" element={<TableShowSpecificLeads />} />
           <Route path="/agentLeads" element={<AgentLeads />} />
+          <Route path="/hashed/codic/main/schedule" element={<SchedulePicker />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />

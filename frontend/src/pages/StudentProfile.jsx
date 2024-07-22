@@ -18,7 +18,7 @@ const StudentProfile = ({ counsellor_id }) => {
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
-  const {page} = location.state || {page: 0}
+  const page = location.state?.page || 0;
   const navigate = useNavigate();
   const id = location.state.id;
 
@@ -32,6 +32,7 @@ const StudentProfile = ({ counsellor_id }) => {
   };
 
   useEffect(() => {
+    console.log(page,"page in useefect")
     const fetchData = async () => {
       try {
         // const response = await axios.get(`${baseUrl}/getTodos/${id}`);
@@ -57,15 +58,14 @@ const StudentProfile = ({ counsellor_id }) => {
 
   const handleGoToLeads = () => {
     // studentData.source=="fb_arnav"? navigate("/showArnavAllLeads",{state:{id:"6672c48614be596e4ccb3b39"}}): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
-    navigate(-1);
+    navigate(`/showAllLeads`,{state:{currPage:page} });
 
   };
 
   // follow up option
 
 
-  const renderedComponent = useMemo(() => {
-    console.log(studentData._id,"han bhai sahi baat hai");
+  const renderedComponent = useMemo(() => { 
     switch (selectedValues) {
       case 'Office Visit':
         return <SlotBooking studentId={studentData._id}/>;

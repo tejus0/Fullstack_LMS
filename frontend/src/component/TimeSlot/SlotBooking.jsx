@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useState,useEffect } from "react";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -19,6 +18,7 @@ export default function SlotBooking({ studentId}) {
   console.log(studentId, "id in book slot frontend");
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [office, setOffice] = useState("");
+  const [dateError, setDateError] = useState(false); // Error state for date selection
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -34,9 +34,22 @@ export default function SlotBooking({ studentId}) {
             // }
           
             if (response.data) {
+
+
+              if (office) { // If an office is already selected
+                const datesKey = `${office.toLowerCase()}StartDate`; // "noidaStartDate" or "kanpurStartDate"
+                const endDatesKey = `${office.toLowerCase()}EndDate`; // "noidaEndDate" or "kanpurEndDate"
+                
+                const fetchedStartDate = dayjs(response.data[datesKey]);
+                const fetchedEndDate = dayjs(response.data[endDatesKey]);
+                
+                console.log(fetchedStartDate,fetchedEndDate,"dates in slot book")
+        
+               
+
               // Ensure the response data has valid dates
-              const fetchedStartDate = dayjs(response.data.startDate);
-              const fetchedEndDate = dayjs(response.data.endDate);
+              // const fetchedStartDate = dayjs(response.data.startDate);
+              // const fetchedEndDate = dayjs(response.data.endDate);
 
               // Check if the fetched dates are valid
               if (!isNaN(fetchedStartDate) && !isNaN(fetchedEndDate)) {
@@ -46,24 +59,32 @@ export default function SlotBooking({ studentId}) {
                   console.error("Invalid date format received:", response.data);
               }
           }
+        }
         } catch (error) {
             console.error("Error fetching dates:", error);
         }
     };
     fetchDates();
-}, []);
+}, [office]);
 
   const handleDateChange = (newValue) => {
-      if (isDateInRange(newValue)) {
-          console.log("Selected date:", newValue.toLocaleDateString());
-      } else {
-          console.log("Selected date is out of range.");
-      }
+    //   if (isDateInRange(newValue)) {
+    //       console.log("Selected date:", newValue.toLocaleDateString());
+    //   } else {
+    //       console.log("Selected date is out of range.");
+    //   }
+    // setSelectedDate(newValue);
+    if (isDateInRange(newValue)) {
+      setDateError(false); // Clear error if date is valid
+    } else {
+      setDateError(true); // Set error if date is out of range
+    }
     setSelectedDate(newValue);
   };
 
   const isDateInRange = (date) => {
-    return date >= startDate && date <= endDate;
+    // return date >= startDate && date <= endDate;
+    return date && startDate && endDate && date.isBetween(startDate, endDate, null, "[]");
 };
 
 const disableDates = (date) => {
@@ -81,6 +102,11 @@ const disableDates = (date) => {
     //   studentId,
     //   date: selectedDate.format(),
     // };
+
+    if (dateError) {
+      toast.error("Please select a valid date.");
+      return; // Prevent submission if date is invalid
+    }
 
     try {
       // Make API call to submit the booking data
@@ -115,37 +141,7 @@ const disableDates = (date) => {
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} margin={"2rem"} sm={6}>
-              {/* <DatePicker
-                label="Basic date time picker"
-                value={selectedDate}
-                onChange={handleDateChange}
-                sx={{
-                  width: "100%",
-                }}
-              /> */}
-               {/* <DatePicker
-               sx={{
-                width: "100%",
-              }}
-                onChange={handleDateChange}
-                label="Basic date time picker"
-                value={selectedDate}
-                minDate={startDate}
-                maxDate={endDate}
-                className="border p-2 rounded w-full"
-                disabled={disableDates} // Disable if dates are not set
-            /> */}
-            <DatePicker
-    sx={{ width: "100%" }}
-    onChange={handleDateChange}
-    label="Select Date"
-    value={selectedDate}
-    minDate={startDate} // Ensure these are dayjs objects
-    maxDate={endDate}
-    disabled={!startDate || !endDate} // Disable if dates are not set
-/>
-            </Grid>
+            
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Office</InputLabel>
@@ -163,6 +159,19 @@ const disableDates = (date) => {
                   ))}
                 </Select>
               </FormControl>
+            </Grid>
+            <Grid item xs={12} margin={"2rem"} sm={6}>
+            <DatePicker
+    sx={{ width: "100%" }}
+    onChange={handleDateChange}
+    label="Select Date"
+    value={selectedDate}
+    minDate={startDate} // Ensure these are dayjs objects
+    maxDate={endDate}
+    disabled={!startDate || !endDate} // Disable if dates are not set
+    error={dateError} // Show error state
+                helperText={dateError ? "Invalid date selected." : ""}
+/>
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary" sx={{ width: "100%" }}>

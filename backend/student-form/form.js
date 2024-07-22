@@ -1,86 +1,80 @@
 import { districtData } from "./district.js";
-document.addEventListener("DOMContentLoaded", () => {
-  // setTimeout(initializeForm, 4000);
-  // createFormButton();
-  
-  // function loadExtraFiles(){
+// document.addEventListener("DOMContentLoaded", () => {
     const nameId =
     getUrlParameter("u_name") !== null && getUrlParameter("u_pass") !== null
     ? 
     clickAgentButton(getUrlParameter("u_name"),getUrlParameter("u_pass"))
     :
     initializeForm();
-  // }
-//   var delay = 5;
-// setTimeout("loadExtraFiles();", delay * 1000);
-});
 
-// Initialize Firebase
-// const firebaseConfig = {
-
-//   apiKey: "AIzaSyAyRCiW3FdjTZN7KpzWirlALYhwNl1cbMU",
-//     authDomain: "lead-9b886.firebaseapp.com",
-//     projectId: "lead-9b886",
-//     storageBucket: "lead-9b886.appspot.com",
-//     messagingSenderId: "299662915818",
-//     appId: "1:299662915818:web:84d51f7f351d088a00ff93",
-//     measurementId: "G-R53YH8CMSL"
-// };
-
-// const firebase= initializeApp(firebaseConfig);
-// const auth = firebase.auth();
-
-document.addEventListener("DOMContentLoaded", () => {
-  const stateSelect = document.getElementById("state");
-
-  // const stateSelect = document.getElementById('state');
-  const districtSelect = document.getElementById("district");
-
-  const defaultStateOption = document.createElement("option");
-  defaultStateOption.textContent = "Select State";
-  defaultStateOption.value = "";
-  stateSelect.appendChild(defaultStateOption);
-
-  const defaultDistrictOption = document.createElement("option");
-  defaultDistrictOption.textContent = "Select District";
-  defaultDistrictOption.value = "";
-  districtSelect.appendChild(defaultDistrictOption);
-
-  districtData.states.forEach((stateObj) => {
-    const option = document.createElement("option");
-    option.textContent = stateObj.state;
-    option.value = stateObj.state;
-    stateSelect.appendChild(option);
-  });
-
-  // Optional: Add event listener to populate districts based on selected state
-  stateSelect.addEventListener("change", () => {
-    const selectedState = stateSelect.value;
-    // const districtSelect = document.getElementById('district');
-    districtSelect.innerHTML = ""; // Clear previous options
-
+  // });
+  
+  // Initialize Firebase
+  // const firebaseConfig = {
+    
+  //   apiKey: "AIzaSyAyRCiW3FdjTZN7KpzWirlALYhwNl1cbMU",
+  //     authDomain: "lead-9b886.firebaseapp.com",
+  //     projectId: "lead-9b886",
+  //     storageBucket: "lead-9b886.appspot.com",
+  //     messagingSenderId: "299662915818",
+  //     appId: "1:299662915818:web:84d51f7f351d088a00ff93",
+  //     measurementId: "G-R53YH8CMSL"
+  // };
+  
+  // const firebase= initializeApp(firebaseConfig);
+  // const auth = firebase.auth();
+  
+  // document.addEventListener("DOMContentLoaded", () => {
+    const stateSelect = document.getElementById("state");
+    
+    // const stateSelect = document.getElementById('state');
+    const districtSelect = document.getElementById("district");
+    
+    const defaultStateOption = document.createElement("option");
+    defaultStateOption.textContent = "Select State";
+    defaultStateOption.value = "";
+    stateSelect.appendChild(defaultStateOption);
+    
     const defaultDistrictOption = document.createElement("option");
     defaultDistrictOption.textContent = "Select District";
     defaultDistrictOption.value = "";
     districtSelect.appendChild(defaultDistrictOption);
-
-    // Populate districts if a state is selected
-    if (selectedState) {
-      const state = districtData.states.find(
-        (stateObj) => stateObj.state === selectedState
-      );
-
-      if (state) {
-        state.districts.forEach((district) => {
-          const option = document.createElement("option");
-          option.textContent = district;
-          option.value = district;
-          districtSelect.appendChild(option);
-        });
+    
+    districtData.states.forEach((stateObj) => {
+      const option = document.createElement("option");
+      option.textContent = stateObj.state;
+      option.value = stateObj.state;
+      stateSelect.appendChild(option);
+    });
+    
+    // Optional: Add event listener to populate districts based on selected state
+    stateSelect.addEventListener("change", () => {
+      const selectedState = stateSelect.value;
+      // const districtSelect = document.getElementById('district');
+      districtSelect.innerHTML = ""; // Clear previous options
+      
+      const defaultDistrictOption = document.createElement("option");
+      defaultDistrictOption.textContent = "Select District";
+      defaultDistrictOption.value = "";
+      districtSelect.appendChild(defaultDistrictOption);
+      
+      // Populate districts if a state is selected
+      if (selectedState) {
+        const state = districtData.states.find(
+          (stateObj) => stateObj.state === selectedState
+        );
+        
+        if (state) {
+          state.districts.forEach((district) => {
+            const option = document.createElement("option");
+            option.textContent = district;
+            option.value = district;
+            districtSelect.appendChild(option);
+          });
+        }
       }
-    }
-  });
-});
+    });
+// });
 
 function clickAgentButton(name,password) {
   console.log("first")
@@ -89,83 +83,84 @@ function clickAgentButton(name,password) {
   
   // // Set button text
   // button.textContent = 'Click me to call API';
-
+  
   
   // Add click event listener to the button
   // button.addEventListener('click', async function() {
-
-      // Define the API endpoint
-      const apiUrl = window.location.href.includes('localhost') ? `http://localhost:4000/api/v1/insertAgent/${name}/${password}` : `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`
-      // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
-      // var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
-      console.log(apiUrl,"url in clcik");
-      try {
-        const response = fetch(apiUrl, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
+    
+  // Define the API endpoint
+  const apiUrl = window.location.href.includes('localhost') ? `http://localhost:4000/api/v1/insertAgent/${name}/${password}` : `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`
+  // var apiUrl = `http://localhost:4000/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+  // var apiUrl = `https://ntechzy.in/api/v1/insertAgent/${name}/${password}`; // Replace with your API endpoint
+  console.log(apiUrl,"url in clcik");
+  try {
+    const response = fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
           },
           // body: JSON.stringify(Data),
         });
         window.close();
-    
-      //   if (!response.ok) {
-      //     const errorData = await response.json();
-      //     throw new Error(errorData.message || "Error calling API");
-      //   }
-    
-      //   const result = await response.json();
-      //   const msg = result.msg;
-
-      //   // Update the message div with the success message
-      // messageDiv.textContent = "lelo sir";
-
-      // // Close the window after 2 seconds (adjust timing as needed)
-      // setTimeout(function() {
-      //   window.close();
-      // }, 2000); // Close after 2 seconds
-      } catch (errorData) {
-        console.error('Error calling API:', error);
-      }
-  // });
-  
-  // Append the button to a container in the DOM
-  // document.body.appendChild(button);
-
-  // // Create a div element for displaying the response message
-  // var messageDiv = document.createElement('div');
-  // messageDiv.id = 'responseMessage'; // Set id for the div
-  // messageDiv.textContent = ''; // Initially empty
-
-  // // Append the message div to the document body
-  // document.body.appendChild(messageDiv);
-}
-
-
-
-
-function initializeForm() {
-  //  const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
-  // const scriptElement = document.querySelector(
-  //   'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
-  // );
-
-  const scriptElement = window.location.href.includes('localhost') ? document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]') :  document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]')
-
-  
-
-  if (!scriptElement) {
-    console.error('Script element with src="Form.js" not found.');
-    return;
-  }
-
-  const agent_name_id = getUrlParameter("u_name") ;
-  const agent_pass = getUrlParameter("u_pass") ;
-
-  if(agent_name_id!=null){
-    clickAgentButton(agent_name_id,agent_pass);
-  }
-  else{
+        
+        //   if (!response.ok) {
+          //     const errorData = await response.json();
+          //     throw new Error(errorData.message || "Error calling API");
+          //   }
+          
+          //   const result = await response.json();
+          //   const msg = result.msg;
+          
+          //   // Update the message div with the success message
+          // messageDiv.textContent = "lelo sir";
+          
+          // // Close the window after 2 seconds (adjust timing as needed)
+          // setTimeout(function() {
+            //   window.close();
+            // }, 2000); // Close after 2 seconds
+          } catch (errorData) {
+            console.error('Error calling API:', error);
+          }
+          // });
+          
+          // Append the button to a container in the DOM
+          // document.body.appendChild(button);
+          
+          // // Create a div element for displaying the response message
+          // var messageDiv = document.createElement('div');
+          // messageDiv.id = 'responseMessage'; // Set id for the div
+          // messageDiv.textContent = ''; // Initially empty
+          
+          // // Append the message div to the document body
+          // document.body.appendChild(messageDiv);
+        }
+        
+        
+        
+        
+        function initializeForm() {
+          //  const scriptElement = document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]');
+          // const scriptElement = document.querySelector(
+            //   'script[src="http://localhost:4000/api/v1/student-form/form.js"]'
+            // );
+            
+            const scriptElement = window.location.href.includes('localhost') ? document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]') :  document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]')
+            
+            
+            
+            if (!scriptElement) {
+              console.error('Script element with src="Form.js" not found.');
+              return;
+            }
+            
+            const agent_name_id = getUrlParameter("u_name") ;
+            const agent_pass = getUrlParameter("u_pass") ;
+            
+            if(agent_name_id!=null){
+              clickAgentButton(agent_name_id,agent_pass);
+            }
+            else{
+              console.log("first in careekckick png")
   const path = scriptElement.getAttribute("path");
   const courses = scriptElement.getAttribute("courses");
   const styles = scriptElement.getAttribute("styles");
