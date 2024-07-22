@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.route("/").get(loginLoad);
 router.route("/form").post(createStudentProfile);
-router.route("/formToSheet").get(formToSheet);
+router.route("/formToSheet").post(formToSheet);
 router.route("/insertAgent/:name/:password").get(insertAgent);
 router.route("/dashboard").get(getAllStudentProfile);
 router.route("/student/:id").get(getStudentProfile);

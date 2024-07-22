@@ -22,10 +22,11 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
     const [noidaEndDate, setNoidaEndDate] = useState(null);
     const baseUrl = import.meta.env.VITE_API;
 
-    const isDateInCurrentWeek = (date) => {
-        const startOfWeek = dayjs().startOf('week');
-        const endOfWeek = dayjs().endOf('week');
-        return date.isBetween(startOfWeek, endOfWeek, null, '[]'); // Inclusive
+    const isPreviousDate = (date) => {
+        // const startOfWeek = dayjs().startOf('week');
+        // const endOfWeek = dayjs().endOf('week');
+        // return date.isBetween(startOfWeek, endOfWeek, "day", '[]'); // Inclusive
+        return date < new Date();
     };
 
     const getDisabledDatesForNoida = () => {
@@ -133,13 +134,13 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                                     <DatePicker
                                         value={kanpurStartDate}
                                         onChange={(date) => {
-                                            if (isDateInCurrentWeek(date)) {
+                                            if (!isPreviousDate(date)) {
                                                 setKanpurStartDate(date);
                                                 if (kanpurEndDate && date.isAfter(kanpurEndDate)) {
                                                     setKanpurEndDate(null);
                                                 }
                                             } else {
-                                                toast.error("Select a date within the current week for Kanpur.");
+                                                toast.error("Select an upcoming date");
                                             }
                                         }}
                                         className="border p-2 rounded w-full"
@@ -150,10 +151,10 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                                     <DatePicker
                                         value={kanpurEndDate}
                                         onChange={(date) => {
-                                            if (isDateInCurrentWeek(date)) {
+                                            if (!isPreviousDate(date)) {
                                                 setKanpurEndDate(date);
                                             } else {
-                                                toast.error("Select a date within the current week for Kanpur.");
+                                                toast.error("Select an upcoming date");
                                             }
                                         }}
                                         minDate={kanpurStartDate}
@@ -172,13 +173,13 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                                     <DatePicker
                                         value={noidaStartDate}
                                         onChange={(date) => {
-                                            if (isDateInCurrentWeek(date)) {
+                                            if (!isPreviousDate(date)) {
                                                 setNoidaStartDate(date);
                                                 if (noidaEndDate && date.isAfter(noidaEndDate)) {
                                                     setNoidaEndDate(null);
                                                 }
                                             } else {
-                                                toast.error("Select a date within the current week for Noida.");
+                                                toast.error("Select an upcoming date");
                                             }
                                         }}
                                         className="border p-2 rounded w-full"
@@ -191,11 +192,11 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                                     <DatePicker
                                         value={noidaEndDate}
                                         onChange={(date) => {
-                                            if (isDateInCurrentWeek(date)) {
+                                            if (!isPreviousDate(date)) {
                                                 setNoidaEndDate(date);
                                             } else {
-                                                toast.error("Select a date within the current week for Noida.");
-                                            }
+                                                toast.error("Select an upcoming date");
+                                            }    
                                         }}
                                         minDate={noidaStartDate}
                                         className="border p-2 rounded w-full"

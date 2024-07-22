@@ -592,11 +592,11 @@ const sendData = async (formData) => {
       body: JSON.stringify(Data),
     });
     const SheetResponse = await fetch(DataToSheet, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      // body: JSON.stringify(Data),
+      body: JSON.stringify(Data),
     });
 
     if (!response.ok) {

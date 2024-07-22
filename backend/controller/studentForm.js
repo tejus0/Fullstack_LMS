@@ -85,7 +85,7 @@ export async function createStudentProfile(req, res) {
         await studentModal.create(data);
         return res.status(201).json({
           success: true,
-          msg: "Form Submitted Successfully",
+          message: "Form Submitted Successfully",
         });
       }
     }
@@ -802,7 +802,13 @@ export const formToSheet = async (req, res) => {
     // Get the directory name
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
-    const sheetData = await studentModal.find();
+    // const sheetData = await studentModal.find();
+    if(!req.body){
+      res.status(500).json({
+        message:"Please provide data"
+      })
+    }
+    const sheetData = req.body;
     console.log(sheetData, "sheetdata");
 
     // Define the path to the JSON file
