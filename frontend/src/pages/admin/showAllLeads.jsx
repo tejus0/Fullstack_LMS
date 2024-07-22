@@ -147,14 +147,64 @@ const ShowAllleads = () => {
                             <tr>
                                 <th scope="col" className="px-6 py-3">S. No.</th>
                                 <th scope="col" className="px-6 py-3">Name</th>
-                                <th scope="col" className="px-6 py-3">Registered ON</th>
-                                <th scope="col" className="px-6 py-3">Neet Score</th>
-                                <th scope="col" className="px-6 py-3">State</th>
-                                <th scope="col" className="px-6 py-3">Course</th>
-                                <th scope="col" className="px-6 py-3">Contact No</th>
-                                <th scope="col" className="px-6 py-3">Counsellor</th>
-                                <th scope="col" className="px-6 py-3">Lead Status</th>
-                                <th scope="col" className="px-6 py-3">Update Status</th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Registered ON
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div>
+                                    </th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Neet Score
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div>
+                                    </th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    State
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div></th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Course
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div></th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Contact No
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div></th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Counsellor
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div></th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Lead Status
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div></th>
+                                <th scope="col" className="px-6 py-3">
+                                    <div className="flex gap-2 items-center">
+                                    Update Status
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+  <path d="M12 5L12 19 19 12 5 12Z" />
+</svg>
+                                    </div></th>
                             </tr>
                         </thead>
                         <tbody>
