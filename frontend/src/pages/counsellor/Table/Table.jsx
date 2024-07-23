@@ -18,22 +18,23 @@ import TablePaginationActions from "@mui/material/TablePagination/TablePaginatio
 const Table = () => {
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
-  const id = location.state.id;
+  console.log(location)
+  const id = location.state?.id;
   const [users, setUsers] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
     direction: "asc",
   });
-  console.log(location.state,"state hai yeh")
   const [page, setPage] = useState(location.state?.page || 0);
-  // const [page, setPage] = useState(0);
-  // const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
+
   const [rowsPerPage] = useState(10); // Fixed rows per page to 10
 
   const [search, setsearch] = useState("");
   const [SearchBy, setSearchBy] = useState("name");
 
   const [filter, setfilter] = useState([]);
+
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
   const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] =
@@ -70,6 +71,7 @@ const Table = () => {
       // });
       setUsers(response.data);
       setfilter(response.data);
+      setFilteredUsers(response.data);
     };
 
     fetchData();
@@ -95,13 +97,7 @@ const Table = () => {
     setPage(newPage);
   };
 
-  // const handleChangeRowsPerPage = (event) => {
-  //   setRowsPerPage(parseInt(event.target.value, 10));
-  //   setPage(0);
-  // };
-
   const handleSearchChange = (e) => {
-    // setsearch(e.target.value);
     setPage(0); // Reset to first page when changing search term
   };
 
@@ -116,15 +112,15 @@ const Table = () => {
     setsearch(e.target.value);
 
     if (e.target.value === "") {
-      setUsers(filter);
+      setFilteredUsers(filter);
     } else {
-      console.log("ok");
-      setUsers(
-        paginatedUsers.filter((item) =>
+      setFilteredUsers(
+        sortedUsers.filter((item) =>
           item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())
         )
       );
     }
+    setPage(0);
   };
 
   const handleSort = (key) => {
@@ -135,11 +131,35 @@ const Table = () => {
     setSortConfig({ key, direction });
   };
 
-  const filteredUsers = React.useMemo(() => {
-    if (leadStatusFilter === "All") {
-      return sortedUsers;
-    } else {
-      return sortedUsers.filter((user) => {
+  // const filteredUsers = React.useMemo(() => {
+  //   if (leadStatusFilter === "All") {
+  //     return sortedUsers;
+  //   } else {
+  //     return sortedUsers.filter((user) => {
+  //       const latestRemark = user.remarks.FollowUp3.length
+  //         ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject
+  //         : user.remarks.FollowUp2.length
+  //         ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
+  //         : user.remarks.FollowUp1.length
+  //         ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
+  //         : "No Remarks";
+  //       const leadStatus = `${latestRemark}`;
+  //       return leadStatus
+  //         .toLowerCase()
+  //         .includes(leadStatusFilter.toLowerCase());
+  //     });
+  //   }
+  // }, [sortedUsers, leadStatusFilter]);
+
+  // var paginatedUsers = filteredUsers.slice(
+  //   page * rowsPerPage,
+  //   page * rowsPerPage + rowsPerPage
+  // );
+
+  const filteredAndSortedUsers = React.useMemo(() => {
+    let filtered = filteredUsers;
+    if (leadStatusFilter !== "All") {
+      filtered = filtered.filter((user) => {
         const latestRemark = user.remarks.FollowUp3.length
           ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject
           : user.remarks.FollowUp2.length
@@ -147,20 +167,19 @@ const Table = () => {
           : user.remarks.FollowUp1.length
           ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
           : "No Remarks";
-        const leadStatus = `${latestRemark}`;
-        return leadStatus
+        return latestRemark
           .toLowerCase()
           .includes(leadStatusFilter.toLowerCase());
       });
     }
-  }, [sortedUsers, leadStatusFilter]);
+    return filtered;
+  }, [filteredUsers, leadStatusFilter]);
 
-  var paginatedUsers = filteredUsers.slice(
+  var paginatedUsers = filteredAndSortedUsers.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-  console.log(paginatedUsers, "usersall");
-  // const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
+
   const paginationDisabled = {
     next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0),
     previous: false, // Always enable Previous button
@@ -171,6 +190,12 @@ const Table = () => {
 
   const toggleLeadStatusDropdown = () => {
     setIsLeadStatusDropdownOpen((prev) => !prev);
+  };
+
+  const handleLeadStatusFilter = (status) => {
+    setLeadStatusFilter(status);
+    setIsLeadStatusDropdownOpen(false);
+    setPage(0); // Reset to first page when lead status filter changes
   };
 
   return (
@@ -308,44 +333,75 @@ const Table = () => {
                       />
                     )}
                     {isLeadStatusDropdownOpen && (
-                      <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                        <button
-                          onClick={() => {
-                            setLeadStatusFilter("All");
-                            toggleLeadStatusDropdown();
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      // <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
+                      //   <button
+                      //     onClick={() => {
+                      //       setLeadStatusFilter("All");
+                      //       toggleLeadStatusDropdown();
+                      //       setPage(0);
+                      //     }}
+                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      //   >
+                      //     All
+                      //   </button>
+                      //   <button
+                      //     onClick={() => {
+                      //       setLeadStatusFilter("Hot Lead");
+                      //       toggleLeadStatusDropdown();
+                      //       setPage(0);
+                      //     }}
+                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      //   >
+                      //     Hot Leads
+                      //   </button>
+                      //   <button
+                      //     onClick={() => {
+                      //       setLeadStatusFilter("Warm");
+                      //       toggleLeadStatusDropdown();
+                      //       setPage(0);
+                      //     }}
+                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      //   >
+                      //     Warm
+                      //   </button>
+                      //   <button
+                      //     onClick={() => {
+                      //       setLeadStatusFilter("Cold Call Done");
+                      //       toggleLeadStatusDropdown();
+                      //       setPage(0);
+                      //     }}
+                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      //   >
+                      //     Cold Call Done
+                      //   </button>
+                      // </div>
+
+                      <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
+                        <li
+                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                          onClick={() => handleLeadStatusFilter("All")}
                         >
                           All
-                        </button>
-                        <button
-                          onClick={() => {
-                            setLeadStatusFilter("Hot Lead");
-                            toggleLeadStatusDropdown();
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        </li>
+                        <li
+                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                          onClick={() => handleLeadStatusFilter("Cold")}
                         >
-                          Hot Leads
-                        </button>
-                        <button
-                          onClick={() => {
-                            setLeadStatusFilter("Warm");
-                            toggleLeadStatusDropdown();
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          Cold
+                        </li>
+                        <li
+                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                          onClick={() => handleLeadStatusFilter("Hot")}
+                        >
+                          Hot
+                        </li>
+                        <li
+                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                          onClick={() => handleLeadStatusFilter("Warm")}
                         >
                           Warm
-                        </button>
-                        <button
-                          onClick={() => {
-                            setLeadStatusFilter("Cold Call Done");
-                            toggleLeadStatusDropdown();
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Cold Call Done
-                        </button>
-                      </div>
+                        </li>
+                      </ul>
                     )}
                   </div>
                 </th>
@@ -393,9 +449,9 @@ const Table = () => {
                       : "No Remarks "}
                   </td>
                   <td className="px-6 py-4">
-                    <Link target="_blank"
+                    <Link
                       to={`/student/${user._id}`}
-                      state={{ id: `${user._id}` , page:page}}
+                      state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
                     >
                       <Button variant="contained">Edit</Button>
                     </Link>
@@ -406,7 +462,7 @@ const Table = () => {
           </table>
           <TablePagination
             component="div"
-            count={sortedUsers.length}
+            count={filteredAndSortedUsers.length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

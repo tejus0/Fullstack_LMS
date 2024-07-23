@@ -18,9 +18,11 @@ const StudentProfile = ({ counsellor_id }) => {
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
-  const page = location.state?.page || 0;
+  const {id, counsellorID, page, origin} = location.state || {page: 0}
   const navigate = useNavigate();
-  const id = location.state.id;
+  // const id = location.state.id;
+
+  console.log(location);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -57,9 +59,11 @@ const StudentProfile = ({ counsellor_id }) => {
   };
 
   const handleGoToLeads = () => {
-    // studentData.source=="fb_arnav"? navigate("/showArnavAllLeads",{state:{id:"6672c48614be596e4ccb3b39"}}): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
-    navigate(`/showAllLeads`,{state:{currPage:page} });
-
+    if (origin === 'counsellorProfile') {
+      navigate(`/counsellor-profile/${counsellorID}`, { state: { page, id: counsellorID } });
+    } else if (origin === 'showAllLeads') {
+      navigate('/showAllLeads', { state: { page } });
+    }
   };
 
   // follow up option

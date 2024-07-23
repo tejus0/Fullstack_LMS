@@ -44,7 +44,7 @@ const ShowAllleads = () => {
     key: "createdAt",
     direction: "asc",
   });
-  const [page, setPage] = useState(location.state?.currPage || 0);
+  const [page, setPage] = useState(location.state?.page || 0);
   const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
   const navigate = useNavigate();
 
@@ -534,7 +534,7 @@ const toggleDrawer = (open) => () => {
                       : "No Remarks "}</td>}
                                     <td className="px-6 py-4">
                                         <Button variant="contained">
-                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page }}> Edit </Link>
+                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page , origin: 'showAllLeads'}}> Edit </Link>
                                         </Button>
                                     </td>
                                 </tr>
