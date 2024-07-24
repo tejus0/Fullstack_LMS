@@ -27,7 +27,7 @@ router.route("/renameKey").post(renameKey);
 
 router.route("/getCounsellorDataList/:id").get(getCounsellorDataList);
 router.route("/getCounsellorInfo").get(getCounsellorInfo);
-router.route("/getAgentLeads/:id").get(getAgentLeads);
+router.route("/getAgentLeads/:categoryName").get(getAgentLeads);
 router.route("/cleatAllAssignedCouns").get(cleatAllAssignedCouns);
 router.route("/slotBook").post(slotBook);
 router.route("/bookedSlot").get(bookedSlot);
@@ -35,7 +35,7 @@ router.route("/insertFromSheet").post(insertFromSheet);
 router.route("/updateAdminAvailableDays").post(updateAdminAvailableDays);
 router.route("/getAdminAvailableDays").get(getAdminAvailableDays);
 
-router.route("/showSpecificLeads/:categoryName").get(showSpecificLeads);
+router.route("/showSpecificLeads/:id").get(showSpecificLeads);
 
 // router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 

@@ -468,7 +468,7 @@ export const verifyLogin = async (req, res) => {
                 return res.json({
                   status: "ok",
                   data: userData._id,
-                  type: "agent",
+                  type: "admissionHead",
                 });
               } else {
                 return res.json({
@@ -584,9 +584,9 @@ export const getCounsellorDataList = async (req, res) => {
   }
 };
 
-export const getAgentLeads = async (req, res) => {
+export const showSpecificLeads = async (req, res) => {
   const id = req.params.id;
-  console.log(id, "in AgentLeads");
+  console.log(id, "in show Specific leads");
   try {
     const agentName = await counsellorModal.find({ _id: id });
     console.log(agentName, "agent");
@@ -714,8 +714,8 @@ export const getArnavCounsellorDataList = async (req, res) => {
   }
 };
 
-export const showSpecificLeads = async (req, res) => {
-  console.log(req.params.categoryName, "name in showspecific");
+export const getAgentLeads = async (req, res) => {
+  console.log(req.params.categoryName, "name in agentSpecific");
   const cat_name = req.params.categoryName;
 
   const sales = await studentModal.find({ source: cat_name });

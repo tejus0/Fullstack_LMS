@@ -17,7 +17,7 @@ import TablePaginationActions from "@mui/material/TablePagination/TablePaginatio
 const TableShowSpecificLeads = () => {
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
-  const id = location.state.name;
+  const id = location.state.id;
   console.log(id," in spoeicifig")
   const [users, setUsers] = useState([]);
   // const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });

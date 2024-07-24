@@ -32,5 +32,22 @@
     "preferredCollege": "2erg",
     "agreeCheckbox": true,
     "AssignedCouns": ""
+  },
+  {
+    "name": "aqws",
+    "contactNumber": "5555555565",
+    "email": "65@gmail.com",
+    "whatsappNumber": "5555555565",
+    "guardianName": "papa",
+    "district": "Dadra & Nagar Haveli",
+    "state": "Dadra and Nagar Haveli (UT)",
+    "courseSelected": "MBBS",
+    "neetScore": "720",
+    "neetAIR": 1,
+    "source": "age_kaushik5",
+    "sourceId": "age_kaushik5",
+    "preferredCollege": "",
+    "agreeCheckbox": true,
+    "AssignedCouns": ""
   }
 ]

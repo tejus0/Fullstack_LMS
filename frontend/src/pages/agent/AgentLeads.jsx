@@ -19,7 +19,7 @@ const AgentLeads = () => {
 
     const baseUrl = import.meta.env.VITE_API;
     const location = useLocation();
-    const id = location.state.id;
+    const cat_name = location.state.name;
     const [users, setUsers] = useState([]);
     const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'asc' });
     const [page, setPage] = useState(0);
@@ -47,7 +47,7 @@ const AgentLeads = () => {
             //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
             //     console.log(err, "error");
             //   });
-            const response = await axios.get(`${baseUrl}/getAgentLeads/${id}`).catch(err => {
+            const response = await axios.get(`${baseUrl}/getAgentLeads/${cat_name}`).catch(err => {
                 console.log(err, "error");
             });
             setUsers(response.data);

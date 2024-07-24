@@ -113,7 +113,7 @@ function Login() {
         window.localStorage.setItem("user-type", response.data.type);
 
         if(response.data.type=="agent"){
-          navigate("/agentLeads",{state: { id: response.data.data}})
+          navigate("/agentLeads",{state: { name: response.data.data}})
         }
         else if(response.data.token==="6672c48614be596e4ccb3b39"){
           navigate("/showArnavAllLeads",{ state: { id: response.data.data } })
@@ -121,8 +121,8 @@ function Login() {
         else if (response.data.type === "user") {
           navigate(`/counsellor-profile/${response.data.data}`, { state: { id: response.data.data } });
         } 
-        else if(response.data.type==="agent"){
-          navigate(`/showSpecificLeads`,{state:{name:response.data.data}})
+        else if(response.data.type==="admissionHead"){
+          navigate(`/showSpecificLeads`,{state:{id:response.data.data}})
         }
         else {
           navigate("/adminDashboard");
