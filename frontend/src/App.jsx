@@ -18,6 +18,7 @@ import TableShowSpecificLeads from "./pages/SpecificLeads/TableSpecificLeads";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import SlotBooking from "./component/TimeSlot/SlotBooking";
 import DaysAvaialble from "./pages/admin/DaysAvailable";
+import CounsellorTrackerDashboard from './pages/admin/CounsellorDashboard'
 
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/adminDashboard" element={<AdminDashboard />} />
           <Route path="/adminAvailableDays" element={<DaysAvaialble />} />
+          <Route path="/cousellorDashboard/:counsellorId" element={<CounsellorTrackerDashboard/>}/>
 
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>

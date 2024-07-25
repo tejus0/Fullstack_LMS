@@ -803,9 +803,9 @@ export const formToSheet = async (req, res) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     // const sheetData = await studentModal.find();
-    if(!req.body){
+    if (!req.body) {
       res.status(500).json({
-        message:"Please provide data"
+        message: "Please provide data"
       })
     }
     const sheetData = req.body;
@@ -867,30 +867,291 @@ export const formToSheet = async (req, res) => {
   }
 };
 
-export const updateAdminAvailableDays= async(req,res)=>{
+export const updateAdminAvailableDays = async (req, res) => {
   // const { startDate, endDate } = req.body;
   // console.log(startDate,endDate,"endAdmin");
 
-  const {kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate}=req.body;
-  
+  const { kanpurStartDate, kanpurEndDate, noidaStartDate, noidaEndDate } = req.body;
+
   try {
     const result = await counsellorModal.updateOne(
-        { is_admin: 1 }, // Filter to find the document
-        { $set: { kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate} } // Use $set to update the fields
+      { is_admin: 1 }, // Filter to find the document
+      { $set: { kanpurStartDate, kanpurEndDate, noidaStartDate, noidaEndDate } } // Use $set to update the fields
     );
 
     if (result.nModified === 0) {
-        return res.status(404).json({ message: "Counselor not found or no changes made." });
+      return res.status(404).json({ message: "Counselor not found or no changes made." });
     }
 
     res.json({ message: "Dates updated successfully." });
-} catch (error) {
+  } catch (error) {
     console.error("Error updating counselor:", error);
     res.status(500).json({ message: "Internal server error." });
-}
+  }
 }
 
-export const getAdminAvailableDays= async(req,res)=>{
+export const getAdminAvailableDays = async (req, res) => {
   const counselor = await counsellorModal.findOne({ is_admin: 1 });
   res.json(counselor);
+}
+
+export const getCounsellorRevenueDetails = async (req, res) => {
+  try {
+    const counsellerId = req.params.id;
+    const counsellor = await counsellorModal.findOne({_id:counsellerId});
+    if(!counsellor){
+      return res.status(404).json({
+        message:"Counsellor Not Found"
+      })
+    }
+    const counsellorStudents = await studentModal.aggregate([
+      {
+        $match: {
+          assignedCouns: counsellerId
+        }
+      },
+      {
+        $addFields: {
+          followUp3Length: { $size: "$remarks.FollowUp3" }
+        }
+      },
+      {
+        $match: {
+          followUp3Length: { $gt: 0 }
+        }
+      }
+    ]);
+    if (!counsellorStudents) {
+      return res.status(500).json({
+        message: "No Students assigned to counsellor"
+      })
+    }
+    let totalRevenue = 0;
+    for (let i = 0; i < counsellorStudents.length; i++) {
+      for (let j = 0; j < counsellorStudents[i].remarks.FollowUp3.length; j++) {
+        totalRevenue += parseInt(counsellorStudents[i].remarks.FollowUp3[j].preBookingAmount);
+      }
+    }
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const thisMonthCounsellorStudents = (await studentModal.aggregate([
+      {
+        $match: {
+          assignedCouns: counsellerId,
+          createdAt: {
+            $gte: startOfMonth,
+            $lt: endOfMonth
+          }
+        }
+      },
+      {
+        $addFields: {
+          followUp3Length: { $size: "$remarks.FollowUp3" }
+        }
+      },
+      {
+        $match: {
+          followUp3Length: { $gt: 0 }
+        }
+      }
+    ]))
+    let thisMonthRevenue = 0;
+    for (let i = 0; i < thisMonthCounsellorStudents.length; i++) {
+      for (let j = 0; j < thisMonthCounsellorStudents[i].remarks.FollowUp3.length; j++) {
+        thisMonthRevenue += parseInt(thisMonthCounsellorStudents[i].remarks.FollowUp3[j].preBookingAmount);
+      }
+    }
+    return res.status(200).json({
+      message: "Success",
+      data: {
+        counsellorName: counsellor.name,
+        totalRevenue,
+        thisMonthRevenue,
+      }
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      message: "Something Went Wrong!"
+    })
+  }
+}
+
+export const getCoursesCounselled = async (req, res) => {
+  try {
+    const counsellorId = req.params.counsellerId;
+    const coursesAggregated = await studentModal.aggregate([
+      { $match: { assignedCouns: counsellorId } },
+      { $group: { _id: "$courseSelected", count: { $sum: 1 } } },
+      { $project: { _id: 0, course: "$_id", count: 1 } }
+    ]);
+
+
+    return res.status(200).json({
+      message: "Success",
+      data: coursesAggregated
+    })
+
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something went wrong!"
+    })
+  }
+}
+
+export const getCounsellorLeadDetails = async (req, res) => {
+  try {
+    const counsellerId = req.params.counsellerId;
+    const totalLeads = (await studentModal.find({ assignedCouns: counsellerId })).length;
+    // const completedLeads = (await studentModal.find({ assignedCouns: counsellerId,  $where: "this.remarks.FollowUp3.length > 1" }));
+    const stage1Students = await studentModal.find({assignedCouns: counsellerId})
+    const stage2Students =(await studentModal.aggregate([
+      {
+        $match: {
+          assignedCouns: counsellerId
+        }
+      },
+      {
+        $addFields: {
+          followUp2Length: { $size: "$remarks.FollowUp2" }
+        }
+      },
+      {
+        $match: {
+          followUp2Length: { $gt: 0 }
+        }
+      }
+    ]));
+    const counselledStudents = (await studentModal.aggregate([
+      {
+        $match: {
+          assignedCouns: counsellerId
+        }
+      },
+      {
+        $addFields: {
+          followUp3Length: { $size: "$remarks.FollowUp3" }
+        }
+      },
+      {
+        $match: {
+          followUp3Length: { $gt: 0 }
+        }
+      }
+    ]));
+    const completedLeads = counselledStudents.length;
+
+    const stage1Obj = {};
+    stage1Obj.firstCallDone = 0;
+    const stage2Obj = {};
+    stage2Obj.hotLeads = 0;
+    stage2Obj.warmLeads = 0 ;
+    stage2Obj.coldLeads = 0;
+    const stage3Obj = {};
+    stage3Obj.paidCounselling = 0;
+    stage3Obj.associateCollege = 0;
+    for(let i=0 ; i < stage1Students.length ; i++){
+      if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("First Call Done"))
+        stage1Obj.firstCallDone += 1; 
+    }
+
+    for(let i = 0 ; i < stage2Students.length ; i++){
+
+      if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Hot Lead")){
+        stage2Obj.hotLeads += 1;
+      }
+      else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Warm Lead")){
+        stage2Obj.warmLeads += 1;
+      }
+      else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Cold Lead")){
+        stage2Obj.coldLeads += 1;
+      }
+    }
+
+
+    for(let i = 0 ; i < counselledStudents.length ; i++){
+
+      if(counselledStudents[i].remarks.FollowUp3.at(-1)?.subject.includes("Paid Counselling")){
+        stage3Obj.paidCounselling += 1;
+      }
+      else if(counselledStudents[i].remarks.FollowUp3.at(-1)?.subject.includes("Associate College")){
+        stage3Obj.associateCollege += 1;
+      }
+    }
+
+
+    return res.status(200).json({
+      message: "Success",
+      totalLeads,
+      completedLeads,
+      stage1Obj,
+      stage2Obj,
+      stage3Obj
+    })
+  } catch (err) {
+    console.log(err);
+
+    return res.status(500).json({
+      message: "Something Went Wrong"
+    })
+  }
+}
+
+
+export const getCounsellorPendingAmount = async(req , res)=>{
+  try {
+    const counsellerId = req.params.counsellerId;
+    const counselledStudents = (await studentModal.aggregate([
+      {
+        $match: {
+          assignedCouns: counsellerId
+        }
+      },
+      {
+        $addFields: {
+          followUp3Length: { $size: "$remarks.FollowUp3" }
+        }
+      },
+      {
+        $match: {
+          followUp3Length: { $gt: 0 }
+        }
+      }
+    ]));
+    const studentData = [];
+    for(let i =0 ; i < counselledStudents.length ; i++){
+      const student = counselledStudents[i];
+      let studentObj = {
+        name:student.name,
+        course: student.courseSelected
+      }
+      console.log(student.remarks.FollowUp3[0].additionalOption)
+      let regex = /[a-zA-Z]+ \- [0-9]+[A-Z]/gm;
+      if(regex.test(student.remarks.FollowUp3[0].additionalOption)){
+        const studentPackage = parseInt(student.remarks.FollowUp3[0].additionalOption.split('-')[1].replace('K', '000'));
+        let totalAmountPaid = 0;
+        for(let j=0 ; j < student.remarks.FollowUp3.length ; j++){
+          totalAmountPaid += student.remarks.FollowUp3[j].preBookingAmount;
+        }
+        let pendingAmount = studentPackage - totalAmountPaid;
+        studentObj.pendingAmount = pendingAmount < 0 ? 0 : pendingAmount ;
+        studentObj.package = studentPackage;
+        studentData.push(studentObj)
+      }
+    }
+
+    console.log(counselledStudents)
+    return res.status(200).json({
+      message:"Success",
+      data:studentData
+    })
+
+  } catch (err) {
+    console.log(err);
+    
+    return res.status(500).json({
+      message:"Something Went Wrong"
+    })
+  }
 }
