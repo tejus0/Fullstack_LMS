@@ -1,5 +1,5 @@
 import { districtData } from "./district.js";
-// document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const nameId =
     getUrlParameter("u_name") !== null && getUrlParameter("u_pass") !== null
     ? 
@@ -7,7 +7,7 @@ import { districtData } from "./district.js";
     :
     initializeForm();
 
-  // });
+  });
   
   // Initialize Firebase
   // const firebaseConfig = {
@@ -24,7 +24,7 @@ import { districtData } from "./district.js";
   // const firebase= initializeApp(firebaseConfig);
   // const auth = firebase.auth();
   
-  // document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", () => {
     const stateSelect = document.getElementById("state");
     
     // const stateSelect = document.getElementById('state');
@@ -74,7 +74,7 @@ import { districtData } from "./district.js";
         }
       }
     });
-// });
+});
 
 function clickAgentButton(name,password) {
   console.log("first")

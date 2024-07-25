@@ -894,3 +894,38 @@ export const getAdminAvailableDays= async(req,res)=>{
   const counselor = await counsellorModal.findOne({ is_admin: 1 });
   res.json(counselor);
 }
+
+export const getCounsellorsWithStudents = async (req, res) => {
+  try {
+    // Fetch all counsellors with allLeads equal to 0
+    const counsellors = await counsellorModal.find({ allLeads: 0 });
+
+    // Fetch all students where assignedCouns is not empty
+    const students = await studentModal.find({ assignedCouns: { $ne: "" } });
+
+    // Group students by counsellor id
+    const counsellorMap = students.reduce((acc, student) => {
+      const counsellorId = student.assignedCouns.toString(); // Ensure counsellorId is converted to string for comparison
+      if (acc[counsellorId]) {
+        acc[counsellorId].students.push(student);
+      } else {
+        const counsellor = counsellors.find(c => c._id.toString() === counsellorId);
+        if (counsellor) {
+          acc[counsellorId] = {
+            counsellor,
+            students: [student],
+          };
+        }
+      }
+      return acc;
+    }, {});
+
+    // Convert map to array of objects
+    const counsellorsWithStudents = Object.values(counsellorMap);
+
+    res.status(200).json(counsellorsWithStudents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};

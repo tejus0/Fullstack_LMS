@@ -31,13 +31,6 @@ const counsellorDetail = mongoose.Schema({
   kanpurEndDate:{type:String},
   noidaEndDate:{type:String},
   noidaStartDate:{type:String},
-  assignedStudents: [
-    {
-        type: Array,
-        // ref: "Students",
-        default:[]
-    }
-],
   is_admin: {
     type: Number,
     required: true,

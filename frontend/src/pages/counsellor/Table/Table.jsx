@@ -401,6 +401,18 @@ const Table = () => {
                         >
                           Warm
                         </li>
+                        <li
+                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                          onClick={() => handleLeadStatusFilter("Paid Counselling")}
+                        >
+                          Paid Counselling
+                        </li>
+                        <li
+                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                          onClick={() => handleLeadStatusFilter("Associate College")}
+                        >
+                          Associate College
+                        </li>
                       </ul>
                     )}
                   </div>
@@ -449,7 +461,7 @@ const Table = () => {
                       : "No Remarks "}
                   </td>
                   <td className="px-6 py-4">
-                    <Link
+                    <Link 
                       to={`/student/${user._id}`}
                       state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
                     >

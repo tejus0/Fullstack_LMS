@@ -61,10 +61,10 @@ const Navbar = () => {
                             </Link>
                         </div>
                         <div>
-                            <a href="#projects" style={linkStyle}>
+                            <a href="/allCounsellorsReport" style={linkStyle}>
                                 <li>
                                     <FaFileZipper style={navIcons} />{" "}
-                                    <p>Portfolio</p>
+                                    <p>Report</p>
                                 </li>
                             </a>
                         </div>
