@@ -7,6 +7,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
 import Navbar from '../../component/navbar/Navbar';
 import dayjs from "dayjs"
+import { useSelector } from 'react-redux';
 
 
 
@@ -15,6 +16,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
     // const [endDate, setEndDate] = useState(null);
     // const [kanpurDate, setKanpurDate] = useState(null);
     // const [noidaDate, setNoidaDate] = useState(null);
+
 
     const [kanpurStartDate, setKanpurStartDate] = useState(null);
     const [kanpurEndDate, setKanpurEndDate] = useState(null);
@@ -31,9 +33,9 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
 
     const getDisabledDatesForNoida = () => {
         const disabledDates = [];
-        
-          // Add Kanpur selected range to disabled dates for Noida
-          if (kanpurStartDate && kanpurEndDate) {
+
+        // Add Kanpur selected range to disabled dates for Noida
+        if (kanpurStartDate && kanpurEndDate) {
             let start = kanpurStartDate.startOf('day');
             let end = kanpurEndDate.endOf('day');
             while (start.isBefore(end) || start.isSame(end)) {
@@ -45,7 +47,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
         return disabledDates;
     };
 
-    const handleSubmit = async() => {
+    const handleSubmit = async () => {
 
         if (!kanpurStartDate || !kanpurEndDate || !noidaStartDate || !noidaEndDate) {
             toast.error("Please select start and end dates for both locations.");
@@ -84,7 +86,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
         //         startDate: start,
         //         endDate: end
         //     });
-    
+
         //     console.log("Sending dates:", { start, end });
 
         // const response = await axios.post(`${baseUrl}/updateAdminAvailableDays`, {
@@ -120,7 +122,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
 
     return (
         <>
-        <div className="ml-20">
+            <div className="ml-20">
                 <Navbar />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <h1 className="text-2xl font-bold mb-4">Date Range Picker</h1>
@@ -196,7 +198,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                                                 setNoidaEndDate(date);
                                             } else {
                                                 toast.error("Select an upcoming date");
-                                            }    
+                                            }
                                         }}
                                         minDate={noidaStartDate}
                                         className="border p-2 rounded w-full"
@@ -209,14 +211,14 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
 
                         <div className="flex justify-center">
                             <div className="flex space-x-4">
-                                <button 
-                                    onClick={handleSubmit} 
+                                <button
+                                    onClick={handleSubmit}
                                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
                                 >
                                     Submit
                                 </button>
-                                <button 
-                                    onClick={handleReset} 
+                                <button
+                                    onClick={handleReset}
                                     className="bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400 transition duration-200"
                                 >
                                     Reset
@@ -227,7 +229,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                 </LocalizationProvider>
             </div>
 
-        {/* <div className="ml-20">
+            {/* <div className="ml-20">
         <Navbar />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
         <h1 className="text-2xl font-bold mb-4">Date Range Picker</h1>

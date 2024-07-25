@@ -1,7 +1,8 @@
+import { useDispatch } from 'react-redux';
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TablePagination from "@mui/material/TablePagination";
 import Button from "@mui/material/Button";
@@ -14,18 +15,22 @@ import Typography from "@mui/material/Typography";
 import { object } from "yup";
 import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+import { useSelector } from "react-redux";
+import { updateCounsellorPage } from "../../../redux/dataSlice";
 
 const Table = () => {
   const baseUrl = import.meta.env.VITE_API;
+  const dispatch = useDispatch();
   const location = useLocation();
-  const id = location.state.id;
+  // const id = location.state.id;
+  const id = useParams().id;
   const [users, setUsers] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
     direction: "asc",
   });
-  console.log(location.state,"state hai yeh")
-  const [page, setPage] = useState(location.state?.page || 0);
+  console.log(id)
+  const page = useSelector((state) => state.data.counsellorPage)
   // const [page, setPage] = useState(0);
   // const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
   const [rowsPerPage] = useState(10); // Fixed rows per page to 10
@@ -55,12 +60,14 @@ const Table = () => {
     return `${formattedDate}, ${formattedTime}`;
   };
 
+  const [length, setlength] = useState()
   useEffect(() => {
     const fetchData = async () => {
       //  this is wrong
 
+
       const response = await axios
-        .get(`${baseUrl}/getCounsellorDataList/${id}`)
+        .get(`${baseUrl}/getCounsellorDataList/${id}?page=${page + 1}`)
         .catch((err) => {
           console.log(err, "error");
         });
@@ -68,13 +75,15 @@ const Table = () => {
       // const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
       //   console.log(err, "error");
       // });
-      setUsers(response.data);
-      setfilter(response.data);
+      setUsers(response.data.data);
+      setfilter(response.data.data);
+      setlength(response.data.len)
     };
 
     fetchData();
-  }, [id]);
+  }, [id, page]);
 
+  console.log(users);
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];
     if (sortConfig !== null) {
@@ -92,7 +101,7 @@ const Table = () => {
   }, [users, sortConfig]);
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    dispatch(updateCounsellorPage(newPage))
   };
 
   // const handleChangeRowsPerPage = (event) => {
@@ -143,10 +152,10 @@ const Table = () => {
         const latestRemark = user.remarks.FollowUp3.length
           ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject
           : user.remarks.FollowUp2.length
-          ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
-          : user.remarks.FollowUp1.length
-          ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
-          : "No Remarks";
+            ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
+            : user.remarks.FollowUp1.length
+              ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
+              : "No Remarks";
         const leadStatus = `${latestRemark}`;
         return leadStatus
           .toLowerCase()
@@ -162,7 +171,7 @@ const Table = () => {
   console.log(paginatedUsers, "usersall");
   // const paginationDisabled = paginatedUsers.some(item => item.remarks.FollowUp1.length === 0)
   const paginationDisabled = {
-    next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0),
+    next: users.some((item) => item.remarks.FollowUp1.length === 0),
     previous: false, // Always enable Previous button
   };
   // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
@@ -355,7 +364,7 @@ const Table = () => {
               </tr>
             </thead>
             <tbody>
-              {paginatedUsers.map((user, index) => (
+              {users.map((user, index) => (
                 <tr
                   key={user._id}
                   className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -380,22 +389,22 @@ const Table = () => {
                   <td className="px-6 py-4">
                     {user.remarks.FollowUp3.length > 0
                       ? user.remarks.FollowUp3[
-                          user.remarks.FollowUp3.length - 1
-                        ].subject
+                        user.remarks.FollowUp3.length - 1
+                      ].subject
                       : user.remarks.FollowUp2.length > 0
-                      ? user.remarks.FollowUp2[
+                        ? user.remarks.FollowUp2[
                           user.remarks.FollowUp2.length - 1
                         ].subject
-                      : user.remarks.FollowUp1.length > 0
-                      ? user.remarks.FollowUp1[
-                          user.remarks.FollowUp1.length - 1
-                        ].subject
-                      : "No Remarks "}
+                        : user.remarks.FollowUp1.length > 0
+                          ? user.remarks.FollowUp1[
+                            user.remarks.FollowUp1.length - 1
+                          ].subject
+                          : "No Remarks "}
                   </td>
                   <td className="px-6 py-4">
-                    <Link target="_blank"
+                    <Link
                       to={`/student/${user._id}`}
-                      state={{ id: `${user._id}` , page:page}}
+                      state={{ id: `${user._id}`, page: page }}
                     >
                       <Button variant="contained">Edit</Button>
                     </Link>
@@ -406,7 +415,7 @@ const Table = () => {
           </table>
           <TablePagination
             component="div"
-            count={sortedUsers.length}
+            count={length}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPage={rowsPerPage}

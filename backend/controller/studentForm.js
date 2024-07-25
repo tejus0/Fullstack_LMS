@@ -154,24 +154,24 @@ export const insertFromSheet = async (req, res) => {
 
 export async function getAllStudentProfile(req, res) {
   try {
-    // const { limit, page } = req.query
+    const { limit, page } = req.query
 
     const student = await studentModal.find();
+    const length = student.length
+    if (limit && page) {
+      const starting = (page - 1) * limit
+      const ending = page * limit
+      const data = student.slice(starting, ending)
 
-    // if (limit && page) {
-    //   const starting = (page - 1) * limit
-    //   const ending = (page) * limit
-
-    //   const data = student.slice(starting, ending)
-
-    //   return res.status(200).json(
-    //     {
-    //       sucess: true,
-    //       msg: "Sucessfull Fetched",
-    //       data
-    //     }
-    //   )
-    // }
+      return res.status(200).json(
+        {
+          sucess: true,
+          msg: "Sucessfull Fetched",
+          data,
+          length
+        }
+      )
+    }
 
     return res.status(200).json({
       sucess: true,
@@ -560,6 +560,8 @@ export const getCounsellorInfo = async (req, res) => {
 
 export const getCounsellorDataList = async (req, res) => {
   const id = req.params.id;
+  const page = req.query.page
+
   console.log(id, "in SalesList");
   try {
     if (id == "6672c48614be596e4ccb3b39") {
@@ -570,14 +572,19 @@ export const getCounsellorDataList = async (req, res) => {
       res.status(200).json(studentList);
       return;
     } else {
-      const sales = await studentModal.find({ assignedCouns: id });
+      const Allsales = await studentModal.find({ assignedCouns: id });
+      const length = Allsales.length
       // add here
       console.log("here it is");
 
-      if (!sales) {
+      if (!Allsales) {
         return res.status(404).json({ msg: "Sales data not found" });
       }
-      return res.status(200).json(sales);
+      const starting = (page - 1) * 10
+      const ending = page * 10
+      console.log(starting, ending);
+      const sales = Allsales.slice(starting, ending)
+      return res.status(200).json({ data: sales, len: length });
     }
   } catch (error) {
     res.status(500).json({ error: error });
@@ -803,9 +810,9 @@ export const formToSheet = async (req, res) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     // const sheetData = await studentModal.find();
-    if(!req.body){
+    if (!req.body) {
       res.status(500).json({
-        message:"Please provide data"
+        message: "Please provide data"
       })
     }
     const sheetData = req.body;
@@ -867,30 +874,30 @@ export const formToSheet = async (req, res) => {
   }
 };
 
-export const updateAdminAvailableDays= async(req,res)=>{
+export const updateAdminAvailableDays = async (req, res) => {
   // const { startDate, endDate } = req.body;
   // console.log(startDate,endDate,"endAdmin");
 
-  const {kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate}=req.body;
-  
+  const { kanpurStartDate, kanpurEndDate, noidaStartDate, noidaEndDate } = req.body;
+
   try {
     const result = await counsellorModal.updateOne(
-        { is_admin: 1 }, // Filter to find the document
-        { $set: { kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate} } // Use $set to update the fields
+      { is_admin: 1 }, // Filter to find the document
+      { $set: { kanpurStartDate, kanpurEndDate, noidaStartDate, noidaEndDate } } // Use $set to update the fields
     );
 
     if (result.nModified === 0) {
-        return res.status(404).json({ message: "Counselor not found or no changes made." });
+      return res.status(404).json({ message: "Counselor not found or no changes made." });
     }
 
     res.json({ message: "Dates updated successfully." });
-} catch (error) {
+  } catch (error) {
     console.error("Error updating counselor:", error);
     res.status(500).json({ message: "Internal server error." });
-}
+  }
 }
 
-export const getAdminAvailableDays= async(req,res)=>{
+export const getAdminAvailableDays = async (req, res) => {
   const counselor = await counsellorModal.findOne({ is_admin: 1 });
   res.json(counselor);
 }

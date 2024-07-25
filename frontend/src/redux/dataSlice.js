@@ -5,6 +5,10 @@ const studentSlice = createSlice({
     initialState: {
         loading: false,
         error: null,
+        page: 0,
+        counsellorPage: 0,
+        loginCounsellorId: null,
+        loginType: null,
         data: [],
     },
     reducers: {
@@ -13,6 +17,25 @@ const studentSlice = createSlice({
             state.error = null
             state.data = []
         },
+
+
+        updatePage: (state, action) => {
+            console.log(action.payload);
+            state.page = action.payload
+        },
+        updateCounsellorPage: (state, action) => {
+            state.counsellorPage = action.payload
+        },
+
+        updateCounsellorId: (state, action) => {
+            state.loginCounsellorId = action.payload
+        },
+
+        setLoginType: (state, action) => {
+            state.loginType = action.payload
+        },
+
+
 
         fetchDetailsucess: (state, action) => {
             state.loading = false
@@ -28,7 +51,7 @@ const studentSlice = createSlice({
     }
 })
 
-export const { fetchDetailfail, fetchDetailsucess, fetchDetailreq } = studentSlice.actions
+export const { fetchDetailfail, fetchDetailsucess, fetchDetailreq, updatePage, updateCounsellorId, setLoginType, updateCounsellorPage } = studentSlice.actions
 
 export const selectStudentData = (state) => state.data.data
 export default studentSlice.reducer

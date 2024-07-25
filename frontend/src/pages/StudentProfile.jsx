@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Box, Paper, Button } from "@mui/material";
 import SimpleAccordion from '../component/Accordion';
 import SideNavigation from '../component/FollowUp/SideNavigation';
@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 import FollowUpSteps from '../component/FollowUp/FollowUpSteps';
 import SlotBooking from '../component/TimeSlot/SlotBooking';
 import DaysAvaialble from './admin/DaysAvailable';
-
+import { useSelector } from 'react-redux';
 
 const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
@@ -18,7 +18,10 @@ const StudentProfile = ({ counsellor_id }) => {
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
-  const page = location.state?.page || 0;
+  // const page = location.state?.page || 0;
+  const page = useSelector((state) => state.data.page)
+  console.log(page);
+
   const navigate = useNavigate();
   const id = location.state.id;
 
@@ -32,7 +35,7 @@ const StudentProfile = ({ counsellor_id }) => {
   };
 
   useEffect(() => {
-    console.log(page,"page in useefect")
+    console.log(page, "page in useefect")
     const fetchData = async () => {
       try {
         // const response = await axios.get(`${baseUrl}/getTodos/${id}`);
@@ -56,27 +59,35 @@ const StudentProfile = ({ counsellor_id }) => {
     setTodos([...todos, newTodo]);
   };
 
+  const param = useParams()
+
+  const counsellorId = useSelector((state) => state.data.loginCounsellorId)
+  const user = useSelector((state) => state.data.loginType)
+  console.log(user, "user")
   const handleGoToLeads = () => {
     // studentData.source=="fb_arnav"? navigate("/showArnavAllLeads",{state:{id:"6672c48614be596e4ccb3b39"}}): studentData.assignedCouns=="" ? navigate("/showAllLeads") : navigate(`/counsellor-profile/${studentData.assignedCouns}`, {state:{id:studentData.assignedCouns}}); // Adjust the path as needed
-    navigate(`/showAllLeads`,{state:{currPage:page} });
-
+    if (user == "admin") {
+      navigate(`/showAllLeads`);
+    } else {
+      navigate(`/counsellor-profile/${counsellorId}`)
+    }
   };
 
   // follow up option
 
 
-  const renderedComponent = useMemo(() => { 
+  const renderedComponent = useMemo(() => {
     switch (selectedValues) {
       case 'Office Visit':
-        return <SlotBooking studentId={studentData._id}/>;
+        return <SlotBooking studentId={studentData._id} />;
       case 'Follow_Ups':
-        return <FollowUpSteps  studentId={studentData._id} />;
+        return <FollowUpSteps studentId={studentData._id} />;
       case 'Option_two':
         return "";
       default:
-        return null; 
+        return null;
     }
-  }, [selectedValues,studentData]);
+  }, [selectedValues, studentData]);
 
   return (
     <>
@@ -96,40 +107,40 @@ const StudentProfile = ({ counsellor_id }) => {
                 <div className="flex items-center mb-4 justify-between">
                   <div className='flex ml-4'>
 
-                  <div className="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center">
-                    S
-                  </div>
-                  <div className="ml-4">
-                    <h2 className="font-bold text-xl">{studentData.name}</h2>
-                    <span className="text-blue-600">{formatDate(studentData.createdAt)}</span>
-                  </div>
+                    <div className="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center">
+                      S
+                    </div>
+                    <div className="ml-4">
+                      <h2 className="font-bold text-xl">{studentData.name}</h2>
+                      <span className="text-blue-600">{formatDate(studentData.createdAt)}</span>
+                    </div>
                   </div>
                   <p className='text-orange-600 font-bold'>Source: {studentData.source}</p>
                   <p className='text-orange-600 font-bold'>SourceId: {studentData.sourceId}</p>
                 </div>
                 <div className="mb-4 flex justify-between">
                   <div>
-                  <p>Mobile: <span className="text-green-600">{studentData.contactNumber}</span></p>
-                  <p>Email: {studentData.email}</p>
-                  <p>Whatsapp Number: <span className="text-green-600">{studentData.whatsappNumber}</span></p>
+                    <p>Mobile: <span className="text-green-600">{studentData.contactNumber}</span></p>
+                    <p>Email: {studentData.email}</p>
+                    <p>Whatsapp Number: <span className="text-green-600">{studentData.whatsappNumber}</span></p>
 
                   </div>
                   <div>
-                  <p>Neet AIR: {studentData.neetAIR}</p>
-                  <p>Neet Score: {studentData.neetScore}</p>
-                  <p>Preferred College: {studentData.preferredCollege}</p>
-                  <p>Course Selected: {studentData.courseSelected}</p>
+                    <p>Neet AIR: {studentData.neetAIR}</p>
+                    <p>Neet Score: {studentData.neetScore}</p>
+                    <p>Preferred College: {studentData.preferredCollege}</p>
+                    <p>Course Selected: {studentData.courseSelected}</p>
 
                   </div>
                   <div>
-                  <p>Father name: {studentData.guardianName}</p>
-                  <p>City: {studentData.district}</p>
-                  <p>State: {studentData.state}</p>
+                    <p>Father name: {studentData.guardianName}</p>
+                    <p>City: {studentData.district}</p>
+                    <p>State: {studentData.state}</p>
 
                   </div>
                   {/* {console.log( studentData.remarks.FollowUp2, "tejus chatur sujaan")} */}
                   {/* <p>Neet AIR: {studentData.remarks.FollowUp2.subject}</p> */}
-                  
+
                 </div>
               </div>
             </div>
