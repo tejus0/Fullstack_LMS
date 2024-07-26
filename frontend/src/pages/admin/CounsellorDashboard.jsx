@@ -5,6 +5,7 @@ import { ArrowUpward } from '@mui/icons-material';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import MaterialPieChart from '../../component/MaterialPieChart';
 
 const baseUrl = import.meta.env.VITE_API;
 
@@ -158,7 +159,7 @@ const CounsellorDashboard = () => {
                     <div className='w-full p-5 bg-purple-50 rounded-lg flex shadow-purple-400 shadow-2xl border-[0.1px]'>
                         <div className='flex flex-col gap-4'>
                             <p>Daily Report</p>
-                            <PieChart
+                            {/* <PieChart
                                 series={[
                                     {
                                         arcLabel: (item) => `${item.caption}`,
@@ -179,7 +180,8 @@ const CounsellorDashboard = () => {
                                 width={400}
                                 height={200}
 
-                            />
+                            /> */}
+                            <MaterialPieChart/>
                         </div>
                         <div className='flex gap-4 flex-col'>
                            {
