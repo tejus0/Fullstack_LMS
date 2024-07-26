@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,slotBook,bookedSlot,formToSheet,insertFromSheet,getAgentLeads,showSpecificLeads,updateAdminAvailableDays,getAdminAvailableDays, getCounsellorInfo,getCounsellorsWithStudents} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile , getTodos,createTodos,deleteTodos, insertUser, getStudentProfile, verifyLogin,assignAuto,getCounsellorDataList,loginLoad,renameKey,cleatAllAssignedCouns,getArnavCounsellorDataList,createFollowUp3,insertAgent,slotBook,bookedSlot,formToSheet,insertFromSheet,getAgentLeads,showSpecificLeads,updateAdminAvailableDays,getAdminAvailableDays, getCounsellorInfo,getCounsellorsWithStudents,getVisitLeads,getCounsellorNames,assignOfflineLeadsToCouncellor} from "../controller/studentForm.js";
 
 import { createCounsellor} from "../controller/counsellorDetail.js";
 
@@ -37,6 +37,12 @@ router.route("/getAdminAvailableDays").get(getAdminAvailableDays);
 
 router.route("/showSpecificLeads/:id").get(showSpecificLeads);
 router.route("/getCounsellorsWithStudents").get(getCounsellorsWithStudents);
+router.route("/getVisitLeads").get(getVisitLeads);
+router.route("/getCounsellorNames").get(getCounsellorNames);
+router.route("/assignOfflineLeadsToCouncellor").post(assignOfflineLeadsToCouncellor);
+
+
+
 
 // router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 

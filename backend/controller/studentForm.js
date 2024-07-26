@@ -929,3 +929,38 @@ export const getCounsellorsWithStudents = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+export const getVisitLeads = async(req,res)=>{
+  const visitedStud = await studentModal.find({ sourceId: {$regex: /office_rec/} });
+  res.json(visitedStud);
+}
+
+export const getCounsellorNames = async(req,res)=>{
+  const counsNames = await counsellorModal.find();
+  res.json(counsNames);
+}
+
+export const assignOfflineLeadsToCouncellor = async (req, res) => {
+  try {
+    const { dataToSend, selectedCounsellor } = req.body;
+
+    // Extract ids from the dataToSend array
+    const ids = dataToSend.map(item => item.id);
+
+    // Update the documents that have _id in the ids array
+    const updateResult = await studentModal.updateMany(
+      { _id: { $in: ids } }, // Match documents where _id is in the ids array
+      { $set: { assignedCouns: selectedCounsellor } } // Set the assignedCouns field
+    );
+
+    // Return the result of the update operation
+    res.json(updateResult);
+  } catch (error) {
+    console.error('Error assigning leads to counsellor:', error);
+    res.status(500).json({ error: 'An error occurred while assigning leads.' });
+  }
+};
+
+
+
+
