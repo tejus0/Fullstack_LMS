@@ -1,39 +1,8 @@
 import { ResponsivePie } from "@nivo/pie"
 
-const data = [
-    {
-        "id": "haskell",
-        "label": "haskell",
-        "value": 497,
-        "color": "hsl(127, 70%, 50%)"
-    },
-    {
-        "id": "scala",
-        "label": "scala",
-        "value": 73,
-        "color": "hsl(239, 70%, 50%)"
-    },
-    {
-        "id": "elixir",
-        "label": "elixir",
-        "value": 9,
-        "color": "hsl(167, 70%, 50%)"
-    },
-    {
-        "id": "erlang",
-        "label": "erlang",
-        "value": 475,
-        "color": "hsl(152, 70%, 50%)"
-    },
-    {
-        "id": "ruby",
-        "label": "ruby",
-        "value": 80,
-        "color": "hsl(202, 70%, 50%)"
-    }
-]
 
-const MaterialPieChart = () => {
+
+const NivoPieChart = ({data}) => {
 
     return (
         <ResponsivePie
@@ -167,4 +136,4 @@ const MaterialPieChart = () => {
 };
 
 
-export default MaterialPieChart;
+export default NivoPieChart;
