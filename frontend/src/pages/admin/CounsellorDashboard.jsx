@@ -11,11 +11,11 @@ const baseUrl = import.meta.env.VITE_API;
 
 const CounsellorDashboard = () => {
     const counsellorId = useParams().counsellorId;
-    const [revenue , setRevenue] = useState({totalRevenue:0 , thisMonthRevenue:0 });
-    const [counsellorName , setCounsellorName] = useState("Counsellor");
-    const [coursesCounselled , setCoursesCounselled] = useState([]);
-    const [counsellorLeadDetails , setCounsellorLeadDetails] = useState({totalLeads:0 , completedLeads: 0 , firstCallDone: 0 , hotLeads: 0 , warmLeads: 0 , coldLeads: 0 , paidCounselling: 0 , associateCollege:0});
-    const [pendingAmountTableData , setPendingAmountTableData] = useState([]);
+    const [revenue, setRevenue] = useState({ totalRevenue: 0, thisMonthRevenue: 0 });
+    const [counsellorName, setCounsellorName] = useState("Counsellor");
+    const [coursesCounselled, setCoursesCounselled] = useState([]);
+    const [counsellorLeadDetails, setCounsellorLeadDetails] = useState({ totalLeads: 0, completedLeads: 0, firstCallDone: 0, hotLeads: 0, warmLeads: 0, coldLeads: 0, paidCounselling: 0, associateCollege: 0 });
+    const [pendingAmountTableData, setPendingAmountTableData] = useState([]);
     const rows = [
         createData('First Call Done', counsellorLeadDetails.firstCallDone),
     ];
@@ -30,6 +30,14 @@ const CounsellorDashboard = () => {
     ];
 
     const revenueDetails = [
+        {
+            label: "Total Leads Assigned",
+            value: revenue.totalRevenue
+        },
+        {
+            label: "Total Admissions",
+            value: revenue.thisMonthRevenue
+        },
         {
             label: "Total Revenue",
             value: revenue.totalRevenue
@@ -63,24 +71,24 @@ const CounsellorDashboard = () => {
     ];
     const tableData = [
         {
-            "row":rows,
+            "row": rows,
             caption: "FollowUp 1"
         },
         {
-            "row":rows2,
+            "row": rows2,
             caption: "FollowUp 2"
         },
         {
-            "row":rows3,
+            "row": rows3,
             caption: "FollowUp 3"
         },
     ]
 
-    const fetchRevenueDetails = async()=>{
+    const fetchRevenueDetails = async () => {
         try {
             let revenueDetails = await axios.get(`${baseUrl}/getCounsellorRevenueDetails/${counsellorId}`);
             revenueDetails = revenueDetails.data;
-            setRevenue({totalRevenue:revenueDetails.data.totalRevenue , thisMonthRevenue: revenueDetails.data.thisMonthRevenue });
+            setRevenue({ totalRevenue: revenueDetails.data.totalRevenue, thisMonthRevenue: revenueDetails.data.thisMonthRevenue });
             setCounsellorName(revenueDetails.data.counsellorName)
         } catch (err) {
             console.log(err);
@@ -88,33 +96,33 @@ const CounsellorDashboard = () => {
 
     }
 
-    const fetchCoursesCounselled = async()=>{
+    const fetchCoursesCounselled = async () => {
         try {
-           let res = await axios.get(`${baseUrl}/getCoursesCounselled/${counsellorId}`) ;
-           res = res.data;
-           setCoursesCounselled(res.data);
+            let res = await axios.get(`${baseUrl}/getCoursesCounselled/${counsellorId}`);
+            res = res.data;
+            setCoursesCounselled(res.data);
 
         } catch (err) {
             console.log(err);
-            
+
         }
     }
 
-    const fetchCounsellorLeadDetails = async()=>{
+    const fetchCounsellorLeadDetails = async () => {
         try {
             let res = await axios.get(`${baseUrl}/getCounsellorLeadDetails/${counsellorId}`);
             res = res.data;
-            setCounsellorLeadDetails({...res , firstCallDone: res.stage1Obj.firstCallDone , hotLeads: res.stage2Obj.hotLeads , coldLeads: res.stage2Obj.coldLeads , warmLeads: res.stage2Obj.warmLeads , paidCounselling: res.stage3Obj.paidCounselling , associateCollege: res.stage3Obj.associateCollege});
+            setCounsellorLeadDetails({ ...res, firstCallDone: res.stage1Obj.firstCallDone, hotLeads: res.stage2Obj.hotLeads, coldLeads: res.stage2Obj.coldLeads, warmLeads: res.stage2Obj.warmLeads, paidCounselling: res.stage3Obj.paidCounselling, associateCollege: res.stage3Obj.associateCollege });
         } catch (err) {
             console.log(err)
         }
     }
 
-    const fetchPendingAmountDetails = async()=>{
+    const fetchPendingAmountDetails = async () => {
         try {
             let res = await axios.get(`${baseUrl}/getCounsellorPendingAmount/${counsellorId}`);
             let data = res.data.data;
-            data = data.map((elem,i)=>({
+            data = data.map((elem, i) => ({
                 name: elem.name,
                 value: elem.pendingAmount
             }))
@@ -124,16 +132,16 @@ const CounsellorDashboard = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchRevenueDetails();
         fetchCoursesCounselled();
         fetchCounsellorLeadDetails();
         fetchPendingAmountDetails();
-    },[])
+    }, [])
 
     return (
         <div className="">
-            <div className="flex gap-2 justify-between p-0">
+            <div className="flex flex-col gap-2 justify-between p-0">
                 <div className="p-9 text-2xl font-semibold flex flex-col gap-9">
                     {/* Name Container */}
                     <div className="w-full text-purple-500">
@@ -181,41 +189,43 @@ const CounsellorDashboard = () => {
                                 height={200}
 
                             /> */}
-                            <MaterialPieChart/>
+                            <MaterialPieChart />
                         </div>
                         <div className='flex gap-4 flex-col'>
-                           {
-                            tableData.map((elem,i)=>(
-                                <MaterialTable rows={elem.row} caption={elem.caption} key={i} bgColor='purple'/>
-                            ))
-                           }
+                            {
+                                tableData.map((elem, i) => (
+                                    <MaterialTable rows={elem.row} caption={elem.caption} key={i} bgColor='purple' />
+                                ))
+                            }
                         </div>
                     </div>
+                    <div className='flex justify-between gap-12 w-full'>
+                        {/* Pending Amount Table Container */}
+                        <div className='flex-1 w-full p-5 bg-purple-50 rounded-lg flex shadow-purple-400 shadow-2xl border-[0.1px] flex-col gap-4'>
+                            <p>Pending Amount</p>
+                            <MaterialTable rows={pendingAmountTableData} bgColor='purple' />
+                        </div>
+                        <div className="flex-1 bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4">
+                            {/* Heading */}
+                            <div>
+                                <p className="font-semibold text-xl text-start">Courses Counselled</p>
+                            </div>
+                            {/* College list container */}
+                            <div className="p-5 flex flex-col gap-5 overflow-y-auto">
+                                {
+                                    coursesCounselled.map((elem, i) => (
+                                        <div className="flex gap-4 text-sm font-light">
+                                            <p>
+                                                <AccountBalanceIcon color={"secondary"} />
+                                            </p>
+                                            <p>{elem.course}</p>
+                                            <p>{elem.count}</p>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
 
-                    {/* Pending Amount Table Container */}
-                    <div className='w-full p-5 bg-purple-50 rounded-lg flex shadow-purple-400 shadow-2xl border-[0.1px] flex-col gap-4'>
-                           <p>Pending Amount</p>
-                           <MaterialTable  rows={pendingAmountTableData} bgColor='purple'/>
-                    </div>
-                </div>
-                <div className=" w-[250px] bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4">
-                    {/* Heading */}
-                    <div>
-                        <p className="font-semibold text-xl text-start">Courses Counselled</p>
-                    </div>
-                    {/* College list container */}
-                    <div className="p-5 flex flex-col gap-5">
-                        {
-                            coursesCounselled.map((elem, i) => (
-                                <div className="flex gap-4">
-                                    <p>
-                                        <AccountBalanceIcon color={"secondary"} />
-                                    </p>
-                                    <p>{elem.course}</p>
-                                    <p>{elem.count}</p>
-                                </div>
-                            ))
-                        }
                     </div>
                 </div>
             </div>
