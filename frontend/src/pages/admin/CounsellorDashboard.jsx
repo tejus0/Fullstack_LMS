@@ -230,19 +230,19 @@ const CounsellorDashboard = () => {
           {/* New Section with NivoPieCharts */}
           <div className="w-full flex gap-12 flex-col md:flex-row">
             <div className="flex-1 flex flex-col gap-4">
-              <p className="font-semibold text-xl text-start">FollowUp 3</p>
+              <p className="font-semibold text-xl md:text-start text-center">FollowUp 3</p>
               <div className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto" style={{ height: '300px' }}>
                 <NivoPieChart data={followUp_3} />
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-4">
-              <p className="font-semibold text-xl text-start">FollowUp 2</p>
+              <p className="font-semibold text-xl text-center md:text-start">FollowUp 2</p>
               <div className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl" style={{ height: '300px' }}> 
                 <NivoPieChart data={followUp_3} />
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-4">
-              <p className="font-semibold text-xl text-start">FollowUp 1</p>
+              <p className="font-semibold text-xl text-center md:text-start">FollowUp 1</p>
               <div className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl" style={{ height: '300px' }}>
                 <NivoPieChart data={followUp_3} />
               </div>

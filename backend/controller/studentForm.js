@@ -1172,3 +1172,20 @@ export const getCounsellorPendingAmount = async(req , res)=>{
     })
   }
 }
+
+export const getAssignedCounsellorStudents = async()=>{
+  try {
+    const counsellerId = req.params.counsellerId;
+    const students = await studentModal.find({assignedCouns:counsellerId});
+
+    return res.status(200).json({
+      message:"Sucess",
+      data: students
+    })
+    
+  } catch (err) {
+    return res.status(500).json({
+      message:"Something Went Wrong"
+    })
+  }
+}
