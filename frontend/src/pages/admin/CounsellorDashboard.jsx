@@ -32,11 +32,11 @@ const CounsellorDashboard = () => {
     const revenueDetails = [
         {
             label: "Total Leads Assigned",
-            value: revenue.totalRevenue
+            value: counsellorLeadDetails.totalLeads
         },
         {
             label: "Total Admissions",
-            value: revenue.thisMonthRevenue
+            value: counsellorLeadDetails.completedLeads
         },
         {
             label: "Total Revenue",
@@ -142,21 +142,23 @@ const CounsellorDashboard = () => {
     return (
         <div className="">
             <div className="flex flex-col gap-2 justify-between p-0">
-                <div className="p-9 text-2xl font-semibold flex flex-col gap-9">
+                <div className="p-4 md:p-9 text-2xl font-semibold flex flex-col gap-9">
                     {/* Name Container */}
-                    <div className="w-full text-purple-500">
+                    <div className="w-full text-purple-500 flex justify-center md:justify-start text-2xl md:text-4xl">
                         <p>Hi {counsellorName}</p>
                     </div>
                     {/* Revenue Card Container */}
-                    <div className="w-full flex gap-24">
+                    <div className="w-full flex gap-12 p-3 md:p-0 md:gap-24 flex-wrap justify-center">
                         {/* card */}
                         {
                             revenueDetails.map((elem, i) => (
-                                <div className="border-[1px] p-5 rounded-lg cursor-pointer px-12 hover:bg-purple-300 bg-purple-100 shadow-purple-400 shadow-2xl flex flex-col gap-4" key={i}>
-                                    <p className="font-extralight text-lg">{elem.label}</p>
-                                    <div className='flex gap-5 items-center text-lg'>
-                                        <p>{elem.value}</p>
-                                        <ArrowUpward color='success' />
+                                <div className="border-[1px] p-5 rounded-lg cursor-pointer px-12 hover:bg-purple-300 bg-purple-100 shadow-purple-300 shadow-2xl flex flex-col gap-4 hover:scale-110 transition-all flex-1 items-center" key={i}>
+                                    <div className='flex flex-col gap-2'>
+                                        <p className="font-extralight text-lg">{elem.label}</p>
+                                        <div className='flex gap-5 items-center text-lg'>
+                                            <p>{elem.value}</p>
+                                            <ArrowUpward color='success' />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -199,7 +201,7 @@ const CounsellorDashboard = () => {
                             }
                         </div>
                     </div>
-                    <div className='flex justify-between gap-12 w-full'>
+                    <div className='flex justify-between gap-12 w-full flex-col md:flex-row'>
                         {/* Pending Amount Table Container */}
                         <div className='flex-1 w-full p-5 bg-purple-50 rounded-lg flex shadow-purple-400 shadow-2xl border-[0.1px] flex-col gap-4'>
                             <p>Pending Amount</p>

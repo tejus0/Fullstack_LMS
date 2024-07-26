@@ -11,18 +11,18 @@ export function createData(name, value) {
 
 
 
-const MaterialTable = ({ rows,caption,bgColor="orange" }) => {
+const MaterialTable = ({ rows,caption,bgColor="purple",hoverColorHex="#c084fc7d" }) => {
     return (
-        <div className={`p-2 rounded-md bg-${bgColor}-400  flex flex-col gap-2 w-full`}>
+        <div className={`p-2 rounded-md bg-purple-opacity  flex flex-col gap-2 w-full h-full`} style={{backgroundColor:bgColor!="purple" ? bgColor:""}}>
            {caption && <p className='text-base text-white'>{caption}</p>}
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 99, width: 400 }} aria-label="simple table">
+            <TableContainer component={Paper} sx={{height:"100%"}}>
+                <Table sx={{ minWidth: 99, width: "100%" , minHeight:"100%" }} aria-label="simple table">
 
                     <TableBody>
                         {rows.map((row) => (
                             <TableRow
                                 key={row.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } , "&:hover": {backgroundColor:hoverColorHex}  , cursor:"pointer"}}
                             >
                                 <TableCell component="th" scope="row">
                                     {row.name}
