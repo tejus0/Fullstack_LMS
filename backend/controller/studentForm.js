@@ -904,7 +904,7 @@ export const getCounsellorRevenueDetails = async (req, res) => {
         message:"Counsellor Not Found"
       })
     }
-    const counsellorStudents = await studentModal.aggregate([
+    const counsellorStudents = (await studentModal.aggregate([
       {
         $match: {
           assignedCouns: counsellerId
@@ -920,7 +920,7 @@ export const getCounsellorRevenueDetails = async (req, res) => {
           followUp3Length: { $gt: 0 }
         }
       }
-    ]);
+    ]));
     if (!counsellorStudents) {
       return res.status(500).json({
         message: "No Students assigned to counsellor"
@@ -1044,6 +1044,10 @@ export const getCounsellorLeadDetails = async (req, res) => {
 
     const stage1Obj = {};
     stage1Obj.firstCallDone = 0;
+    stage1Obj.switchOff = 0;
+    stage1Obj.notReachable = 0;
+    stage1Obj.disconnect = 0;
+    stage1Obj.networkIssue  = 0;
     const stage2Obj = {};
     stage2Obj.hotLeads = 0;
     stage2Obj.warmLeads = 0 ;
@@ -1052,8 +1056,21 @@ export const getCounsellorLeadDetails = async (req, res) => {
     stage3Obj.paidCounselling = 0;
     stage3Obj.associateCollege = 0;
     for(let i=0 ; i < stage1Students.length ; i++){
-      if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("First Call Done"))
+      if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("First Call Done")){
         stage1Obj.firstCallDone += 1; 
+      }
+      else if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("Switch Off")){
+        stage1Obj.switchOff += 1; 
+      }
+      else if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("Not Reachable")){
+        stage1Obj.notReachable += 1; 
+      }
+      else if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("Disconnect")){
+        stage1Obj.disconnect += 1; 
+      }
+      else if(stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes("Network Issue")){
+        stage1Obj.networkIssue += 1; 
+      }
     }
 
     for(let i = 0 ; i < stage2Students.length ; i++){
@@ -1061,10 +1078,10 @@ export const getCounsellorLeadDetails = async (req, res) => {
       if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Hot Lead")){
         stage2Obj.hotLeads += 1;
       }
-      else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Warm Lead")){
+      else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Warm")){
         stage2Obj.warmLeads += 1;
       }
-      else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Cold Lead")){
+      else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Cold Call Done")){
         stage2Obj.coldLeads += 1;
       }
     }
