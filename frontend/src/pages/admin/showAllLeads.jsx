@@ -63,6 +63,14 @@ const ShowAllleads = () => {
 
   const [showNewTable, setShowNewTable] = useState(false);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [rangeStart, setRangeStart] = useState('');
+  const [rangeEnd, setRangeEnd] = useState('');
+  const [selectedCounsellor, setSelectedCounsellor] = useState('');
+  
+  const [allCouncellors, setAllCouncellors] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const handleToggleTable = () => {
     setShowNewTable(!showNewTable);
   };
@@ -98,6 +106,19 @@ const ShowAllleads = () => {
       setfilter(response.data.data);
     };
 
+    const fetchCounsellors = async () => {
+      try {
+        const response = await axios.get(`${baseUrl}/getCounsellorNames`);
+        console.log(response.data,"all counsellors")
+        setAllCouncellors(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching counsellors names:', error);
+      }
+    };
+  
+    fetchCounsellors();
+
     fetchData();
   }, []);
 
@@ -105,6 +126,7 @@ const ShowAllleads = () => {
     try {
       const res = await axios.get(`${baseUrl}/getCounsellorInfo`);
       setCounsellors(res.data.data);
+      console.log(res.data.data,"all couselloes")
     } catch (error) {
       console.log(error);
       setCounsellors([]);
@@ -155,11 +177,41 @@ const ShowAllleads = () => {
   };
 
   const handelChange = (e) => {
+    console.log(e.target.value);
     setsearch(e.target.value);
+    
 
     if (e.target.value === "") {
       setUsers(filter);
-    } else {
+    }
+    else if(SearchBy==="assignedCouns"){
+    //   const enteredCouns=  counsellors.find(counsellor =>  counsellor.name.toLowerCase().includes(e.target.value));
+    // console.log(enteredCouns._id,"enteredcouns")
+    //   setUsers(
+    //     sortedUsers.filter((item) =>
+    //       // {counsellors.find(counsellor =>  e.target.value === counsellor.name) }
+    //     enteredCouns._id === item[SearchBy]
+
+    //     )
+    //   );
+      const searchValue= e.target.value
+     // Find counsellor IDs that match the search input
+     const matchedCounsellors = counsellors.filter(counsellor => 
+      counsellor.name.toLowerCase().includes(searchValue)
+  );
+
+  // Extract IDs of matched counsellors
+  const matchedCounsellorIds = matchedCounsellors.map(counsellor => counsellor._id);
+
+  // Filter users based on matched counsellor IDs
+  setUsers(
+      sortedUsers.filter(user =>
+          matchedCounsellorIds.includes(user[SearchBy])
+      )
+  );
+    }
+    
+    else {
       console.log("ok");
       setUsers(
         sortedUsers.filter((item) =>
@@ -254,36 +306,48 @@ const generatePDF = useReactToPrint({
     }
   };
 
+  const handleAssignLeads = async() => {
+    console.log(rangeStart,"start",rangeEnd,"end")
+    // const endIndex = rangeEnd ? filteredUsers.length - 1 : parseInt(rangeEnd, 10);
+
+    if (rangeEnd > filteredUsers.length) {
+      toast.error("End value exceeds the maximum limit of the table.");
+      return;
+    }
+     // Extract the subset of users from sortedUsers
+  const usersToAssign = sortedUsers.slice(parseInt(rangeStart, 10)-1, parseInt(rangeEnd, 10) );
+  console.log(usersToAssign,"assin")
+
+  // Prepare the data to be sent in the API request
+  const dataToSend = usersToAssign.map(user => ({
+    id: user._id, // Assuming `_id` is the unique identifier
+    // assignedCouns: selectedCounsellor // The new value for `assignedCouns`
+  }));
+
+  try {
+    // Make the API request to update the users
+    const response = await axios.post(`${baseUrl}/assignOfflineLeadsToCouncellor`, {dataToSend,selectedCounsellor});
+    
+    if (response.status === 200) {
+      toast.success(`Leads successfully assigned`);
+    } else {
+      toast.error("Failed to assign leads. Please try again.");
+    }
+  } catch (error) {
+    toast.error("An error occurred while assigning leads.");
+    console.error("Error assigning leads:", error);
+  }
+
+    console.log(`Assign leads from index ${rangeStart} to ${rangeEnd}`);
+    // Implement assignment logic here
+    setModalOpen(false);
+  };
+
   return (
     <div>
       <Box className="flex">
         <Navbar />
-         {/* <div>
-                    <Tooltip title="Delete">
-                        <IconButton onClick={handleLogout}>
-                            <LogoutIcon />
-                        </IconButton>
-                    </Tooltip>
-
-
-                    <div>
-
-                        <IconButton onClick={toggleDrawer(true)}>
-                            <FilterAltIcon />
-                        </IconButton>
-                        <FilterDrawer
-                            open={drawerOpen}
-                            onClose={toggleDrawer(false)}
-                            searchBy={SearchBy}
-                            setSearchBy={setSearchBy}
-                            onChange={handelChange}
-                            search={search}
-                            columns={columns}
-                            handleSelectRow={handleSelectRow}
-                        />
-
-                    </div>
-                </div> */}
+         
         <div ref={componentToPdf} className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
           <div className="flex justify-end">
             <div>
@@ -307,6 +371,7 @@ const generatePDF = useReactToPrint({
                 <option value="state">state</option>
                 <option value="courseSelected">courseSelected</option>
                 <option value="contactNumber">contactNumber</option>
+                <option value="assignedCouns">councellor</option>
               </select>
               <input
                 type="text"
@@ -347,7 +412,71 @@ const generatePDF = useReactToPrint({
             </div>
           </div>
 
-          { !showNewTable ?  <div> <table className=" w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          { !showNewTable ?  <div>
+            {/* Modal */}
+      {modalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg w-96">
+            <h2 className="text-lg font-semibold mb-4">Assign Leads to Counsellors</h2>
+            <div className="mb-4">
+              <label htmlFor="rangeStart" className="block text-sm font-medium text-gray-700">Start Index:</label>
+              <input
+                type="number"
+                id="rangeStart"
+                value={rangeStart}
+                onChange={(e) => setRangeStart(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="rangeEnd" className="block text-sm font-medium text-gray-700">End Index:</label>
+              <input
+                type="number"
+                id="rangeEnd"
+                value={rangeEnd}
+                onChange={(e) => setRangeEnd(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+              />
+            </div>
+            <div className="mb-4">
+            <label htmlFor="dropdown" className="block text-sm font-medium text-gray-700">Select Option:</label>
+            <select
+              id="dropdown"
+              value={selectedCounsellor}
+              onChange={(e) => setSelectedCounsellor(e.target.value)}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+              disabled={loading}
+            >
+              <option value="" disabled>Select an option</option>
+              {allCouncellors.map(option => (
+                <option key={option.value} value={option._id}>
+                  {option.name}
+                </option>
+              ))}
+            </select>
+            {loading && <p>Loading options...</p>}
+          </div>
+            <div className="flex justify-end">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAssignLeads}
+              >
+                Assign
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => setModalOpen(false)}
+                className="ml-2"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+             <table className=" w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
@@ -618,6 +747,16 @@ const generatePDF = useReactToPrint({
           PDF
         </Button>
         </div>
+        {!showNewTable ? <div>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+        className="mb-4"
+      >
+        Assign Leads to Counsellors
+      </Button>
+        </div>:""}
         </div>
       </Box>
     </div>
