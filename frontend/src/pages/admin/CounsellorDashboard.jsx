@@ -371,19 +371,19 @@ const CounsellorDashboard = () => {
           <div className="w-full flex gap-12 flex-col md:flex-row">
             <div className="flex-1 flex flex-col gap-4">
               <p className="font-semibold text-xl md:text-start text-center">
-                FollowUp 3: {totalFollowUp3}
+                FollowUp 3: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp3}</span>
               </p>
               <div
                 className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto"
                 style={{ height: "300px" }}
               >
-                <NivoPieChart data={followUp_3} students={assignedStudents} />
+                <N   ivoPieChart data={followUp_3} students={assignedStudents} />
                 {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-4">
               <p className="font-semibold text-xl text-center md:text-start">
-                FollowUp 2: {totalFollowUp2}
+                FollowUp 2: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp2}</span>
               </p>
               <div
                 className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl"
@@ -395,7 +395,7 @@ const CounsellorDashboard = () => {
             </div>
             <div className="flex-1 flex flex-col gap-4">
               <p className="font-semibold text-xl text-center md:text-start">
-                FollowUp 1: {totalFollowUp1}
+                FollowUp 1: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp1}</span>
               </p>
               <div
                 className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl"
