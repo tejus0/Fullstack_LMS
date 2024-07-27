@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import Navbar from "../../component/navbar/Navbar";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterDrawer from "../../component/FilterDrawer";
+import { useReactToPrint } from "react-to-print";
 
 
 
@@ -37,6 +38,7 @@ const ShowAllleads = () => {
         );
     };
 
+  const componentToPdf = useRef();
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const [users, setUsers] = useState([]);
@@ -114,13 +116,8 @@ const ShowAllleads = () => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
           return sortConfig.direction === "asc" ? -1 : 1;
         }
-// <<<<<<< Updated upstream
-        // else {
-        //     setUsers(sortedUsers.filter((item) => item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())))
-// =======
         if (a[sortConfig.key] > b[sortConfig.key]) {
           return sortConfig.direction === "asc" ? 1 : -1;
-// >>>>>>> Stashed changes
         }
         return 0;
       });
@@ -207,6 +204,11 @@ const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
 };
 
+const generatePDF = useReactToPrint({
+  content: () => componentToPdf.current,
+  documentTitle: "UserData",
+  onAfterPrint: ()=>alert("Data saved in PDF")
+});
 // console.log(users,"uders in all leads"  );
 
 
@@ -240,7 +242,7 @@ const toggleDrawer = (open) => () => {
 
                     </div>
                 </div> */}
-        <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
+        <div ref={componentToPdf} className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
           <div className="flex justify-end">
             <div className="flex justify-center mb-3 ">
 
@@ -550,140 +552,12 @@ const toggleDrawer = (open) => () => {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                         disabled={paginationDisabled}
                     />
-                    {/* </div>
-                </th>
-                <th scope="col" className="px-6 py-3 flex">
-                  <div className="flex items-center">
-
-                  Counsellor
-                 
-                      </div>
-                </th>
-                <th scope="col" className=" relative px-6 py-3 flex">
-                  {/* <div className="flex items-center"> */}
-
-                  {/* Lead Status
-                  {isLeadStatusDropdownOpen ? (
-                    <FaChevronUp
-                    onClick={toggleLeadStatusDropdown}
-                    style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    // </div>
-                    />
-                  ) : (
-                    <FaChevronDown
-                      onClick={toggleLeadStatusDropdown}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
-                  )}
-                  {isLeadStatusDropdownOpen && (
-                    <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                      <button
-                        onClick={() => {
-                          setLeadStatusFilter("All");
-                          toggleLeadStatusDropdown();
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        All
-                      </button>
-                      <button
-                        onClick={() => {
-                          setLeadStatusFilter("Hot Lead");
-                          toggleLeadStatusDropdown();
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Hot Leads
-                      </button>
-                      <button
-                        onClick={() => {
-                          setLeadStatusFilter("Warm");
-                          toggleLeadStatusDropdown();
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Warm
-                      </button>
-                      <button
-                        onClick={() => {
-                          setLeadStatusFilter("Cold Call Done");
-                          toggleLeadStatusDropdown();
-                        }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Cold Call Done
-                      </button>
-                    </div>
-                  )}
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Update Status{" "}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginatedUsers.map((user, index) => (
-                <tr
-                  key={user._id}
-                  className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td className="w-4 p-4">
-                    <div className="flex items-center">{index + 1}</div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {user.name}
-                  </th>
-                  <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
-                  <td className="px-6 py-4">{user.neetScore}</td>
-                  <td className="px-6 py-4">{formatDate(user.DateToVisit)}</td>
-                  <td className="px-6 py-4">{user.state}</td>
-                  <td className="px-6 py-4">{user.courseSelected}</td>
-                  <td className="px-6 py-4">{user.contactNumber}</td>
-                  <td className="px-6 py-4">
-                    {counsellors.find(
-                      (counsellor) => counsellor._id === user.assignedCouns
-                    )?.name || "N/A"}
-                  </td>
-                  <td className="px-6 py-4">
-                    {" "}
-                    {user.remarks.FollowUp3.length > 0
-                      ? user.remarks.FollowUp3[
-                          user.remarks.FollowUp3.length - 1
-                        ].subject
-                      : user.remarks.FollowUp2.length > 0
-                      ? user.remarks.FollowUp2[
-                          user.remarks.FollowUp2.length - 1
-                        ].subject
-                      : user.remarks.FollowUp1.length > 0
-                      ? user.remarks.FollowUp1[
-                          user.remarks.FollowUp1.length - 1
-                        ].subject
-                      : "No Remarks "}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to={`/student/${user._id}`}
-                      state={{ id: `${user._id}`, page: page }}
-                    >
-                      <Button variant="contained">Edit</Button>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <TablePagination
-            component="div"
-            count={sortedUsers.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            disabled={paginationDisabled}
-          /> */} 
+                   
+        </div>
+        <div>
+        <Button variant="contained" onClick={generatePDF}>
+          PDF
+        </Button>
         </div>
       </Box>
     </div>

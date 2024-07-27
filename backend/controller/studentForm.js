@@ -501,8 +501,15 @@ export const assignAuto = async (req, res) => {
   const counsellors = await counsellorModal.find({ allLeads: 0 });
   const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-  // Fetch all student documents
-  const students = await studentModal.find({ assignedCouns: "" });
+  const students = await studentModal.find({
+    $and: [
+      { sourceId: { $not:{$regex: /office_rec/ }} },  // Regular expression for sourceId
+      { assignedCouns: "" }                    // Check for empty string in assignedCouns
+    ]
+  });
+  
+  
+  // const students = await studentModal.find({ assignedCouns: ""});
   console.log(students, "stude");
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
@@ -539,6 +546,7 @@ export const assignAuto = async (req, res) => {
   );
 
   console.log("Updated students with counsellor ids successfully.");
+  // return res.status(200).json(students);
   return res.status(200).json(counsellorIds);
 };
 
