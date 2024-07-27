@@ -41,7 +41,7 @@ router.route("/getCounsellorRevenueDetails/:id").get(getCounsellorRevenueDetails
 router.route("/getCoursesCounselled/:counsellerId").get(getCoursesCounselled);
 router.route("/getCounsellorLeadDetails/:counsellerId").get(getCounsellorLeadDetails);
 router.route("/getCounsellorPendingAmount/:counsellerId").get(getCounsellorPendingAmount);
-router.route("/getAssignedCousellorStudents/:counsellerId").get(getAssignedCounsellorStudents)
+router.route("/getAssignedCounsellorStudents/:counsellerId").get(getAssignedCounsellorStudents)
 
 // router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 

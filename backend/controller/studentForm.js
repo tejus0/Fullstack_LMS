@@ -1193,7 +1193,7 @@ export const getCounsellorPendingAmount = async(req , res)=>{
   }
 }
 
-export const getAssignedCounsellorStudents = async(req,res)=>{
+export const getAssignedCounsellorStudents = async (req, res)=>{
   try {
     const counsellerId = req.params.counsellerId;
     const students = await studentModal.find({assignedCouns:counsellerId});

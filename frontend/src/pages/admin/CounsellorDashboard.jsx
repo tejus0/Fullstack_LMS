@@ -7,6 +7,10 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import MaterialPieChart from "../../component/NivoPieChart";
 import NivoPieChart from "../../component/NivoPieChart";
+import { SiGoogleads } from "react-icons/si";
+import { IoSchool } from "react-icons/io5";
+import { FaMoneyBill1 } from "react-icons/fa6";
+import { FaMoneyCheck } from "react-icons/fa6";
 
 const baseUrl = import.meta.env.VITE_API;
 
@@ -22,6 +26,10 @@ const CounsellorDashboard = () => {
     totalLeads: 0,
     completedLeads: 0,
     firstCallDone: 0,
+    switchOff: 0,
+    disconnect: 0,
+    networkIssue: 0,
+    notReachable: 0,
     hotLeads: 0,
     warmLeads: 0,
     coldLeads: 0,
@@ -29,6 +37,12 @@ const CounsellorDashboard = () => {
     associateCollege: 0,
   });
   const [pendingAmountTableData, setPendingAmountTableData] = useState([]);
+  const [totalFollowUp1, setTotalFollowUp1] = useState(0);
+  const [totalFollowUp2, setTotalFollowUp2] = useState(0);
+  const [totalFollowUp3, setTotalFollowUp3] = useState(0);
+
+  const [assignedStudents, setAssignedStudents] = useState([]);
+
   const rows = [
     createData("First Call Done", counsellorLeadDetails.firstCallDone),
   ];
@@ -42,60 +56,68 @@ const CounsellorDashboard = () => {
     createData("Associate College", counsellorLeadDetails.associateCollege),
   ];
 
-    const revenueDetails = [
-        {
-            label: "Total Leads Assigned",
-            value: counsellorLeadDetails.totalLeads
-        },
-        {
-            label: "Total Admissions",
-            value: counsellorLeadDetails.completedLeads
-        },
-        {
-            label: "Total Revenue",
-            value: revenue.totalRevenue
-        },
-        {
-            label: "This Month Revenue",
-            value: revenue.thisMonthRevenue
-        },
-    ];
-    // const coursesCounselled = [
-    //     {
-    //         name: "BAMS",
-    //         count: 22
-    //     },
-    //     {
-    //         name: "MBBS",
-    //         count: 22
-    //     },
-    //     {
-    //         name: "JEE",
-    //         count: 22
-    //     },
-    //     {
-    //         name: "NEET",
-    //         count: 22
-    //     },
-    // ];
-    const leadsChartsData = [
-        { id: 0, value: counsellorLeadDetails.completedLeads, caption: "Completed Leads" },
-        { id: 1, value: counsellorLeadDetails.totalLeads, caption: "Total Leads" },
-    ];
-    const tableData = [
-        {
-            "row": rows,
-            caption: "FollowUp 1"
-        },
-        {
-            "row": rows2,
-            caption: "FollowUp 2"
-        },
-        {
-            "row": rows3,
-            caption: "FollowUp 3"
-        },
-    ]
+  const revenueDetails = [
+    {
+      label: "Total Leads Assigned",
+      value: counsellorLeadDetails.totalLeads,
+      icon: <SiGoogleads fontSize={30} color="purple"/>,
+    },
+    {
+      label: "Total Admissions",
+      value: counsellorLeadDetails.completedLeads,
+      icon: <IoSchool fontSize={30} color="purple"/>,
+    },
+    {
+      label: "Total Revenue",
+      value: revenue.totalRevenue,
+      icon: <FaMoneyBill1 fontSize={30} color="purple"/>,
+    },
+    {
+      label: "This Month Revenue",
+      value: revenue.thisMonthRevenue,
+      icon: <FaMoneyCheck fontSize={30} color="purple"/>,
+    },
+  ];
+  // const coursesCounselled = [
+  //     {
+  //         name: "BAMS",
+  //         count: 22
+  //     },
+  //     {
+  //         name: "MBBS",
+  //         count: 22
+  //     },
+  //     {
+  //         name: "JEE",
+  //         count: 22
+  //     },
+  //     {
+  //         name: "NEET",
+  //         count: 22
+  //     },
+  // ];
+  const leadsChartsData = [
+    {
+      id: 0,
+      value: counsellorLeadDetails.completedLeads,
+      caption: "Completed Leads",
+    },
+    { id: 1, value: counsellorLeadDetails.totalLeads, caption: "Total Leads" },
+  ];
+  const tableData = [
+    {
+      row: rows,
+      caption: "FollowUp 1",
+    },
+    {
+      row: rows2,
+      caption: "FollowUp 2",
+    },
+    {
+      row: rows3,
+      caption: "FollowUp 3",
+    },
+  ];
 
   const fetchRevenueDetails = async () => {
     try {
@@ -131,9 +153,30 @@ const CounsellorDashboard = () => {
         `${baseUrl}/getCounsellorLeadDetails/${counsellorId}`
       );
       res = res.data;
+      const stage1Total = Object.values(res.stage1Obj).reduce(
+        (acc, val) => acc + val,
+        0
+      );
+      const stage2Total = Object.values(res.stage2Obj).reduce(
+        (acc, val) => acc + val,
+        0
+      );
+      const stage3Total = Object.values(res.stage3Obj).reduce(
+        (acc, val) => acc + val,
+        0
+      );
+
+      setTotalFollowUp1(stage1Total);
+      setTotalFollowUp2(stage2Total);
+      setTotalFollowUp3(stage3Total);
+
       setCounsellorLeadDetails({
         ...res,
         firstCallDone: res.stage1Obj.firstCallDone,
+        switchOff: res.stage1Obj.switchOff,
+        notReachable: res.stage1Obj.notReachable,
+        disconnect: res.stage1Obj.disconnect,
+        networkIssue: res.stage1Obj.networkIssue,
         hotLeads: res.stage2Obj.hotLeads,
         coldLeads: res.stage2Obj.coldLeads,
         warmLeads: res.stage2Obj.warmLeads,
@@ -144,6 +187,8 @@ const CounsellorDashboard = () => {
       console.log(err);
     }
   };
+
+  console.log(totalFollowUp1, totalFollowUp2, totalFollowUp3);
 
   const fetchPendingAmountDetails = async () => {
     try {
@@ -170,36 +215,130 @@ const CounsellorDashboard = () => {
 
   const followUp_3 = [
     {
-      id: "haskell",
-      label: "haskell",
-      value: 497,
+      id: "Paid Counselling",
+      label: "Paid Counselling",
+      value: (
+        (counsellorLeadDetails.paidCounselling / totalFollowUp3) *
+        100
+      ).toFixed(2),
       color: "hsl(127, 70%, 50%)",
     },
     {
-      id: "scala",
-      label: "scala",
-      value: 73,
+      id: "Associate College",
+      label: "Associate College",
+      value: (
+        (counsellorLeadDetails?.associateCollege / totalFollowUp3) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+  ];
+
+  const followUp_2 = [
+    {
+      id: "Hot Lead",
+      label: "Hot Lead",
+      value: ((counsellorLeadDetails?.hotLeads / totalFollowUp2) * 100).toFixed(
+        2
+      ),
+      color: "hsl(127, 70%, 50%)",
+    },
+    {
+      id: "Warm",
+      label: "Warm",
+      value: (
+        (counsellorLeadDetails?.warmLeads / totalFollowUp2) *
+        100
+      ).toFixed(2),
       color: "hsl(239, 70%, 50%)",
     },
     {
-      id: "elixir",
-      label: "elixir",
-      value: 9,
-      color: "hsl(167, 70%, 50%)",
-    },
-    {
-      id: "erlang",
-      label: "erlang",
-      value: 475,
-      color: "hsl(152, 70%, 50%)",
-    },
-    {
-      id: "ruby",
-      label: "ruby",
-      value: 80,
-      color: "hsl(202, 70%, 50%)",
+      id: "Cold Call Done",
+      label: "Cold Call Done",
+      value: (
+        (counsellorLeadDetails?.coldLeads / totalFollowUp2) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
     },
   ];
+
+  const followUp_1 = [
+    {
+      id: "Switch Off",
+      label: "Switch Off",
+      value: (
+        (counsellorLeadDetails?.switchOff / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(127, 70%, 50%)",
+    },
+    {
+      id: "Not Reachable",
+      label: "Not Reachable",
+      value: (
+        (counsellorLeadDetails?.notReachable / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Disconnect",
+      label: "Disconnect",
+      value: (
+        (counsellorLeadDetails?.disconnect / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Network Issue",
+      label: "Network Issue",
+      value: (
+        (counsellorLeadDetails?.networkIssue / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "First Call Done",
+      label: "First Call Done",
+      value: (
+        (counsellorLeadDetails?.firstCallDone / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+  ];
+
+  const getAssignedStudents = async () => {
+    // try {
+    //     const res = await toast.promise(
+    //         axios.get(
+    //             `${baseUrl}/getAssignedCounsellorStudents/${counsellorId}`
+    //         )
+    //         console.log(res.data)
+    //     )
+    // } catch (error) {
+    //     console.log(error)
+    // }
+    try {
+      const res = await axios.get(
+        `${baseUrl}/getAssignedCounsellorStudents/${counsellorId}`
+      );
+
+      setAssignedStudents(res.data.data);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    console.log(assignedStudents);
+  }, [assignedStudents]);
+
+  useEffect(() => {
+    getAssignedStudents();
+  }, []);
+
   return (
     <div className="">
       <div className="flex flex-col gap-2 justify-between p-0">
@@ -216,12 +355,13 @@ const CounsellorDashboard = () => {
                 className="border-[1px] p-5 rounded-lg cursor-pointer px-12 hover:bg-purple-300 bg-purple-100 shadow-purple-300 shadow-2xl flex flex-col gap-4 hover:scale-110 transition-all flex-1 items-center"
                 key={i}
               >
-                                    <div className='flex flex-col gap-2'>
-                    <p className="font-extralight text-lg">{elem.label}</p>
-                    <div className="flex gap-5 items-center text-lg">
-                      <p>{elem.value}</p>
-                      <ArrowUpward color="success" />
-                                        </div>
+                <div className="flex flex-col gap-2">
+                  <p className="font-extralight text-lg">{elem.label}</p>
+                  <div className="flex gap-5 items-center text-lg">
+                  <div className="text-gray-500">{elem.icon}</div>
+                    <p>{elem.value}</p>
+                    {/* <ArrowUpward color="success" /> */}
+                  </div>
                 </div>
               </div>
             ))}
@@ -230,21 +370,39 @@ const CounsellorDashboard = () => {
           {/* New Section with NivoPieCharts */}
           <div className="w-full flex gap-12 flex-col md:flex-row">
             <div className="flex-1 flex flex-col gap-4">
-              <p className="font-semibold text-xl md:text-start text-center">FollowUp 3</p>
-              <div className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto" style={{ height: '300px' }}>
-                <NivoPieChart data={followUp_3} />
+              <p className="font-semibold text-xl md:text-start text-center">
+                FollowUp 3: {totalFollowUp3}
+              </p>
+              <div
+                className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto"
+                style={{ height: "300px" }}
+              >
+                <NivoPieChart data={followUp_3} students={assignedStudents} />
+                {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-4">
-              <p className="font-semibold text-xl text-center md:text-start">FollowUp 2</p>
-              <div className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl" style={{ height: '300px' }}> 
-                <NivoPieChart data={followUp_3} />
+              <p className="font-semibold text-xl text-center md:text-start">
+                FollowUp 2: {totalFollowUp2}
+              </p>
+              <div
+                className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl"
+                style={{ height: "300px" }}
+              >
+                <NivoPieChart data={followUp_2} students={assignedStudents} />
+                {/* <div className="text-center">Total FollowUp2 : {totalFollowUp2}</div> */}
               </div>
             </div>
             <div className="flex-1 flex flex-col gap-4">
-              <p className="font-semibold text-xl text-center md:text-start">FollowUp 1</p>
-              <div className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl" style={{ height: '300px' }}>
-                <NivoPieChart data={followUp_3} />
+              <p className="font-semibold text-xl text-center md:text-start">
+                FollowUp 1: {totalFollowUp1}
+              </p>
+              <div
+                className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl"
+                style={{ height: "300px" }}
+              >
+                <NivoPieChart data={followUp_1} students={assignedStudents} />
+                {/* <div className="text-center">Total FollowUp1 : {totalFollowUp1}</div> */}
               </div>
             </div>
           </div>

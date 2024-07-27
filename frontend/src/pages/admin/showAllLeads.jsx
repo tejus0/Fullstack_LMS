@@ -292,71 +292,6 @@ const toggleDrawer = (open) => () => {
 
           <table className=" w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              {/* <tr>
-                <th scope="col" className="px-6 py-3">
-                  S. No.
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                  {" "}
-                  <div className="flex gap-2 items-center">
-                    {" "}
-                    Name{" "}
-                    <FaSort
-                      onClick={() => handleSort("name")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />{" "}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                <div className="flex gap-2 items-center">
-                  Registered ON{" "}
-                  <FaSort
-                    onClick={() => handleSort("createdAt")}
-                    style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                  />
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                <div className="flex items-center">
-                  Neet Score{" "}
-                  <FaSort
-                    onClick={() => handleSort("neetScore")}
-                    style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                  />
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                  <div className="flex items-center">
-                    Slot Date
-                    <FaSort
-                      onClick={() => handleSort("DateToVisit")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                <div className="flex items-center">
-                  State{" "}
-                  <FaSort
-                    onClick={() => handleSort("state")}
-                    style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                  />
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3 ">
-                  <div className="flex items-center">
-
-                  Course{" "}
-                  <FaSort
-                    onClick={() => handleSort("courseSelected")}
-                    style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
-                    </div> */}
-{/* <<<<<<< Updated upstream
-                    
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"> */}
 
                             <tr>
                                 <th scope="col" className="px-6 py-3">S. No.</th>
@@ -472,6 +407,24 @@ const toggleDrawer = (open) => () => {
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         Cold Call Done
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLeadStatusFilter("Paid Counselling");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Paid Counselling
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLeadStatusFilter("Associate College");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Associate College
                       </button>
                     </div>
                   )}
