@@ -12,7 +12,8 @@ import assignmentConfigModal from "../models/lastAssignedCounsellor.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import { getUri } from "../middleware/dataUri.js";
+import cloudinary from "cloudinary";
 export const loginLoad = async (req, res) => {
   try {
     res.json("this is working");
@@ -208,6 +209,28 @@ export async function getStudentProfile(req, res) {
   }
 }
 
+export const dateSorting = async (req, res) => {
+  try {
+    const { start, end } = req.body
+    const startDate = new Date(start).toISOString();
+    const endDate = new Date(end).toISOString();
+    const students = await studentModal.find({
+      createdAt: { $gte: startDate, $lte: endDate }
+    });
+
+    return res.status(200).json({
+      sucess: true,
+      students,
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      sucess: false,
+      message: error.message,
+    })
+  }
+}
+
 export const getTodos = async (req, res) => {
   //    const todos = await Todo.find();
   const id = req.params.id;
@@ -257,6 +280,7 @@ export const createFollowUp3 = async (req, res) => {
       followUpStage,
       additionalOption, // Include additionalOption in API call
       preBookingAmount,
+      url,
     } = req.body;
     console.log(preBookingAmount, "amount");
 
@@ -269,6 +293,7 @@ export const createFollowUp3 = async (req, res) => {
             updatedAt: new Date(),
             additionalOption: additionalOption,
             preBookingAmount: preBookingAmount,
+            url: url
           },
         },
       }
@@ -495,6 +520,27 @@ export const verifyLogin = async (req, res) => {
     console.log(error.message);
   }
 };
+
+export const uploadPayReceipt = async (req, res) => {
+  try {
+    const id = req.params.id
+    const file = req.file
+    console.log("file");
+    const uri = getUri(file)
+    const cloud = await cloudinary.v2.uploader.upload(uri.content, { folder: `fee-receipt/${id}` })
+
+    return res.status(200).json({
+      success: true,
+      message: "Receipt uploaded successfully",
+      url: cloud.secure_url
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 export const assignAuto = async (req, res) => {
   // Fetch all counsellor ids
@@ -803,9 +849,9 @@ export const formToSheet = async (req, res) => {
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
     // const sheetData = await studentModal.find();
-    if(!req.body){
+    if (!req.body) {
       res.status(500).json({
-        message:"Please provide data"
+        message: "Please provide data"
       })
     }
     const sheetData = req.body;
@@ -867,30 +913,30 @@ export const formToSheet = async (req, res) => {
   }
 };
 
-export const updateAdminAvailableDays= async(req,res)=>{
+export const updateAdminAvailableDays = async (req, res) => {
   // const { startDate, endDate } = req.body;
   // console.log(startDate,endDate,"endAdmin");
 
-  const {kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate}=req.body;
-  
+  const { kanpurStartDate, kanpurEndDate, noidaStartDate, noidaEndDate } = req.body;
+
   try {
     const result = await counsellorModal.updateOne(
-        { is_admin: 1 }, // Filter to find the document
-        { $set: { kanpurStartDate,kanpurEndDate,noidaStartDate,noidaEndDate} } // Use $set to update the fields
+      { is_admin: 1 }, // Filter to find the document
+      { $set: { kanpurStartDate, kanpurEndDate, noidaStartDate, noidaEndDate } } // Use $set to update the fields
     );
 
     if (result.nModified === 0) {
-        return res.status(404).json({ message: "Counselor not found or no changes made." });
+      return res.status(404).json({ message: "Counselor not found or no changes made." });
     }
 
     res.json({ message: "Dates updated successfully." });
-} catch (error) {
+  } catch (error) {
     console.error("Error updating counselor:", error);
     res.status(500).json({ message: "Internal server error." });
-}
+  }
 }
 
-export const getAdminAvailableDays= async(req,res)=>{
+export const getAdminAvailableDays = async (req, res) => {
   const counselor = await counsellorModal.findOne({ is_admin: 1 });
   res.json(counselor);
 }
@@ -930,12 +976,12 @@ export const getCounsellorsWithStudents = async (req, res) => {
   }
 };
 
-export const getVisitLeads = async(req,res)=>{
-  const visitedStud = await studentModal.find({ sourceId: {$regex: /office_rec/} });
+export const getVisitLeads = async (req, res) => {
+  const visitedStud = await studentModal.find({ sourceId: { $regex: /office_rec/ } });
   res.json(visitedStud);
 }
 
-export const getCounsellorNames = async(req,res)=>{
+export const getCounsellorNames = async (req, res) => {
   const counsNames = await counsellorModal.find();
   res.json(counsNames);
 }
