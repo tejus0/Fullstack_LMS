@@ -1005,7 +1005,25 @@ export const getCounsellorLeadDetails = async (req, res) => {
     const counsellerId = req.params.counsellerId;
     const totalLeads = (await studentModal.find({ assignedCouns: counsellerId })).length;
     // const completedLeads = (await studentModal.find({ assignedCouns: counsellerId,  $where: "this.remarks.FollowUp3.length > 1" }));
-    const stage1Students = await studentModal.find({assignedCouns: counsellerId})
+    const stage1Students = (await studentModal.aggregate([
+      {
+        $match: {
+          assignedCouns: counsellerId
+        }
+      },
+      {
+        $addFields: {
+          followUp2Length: { $size: "$remarks.FollowUp2" },
+          followUp3Length: { $size: "$remarks.FollowUp3"}
+        }
+      },
+      {
+        $match: {
+          followUp2Length: { $eq: 0 },
+          followUp3Length: { $eq: 0 }
+        }
+      }
+    ]))
     const stage2Students =(await studentModal.aggregate([
       {
         $match: {
@@ -1014,12 +1032,14 @@ export const getCounsellorLeadDetails = async (req, res) => {
       },
       {
         $addFields: {
-          followUp2Length: { $size: "$remarks.FollowUp2" }
+          followUp2Length: { $size: "$remarks.FollowUp2" },
+          followUp3Length: { $size: "$remarks.FollowUp3"}
         }
       },
       {
         $match: {
-          followUp2Length: { $gt: 0 }
+          followUp2Length: { $gt: 0 },
+          followUp3Length: { $eq: 0 }
         }
       }
     ]));
@@ -1075,7 +1095,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
 
     for(let i = 0 ; i < stage2Students.length ; i++){
 
-      if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Hot Lead")){
+      if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Hot")){
         stage2Obj.hotLeads += 1;
       }
       else if(stage2Students[i].remarks.FollowUp2.at(-1)?.subject.includes("Warm")){
@@ -1173,7 +1193,7 @@ export const getCounsellorPendingAmount = async(req , res)=>{
   }
 }
 
-export const getAssignedCounsellorStudents = async()=>{
+export const getAssignedCounsellorStudents = async(req,res)=>{
   try {
     const counsellerId = req.params.counsellerId;
     const students = await studentModal.find({assignedCouns:counsellerId});
