@@ -377,7 +377,7 @@ const CounsellorDashboard = () => {
                 className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto"
                 style={{ height: "300px" }}
               >
-                <N   ivoPieChart data={followUp_3} students={assignedStudents} />
+                <NivoPieChart data={followUp_3} students={assignedStudents} />
                 {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
             </div>
