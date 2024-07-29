@@ -2,8 +2,13 @@
 import React, { useState } from 'react';
 import { Drawer, Button, List, ListItem, TextField } from '@mui/material';
 
-const FilterDrawer = ({ open, onClose, onChange, SearchBy, search, setSearchBy, columns, handleSelectRow }) => {
+const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date }) => {
+    const handleDateChange = (e) => {
 
+        const { name, value } = e.target
+        setdate({ ...date, [name]: value })
+
+    }
     const list = () => (
         <div>
             <List>
@@ -37,6 +42,23 @@ const FilterDrawer = ({ open, onClose, onChange, SearchBy, search, setSearchBy, 
                                 </div>
                             ))
                         }
+                    </div>
+
+                    <div className='flex flex-col gap-2'>
+                        <div className='flex  gap-2'>
+
+                            <div className='flex flex-col'>
+
+                                <h1>Start Date</h1>
+                                <input name='startDate' type="date" onChange={handleDateChange} />
+                            </div>
+                            <div className='flex flex-col'>
+
+                                <h1>End Date</h1>
+                                <input name='endDate' type="date" onChange={handleDateChange} />
+                            </div>
+                        </div>
+                        <button className='bg-blue-700 p-3 text-white rounded-lg' onClick={filterDate}>Sort </button>
                     </div>
                 </ListItem>
 
