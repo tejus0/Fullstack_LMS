@@ -136,3 +136,8 @@
   margin-left: 1%;
 }
 } */
+
+.bg-purple-opacity{
+    --tw-bg-opacity: 1;
+    background-color: rgb(192 132 252 / var(--tw-bg-opacity));
+}

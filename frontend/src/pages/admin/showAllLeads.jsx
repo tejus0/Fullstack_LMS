@@ -677,7 +677,25 @@ const generatePDF = useReactToPrint({
                             >
                               Cold Call Done
                             </button>
-                          </div>
+                            <button
+                        onClick={() => {
+                          setLeadStatusFilter("Paid Counselling");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Paid Counselling
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLeadStatusFilter("Associate College");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Associate College
+                      </button>
+                    </div>
                         )}
                       </div>
                     </th>
