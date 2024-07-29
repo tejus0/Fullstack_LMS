@@ -1,16 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField, Box, Grid, Paper } from '@mui/material';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  TextField,
+  Box,
+  Grid,
+  Paper,
+  Button,
+} from "@mui/material";
+import axios from "axios";
+import { useStateContext } from "../../../context/StateContext";
 
 const ReportCards = () => {
   const baseUrl = import.meta.env.VITE_API;
   const [allCounsData, setAllCounsData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const {office, setOffice} = useStateContext()
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getCounsellorsWithStudents`);
+        const response = await axios.get(
+          `${baseUrl}/getCounsellorsWithStudents`
+        );
         setAllCounsData(response.data);
         console.log(response.data, "every counsellor and their students");
       } catch (err) {
@@ -33,8 +51,9 @@ const ReportCards = () => {
     let totalColdCalls = 0;
     students.forEach((student) => {
       if (student.remarks.FollowUp2 && student.remarks.FollowUp2.length) {
-        const lastFollowUp = student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
-        if (lastFollowUp && lastFollowUp.subject.includes('Cold Call Done')) {
+        const lastFollowUp =
+          student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
+        if (lastFollowUp && lastFollowUp.subject.includes("Cold Call Done")) {
           totalColdCalls += 1;
         }
       }
@@ -46,12 +65,15 @@ const ReportCards = () => {
     let totalHotLeads = 0;
     students.forEach((student) => {
       if (student.remarks && student.remarks.FollowUp2) {
-        const hotCallCount = student.remarks.FollowUp2.reduce((count, followup) => {
-          if (followup.subject.includes('Lead')) {
-            return count + 1;
-          }
-          return count;
-        }, 0);
+        const hotCallCount = student.remarks.FollowUp2.reduce(
+          (count, followup) => {
+            if (followup.subject.includes("Lead")) {
+              return count + 1;
+            }
+            return count;
+          },
+          0
+        );
         totalHotLeads += hotCallCount;
       }
     });
@@ -62,12 +84,15 @@ const ReportCards = () => {
     let totalWarmCalls = 0;
     students.forEach((student) => {
       if (student.remarks && student.remarks.FollowUp2) {
-        const warmCallCount = student.remarks.FollowUp2.reduce((count, followup) => {
-          if (followup.subject.includes('Warm')) {
-            return count + 1;
-          }
-          return count;
-        }, 0);
+        const warmCallCount = student.remarks.FollowUp2.reduce(
+          (count, followup) => {
+            if (followup.subject.includes("Warm")) {
+              return count + 1;
+            }
+            return count;
+          },
+          0
+        );
         totalWarmCalls += warmCallCount;
       }
     });
@@ -87,50 +112,106 @@ const ReportCards = () => {
   const totalCallsDone = (students) => {
     let totalCallsDone = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp1 && student.remarks.FollowUp1.length > 0) {
-        const totalCallsCount = student.remarks.FollowUp1.reduce((count, followup) => {
-          if (followup.subject.includes('First')) {
-            return count + 1;
-          }
-          return count;
-        }, 0);
+      if (
+        student.remarks &&
+        student.remarks.FollowUp1 &&
+        student.remarks.FollowUp1.length > 0
+      ) {
+        const totalCallsCount = student.remarks.FollowUp1.reduce(
+          (count, followup) => {
+            if (followup.subject.includes("First")) {
+              return count + 1;
+            }
+            return count;
+          },
+          0
+        );
         totalCallsDone += totalCallsCount;
       }
     });
     return totalCallsDone;
   };
 
-  const noidaCounsData = filteredData.filter(item => item.counsellor.counsellor_id.toLowerCase().includes('n'));
-  const kanpurCounsData = filteredData.filter(item => item.counsellor.counsellor_id.toLowerCase().includes('k'));
+  const noidaCounsData = filteredData.filter((item) =>
+    item.counsellor.counsellor_id.toLowerCase().includes("n")
+  );
+  const kanpurCounsData = filteredData.filter((item) =>
+    item.counsellor.counsellor_id.toLowerCase().includes("k")
+  );
 
   const getTopPerformers = (data) => {
     return data
-      .map(item => ({
+      .map((item) => ({
         name: item.counsellor.name,
         // leads: leadsUnlocked(item.students) + totalCallsDone(item.students)  // Example metric
       }))
-      .slice(0, 10);  
+      .slice(0, 10);
   };
 
   const topPerformers = getTopPerformers(filteredData);
 
+  const handleShowReport = (title) =>{
+    if(title === "Noida Office Leads"){
+      setOffice('N');
+    } else if(title === "Kanpur Office Leads"){
+      setOffice('K')
+    }
+  }
+
+
   const renderTable = (data, title) => (
     <Box sx={{ my: 3 }}>
-      <Typography variant="h5" component="div" sx={{ bgcolor: "#f5f5f5", p: 1, borderRadius: 1, textAlign: 'center', color: '#333' }}>
+      {/* <Typography variant="h5" component="div" sx={{ bgcolor: "#f5f5f5", p: 1, borderRadius: 1, textAlign: 'center', color: '#333' }}>
         {title}
       </Typography>
+      <Button variant="contained">
+        Show Office Report
+      </Button> */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          bgcolor: "#f5f5f5",
+          p: 1,
+          borderRadius: 1,
+        }}
+      >
+        <Typography variant="h5" component="div" sx={{ color: "#333" }}>
+          {title}
+        </Typography>
+        <Button variant="contained" onClick={() => handleShowReport(title)}>
+          Show Office Report
+        </Button>
+      </Box>
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><Typography variant="h6">Name</Typography></TableCell>
-              <TableCell><Typography variant="h6">Mobile</Typography></TableCell>
-              <TableCell><Typography variant="h6">Email</Typography></TableCell>
-              <TableCell><Typography variant="h6">Leads Unlocked</Typography></TableCell>
-              <TableCell><Typography variant="h6">Total Calls Done</Typography></TableCell>
-              <TableCell><Typography variant="h6">Hot Leads</Typography></TableCell>
-              <TableCell><Typography variant="h6">Cold Leads</Typography></TableCell>
-              <TableCell><Typography variant="h6">Warm Leads</Typography></TableCell>
+              <TableCell>
+                <Typography variant="h6">Name</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Mobile</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Email</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Leads Unlocked</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Total Calls Done</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Hot Leads</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Cold Leads</Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6">Warm Leads</Typography>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -141,9 +222,15 @@ const ReportCards = () => {
                 <TableCell>{item.counsellor.email}</TableCell>
                 <TableCell>{leadsUnlocked(item.students)}</TableCell>
                 <TableCell>{totalCallsDone(item.students)}</TableCell>
-                <TableCell>{countHotCallsByCounsellor(item.students)}</TableCell>
-                <TableCell>{countColdCallsByCounsellor(item.students)}</TableCell>
-                <TableCell>{countWarmCallsByCounsellor(item.students)}</TableCell>
+                <TableCell>
+                  {countHotCallsByCounsellor(item.students)}
+                </TableCell>
+                <TableCell>
+                  {countColdCallsByCounsellor(item.students)}
+                </TableCell>
+                <TableCell>
+                  {countWarmCallsByCounsellor(item.students)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -153,13 +240,25 @@ const ReportCards = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex', p: 2 }}>
-      <Box sx={{ width: '250px', mr: 2, flexShrink: 0 }}>
-        <Paper sx={{ p: 2, bgcolor: '#f5f5f5', boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', height: '100%' }}>
-          <Typography variant="h6" gutterBottom textAlign="center" sx={{ mb: 2, color: '#333' }}>
+    <Box sx={{ display: "flex", p: 2 }}>
+      <Box sx={{ width: "250px", mr: 2, flexShrink: 0 }}>
+        <Paper
+          sx={{
+            p: 2,
+            bgcolor: "#f5f5f5",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            height: "100%",
+          }}
+        >
+          <Typography
+            variant="h6"
+            gutterBottom
+            textAlign="center"
+            sx={{ mb: 2, color: "#333" }}
+          >
             Top Performers
           </Typography>
-          <TableContainer component={Paper} sx={{ maxHeight: '400px' }}>
+          <TableContainer component={Paper} sx={{ maxHeight: "400px" }}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
@@ -184,13 +283,24 @@ const ReportCards = () => {
           value={searchTerm}
           onChange={handleSearchChange}
           fullWidth
-          sx={{ mb: 2, bgcolor: "#e0e0e0", boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', borderRadius: 2 }}
+          sx={{
+            mb: 2,
+            bgcolor: "#e0e0e0",
+            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            borderRadius: 2,
+          }}
         />
-        <Typography variant="h4" component="div" gutterBottom textAlign="center" sx={{ bgcolor: "#f5f5f5", p: 1, borderRadius: 1, color: '#333' }}>
+        <Typography
+          variant="h4"
+          component="div"
+          gutterBottom
+          textAlign="center"
+          sx={{ bgcolor: "#f5f5f5", p: 1, borderRadius: 1, color: "#333" }}
+        >
           Report
         </Typography>
-        {renderTable(noidaCounsData, 'Noida Office Leads')}
-        {renderTable(kanpurCounsData, 'Kanpur Office Leads')}
+        {renderTable(noidaCounsData, "Noida Office Leads", handleShowReport)}
+        {renderTable(kanpurCounsData, "Kanpur Office Leads", handleShowReport)}
       </Box>
     </Box>
   );

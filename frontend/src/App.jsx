@@ -49,7 +49,6 @@ const App = () => {
           <Route path="/adminAvailableDays" element={<DaysAvaialble />} />
           <Route path="/allCounsellorsReport" element={<ReportCards />} />
           <Route path="/counsellorDashboard/:counsellorId" element={<CounsellorTrackerDashboard/>}/>
-
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>
