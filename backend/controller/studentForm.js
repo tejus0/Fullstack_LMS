@@ -969,6 +969,24 @@ export const assignOfflineLeadsToCouncellor = async (req, res) => {
   }
 };
 
+export const removeCounsellor= async(req,res)=>{
+  const counsellorId = req.params.id
+  console.log(counsellorId,"id to remove")
+
+  try {
+    // Remove the counsellor document
+   await counsellorModal.findByIdAndDelete(counsellorId);
+
+    // Update student documents
+    await studentModal.updateMany({ assignedCouns: counsellorId }, { $set: { assignedCouns: '' } });
+
+    res.status(200).json({ message: 'Counsellor removed and students updated successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error removing counsellor and updating students.' });
+  }
+};
+
 
 
 

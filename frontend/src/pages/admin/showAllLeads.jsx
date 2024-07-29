@@ -15,7 +15,7 @@ import { useReactToPrint } from "react-to-print";
 import OrganicTableLeads from "./OrganicTableLeads";
 import { MdCloudUpload } from "react-icons/md";
 
-import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaSort, FaChevronDown, FaChevronUp,FaPowerOff } from "react-icons/fa";
 import * as XLSX from 'xlsx'; 
 import toast from "react-hot-toast";
 
@@ -388,9 +388,9 @@ const generatePDF = useReactToPrint({
                 style={{ display: "none" }}
                 onChange={handleFileUpload}
               />
-              <Tooltip title="Delete">
+              <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
-                  <LogoutIcon />
+                  <FaPowerOff />
                 </IconButton>
               </Tooltip>
 
