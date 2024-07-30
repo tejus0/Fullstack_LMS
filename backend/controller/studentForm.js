@@ -1401,7 +1401,7 @@ export const getAssignedCounsellorStudents = async (req, res) => {
 
 export const getOfficeReport = async (req, res) => {
   try {
-    const office = req.query.office;
+    const office = req.query.office.toUpperCase();
     if (!office || office.length !== 1) {
       return res.status(400).send("Invalid Office Parameter");
     }
