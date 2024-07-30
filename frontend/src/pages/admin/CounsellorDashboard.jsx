@@ -11,8 +11,9 @@ import { SiGoogleads } from "react-icons/si";
 import { IoSchool } from "react-icons/io5";
 import { FaMoneyBill1 } from "react-icons/fa6";
 import { FaMoneyCheck } from "react-icons/fa6";
+import StyledCard from "../../component/StyledCard";
 
-const baseUrl = import.meta.env.VITE_API;
+export const baseUrl = import.meta.env.VITE_API;
 
 const CounsellorDashboard = () => {
   const counsellorId = useParams().counsellorId;
@@ -60,22 +61,22 @@ const CounsellorDashboard = () => {
     {
       label: "Total Leads Assigned",
       value: counsellorLeadDetails.totalLeads,
-      icon: <SiGoogleads fontSize={30} color="purple"/>,
+      icon: <SiGoogleads fontSize={30} color="purple" />,
     },
     {
       label: "Total Admissions",
       value: counsellorLeadDetails.completedLeads,
-      icon: <IoSchool fontSize={30} color="purple"/>,
+      icon: <IoSchool fontSize={30} color="purple" />,
     },
     {
       label: "Total Revenue",
       value: revenue.totalRevenue,
-      icon: <FaMoneyBill1 fontSize={30} color="purple"/>,
+      icon: <FaMoneyBill1 fontSize={30} color="purple" />,
     },
     {
       label: "This Month Revenue",
       value: revenue.thisMonthRevenue,
-      icon: <FaMoneyCheck fontSize={30} color="purple"/>,
+      icon: <FaMoneyCheck fontSize={30} color="purple" />,
     },
   ];
   // const coursesCounselled = [
@@ -328,7 +329,7 @@ const CounsellorDashboard = () => {
       );
 
       setAssignedStudents(res.data.data);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -351,19 +352,7 @@ const CounsellorDashboard = () => {
           <div className="w-full flex gap-12 p-3 md:p-0 md:gap-24 flex-wrap justify-center">
             {/* card */}
             {revenueDetails.map((elem, i) => (
-              <div
-                className="border-[1px] p-5 rounded-lg cursor-pointer px-12 hover:bg-purple-300 bg-purple-100 shadow-purple-300 shadow-2xl flex flex-col gap-4 hover:scale-110 transition-all flex-1 items-center"
-                key={i}
-              >
-                <div className="flex flex-col gap-2">
-                  <p className="font-extralight text-lg">{elem.label}</p>
-                  <div className="flex gap-5 items-center text-lg">
-                  <div className="text-gray-500">{elem.icon}</div>
-                    <p>{elem.value}</p>
-                    {/* <ArrowUpward color="success" /> */}
-                  </div>
-                </div>
-              </div>
+                <StyledCard icon={elem.icon} label={elem.label} value={elem.value} key={i}/>
             ))}
           </div>
 

@@ -219,13 +219,11 @@ const ModalComponent = ({ open, handleClose, title, data }) => {
                   </tr>
                 </thead>
                 <tbody>
-                    {console.log(data)}
                   {data.map((user, index) => (
                     <tr
                       key={user._id}
                       className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
-                      {console.log(user.remarks, "user.remarkls")}
                       <td className="w-4 p-4">
                         <div className="flex items-center">{index + 1}</div>
                       </td>
