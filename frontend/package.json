@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "^5.16.1",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.4",
     "@mui/material": "^5.16.4",
+    "@mui/x-charts": "^7.11.0",
     "@mui/x-date-pickers": "^7.10.0",
+    "@mui/x-date-pickers-pro": "^7.11.1",
+    "@nivo/pie": "^0.87.0",
     "@reduxjs/toolkit": "^2.2.5",
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",

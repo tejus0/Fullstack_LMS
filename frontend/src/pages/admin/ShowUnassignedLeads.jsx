@@ -28,7 +28,8 @@ import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 
 
-const OrganicTableLeads = () => {
+const ShowUnassignedLeads = () => {
+    console.log("first in show unassigned Leads")
   const [columns, setColumns] = useState([
     { visible: true, label: 'name' },
     { visible: true, label: 'registeredOn' },
@@ -123,7 +124,7 @@ const OrganicTableLeads = () => {
   };
 
   useEffect(() => {
-    console.log(page, "page in all leads");
+    console.log(page, "unassigned page in all leads");
 
     const fetchData = async () => {
       //  this is wrong
@@ -131,12 +132,12 @@ const OrganicTableLeads = () => {
       //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
       //     console.log(err, "error");
       //   });
-      const response = await axios.get(`${baseUrl}/getVisitLeads`).catch((err) => {
+      const response = await axios.get(`${baseUrl}/getUnassignedLeads`).catch((err) => {
         console.log(err, "error");
       });
-      console.log(response.data, "viasit leds");
-      setUsers(response.data);
-      setfilter(response.data);
+      console.log(response.data, "unassigned leads");
+      setUsers(response.data.data);
+      setfilter(response.data.data);
     };
 
     console.log(users);
@@ -313,6 +314,8 @@ const OrganicTableLeads = () => {
     setModalOpen(false);
   };
 
+
+  
 
   return (
     <div>
@@ -598,4 +601,4 @@ const OrganicTableLeads = () => {
   )
 }
 
-export default OrganicTableLeads
+export default ShowUnassignedLeads;

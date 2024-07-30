@@ -94,13 +94,13 @@ const studentDetailSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            default:""
+            default: ""
             // required: [true, "Please enter your name "]
         },
 
         contactNumber: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, 'Phone number is required'],
             // match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
@@ -112,7 +112,7 @@ const studentDetailSchema = new mongoose.Schema(
 
         email: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, "Please enter your email "]
         },
 
@@ -123,32 +123,32 @@ const studentDetailSchema = new mongoose.Schema(
 
         whatsappNumber: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, 'Phone number is required'],
             // match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
         guardianName: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, "Please enter your father's Name "]
         },
 
         district: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, "Please enter your city "]
         },
 
         state: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, "Please enter your state "]
         },
 
         courseSelected: {
             type: String,
-            default:"",
+            default: "",
             // required: [true, "Please Select Course "]
         },
 
@@ -180,41 +180,48 @@ const studentDetailSchema = new mongoose.Schema(
             // required: [false, 'Rank is required'],
             default: ""
         },
-        DateToVisit:{type:String},
-        location:{type:String},
-        remarks: 
-            {
+        DateToVisit: { type: String },
+        location: { type: String },
+        remarks:
+        {
 
-                FollowUp1:[{
-                    type: Object,
+            FollowUp1: [{
+                type: Object,
                 subject: {
                     type: String,
                     required: true
                 },
                 updatedAt: { type: String },
                 // default: {},
-                }],
-                FollowUp2:[{
-                    type: Object,
+            }],
+            FollowUp2: [{
+                type: Object,
                 subject: {
                     type: String,
                     required: true
                 },
                 updatedAt: { type: String },
                 // default: {},
-                }],
-                FollowUp3:[{
-                    type: Object,
+            }],
+            FollowUp3: [{
+                type: Object,
                 subject: {
                     type: String,
                     required: true
-                },additionalOption: {
+                },
+                additionalOption: {
                     type: String,
                     required: true
-                },preBookingAmount: {
+                },
+                preBookingAmount: {
                     type: Number,
                     required: true
                 },
+                url: {
+                    type: String,
+                    required: true
+                },
+
                 // pendingAmount: {
                 //     type: Number,
                 //     required: true
@@ -222,8 +229,8 @@ const studentDetailSchema = new mongoose.Schema(
 
                 updatedAt: { type: String },
                 // default: {},
-                }]
-            }
+            }]
+        }
         ,
         assignedCouns:
 
