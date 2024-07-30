@@ -61,6 +61,7 @@ const OfficeDashboard = () => {
                 (followUp_3_data.paidCounselling / followUp_3_data.totalFollowUp3) *
                 100
             ).toFixed(2),
+            // value: followUp_3_data.paidCounselling,
             color: "hsl(127, 70%, 50%)",
         },
         {
@@ -70,6 +71,7 @@ const OfficeDashboard = () => {
                 (followUp_3_data?.associateCollege / followUp_3_data.totalFollowUp3) *
                 100
             ).toFixed(2),
+            // value: followUp_3_data.associateCollege
             color: "hsl(239, 70%, 50%)",
         },
     ];
@@ -110,6 +112,7 @@ const OfficeDashboard = () => {
                 (followUp_1_data?.switchOff / followUp_1_data.totalFollowUp1) *
                 100
             ).toFixed(2),
+            // value: followUp_1_data?.switchOff,
             color: "hsl(127, 70%, 50%)",
         },
         {
@@ -119,6 +122,7 @@ const OfficeDashboard = () => {
                 (followUp_1_data?.notReachable / followUp_1_data.totalFollowUp1) *
                 100
             ).toFixed(2),
+            // value: followUp_1_data?.notReachable,
             color: "hsl(239, 70%, 50%)",
         },
         {
@@ -128,6 +132,7 @@ const OfficeDashboard = () => {
                 (followUp_1_data?.disconnect / followUp_1_data.totalFollowUp1) *
                 100
             ).toFixed(2),
+            // value: followUp_1_data?.disconnect,
             color: "hsl(239, 70%, 50%)",
         },
         {
@@ -137,6 +142,7 @@ const OfficeDashboard = () => {
                 (followUp_1_data?.networkIssue / followUp_1_data.totalFollowUp1) *
                 100
             ).toFixed(2),
+            // value: followUp_1_data?.networkIssue,
             color: "hsl(239, 70%, 50%)",
         },
         {
@@ -146,6 +152,7 @@ const OfficeDashboard = () => {
                 (followUp_1_data?.firstCallDone / followUp_1_data.totalFollowUp1) *
                 100
             ).toFixed(2),
+            // value: followUp_1_data?.firstCallDone,
             color: "hsl(239, 70%, 50%)",
         },
     ];
@@ -217,15 +224,24 @@ const OfficeDashboard = () => {
         }
     }
 
+
     const fetchTopPerformer = async () => {
         try {
             const res = await axios.get(`${baseUrl}/getTopPerformer`);
-            setTopPerformer(res.data.totalPerformance)
+            const filterTopPerformer = res.data.totalPerformance.filter((element) => element.id.charAt(2) === office.toUpperCase())
+            setTopPerformer(filterTopPerformer)
             console.log(res.data)
         } catch (err) {
             console.error(err)
         }
     }
+
+
+    useEffect(() =>{
+        console.log(topPerformer)
+    }, [topPerformer])
+
+
 
     useEffect(() => {
         fetchReportDetails();

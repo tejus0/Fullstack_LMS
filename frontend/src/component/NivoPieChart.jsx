@@ -61,7 +61,7 @@ const NivoPieChart = ({ data, students }) => {
           from: "color",
           modifiers: [["darker", 0.2]],
         }}
-        enableArcLinkLabels={false}
+        // enableArcLinkLabels={false}
         arcLinkLabelsSkipAngle={10}
         arcLinkLabelsTextColor="#333333"
         arcLinkLabelsThickness={2}
