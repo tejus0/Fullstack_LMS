@@ -3,13 +3,13 @@ import React, { createContext, useContext, useState } from "react"
 const Context = createContext();
 
 export default function StateContext({children}){
-    const [office, setOffice] = useState("");
+    // const [office, setOffice] = useState("");
     return (
         <Context.Provider
-            value={{
-                office,
-                setOffice
-            }}
+            // value={{
+            //     office,
+            //     setOffice
+            // }}
         >
             {children}
         </Context.Provider>

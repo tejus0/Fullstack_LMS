@@ -22,7 +22,7 @@ const ReportCards = () => {
   const [allCounsData, setAllCounsData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [CounstopPerformer, setCounsTopPerformer] = useState();
-  const { office, setOffice } = useStateContext();
+  // const { office, setOffice } = useStateContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -157,14 +157,14 @@ const ReportCards = () => {
     }
   };
 
-  const handleShowReport = (title) => {
-    if (title === "Noida Office Leads") {
-      setOffice("N");
-      
-    } else if (title === "Kanpur Office Leads") {
-      setOffice("K");
-    }
-  };
+  // const handleShowReport = (title) => {
+  //   if (title === "Noida Office Leads") {
+  //     setOffice("N");
+
+  //   } else if (title === "Kanpur Office Leads") {
+  //     setOffice("K");
+  //   }
+  // };
 
   console.log(CounstopPerformer);
 
@@ -183,9 +183,16 @@ const ReportCards = () => {
         <Typography variant="h5" component="div" sx={{ color: "#333" }}>
           {title}
         </Typography>
-        <Button variant="contained" onClick={() => handleShowReport(title)}>
-          <Link to='/officeDashboard'>{title === "Noida Office Leads" ? "Noida" : "Kanpur"} Office Report</Link>
-        </Button>
+
+        <Link
+          to={`/officeDashboard?office=${
+            title === "Noida Office Leads" ? "N" : "K"
+          }`}
+        >
+          <Button variant="contained" onClick={() => handleShowReport(title)}>
+          {title === "Noida Office Leads" ? "Noida" : "Kanpur"} Office Report
+          </Button>
+        </Link>
       </Box>
       <TableContainer component={Paper} sx={{ mt: 2 }}>
         <Table>
@@ -225,9 +232,15 @@ const ReportCards = () => {
                 <TableCell>{item.counsellor.email}</TableCell>
                 <TableCell>{leadsUnlocked(item.students)}</TableCell>
                 <TableCell>{totalCallsDone(item.students)}</TableCell>
-                <TableCell>{countHotCallsByCounsellor(item.students)}</TableCell>
-                <TableCell>{countColdCallsByCounsellor(item.students)}</TableCell>
-                <TableCell>{countWarmCallsByCounsellor(item.students)}</TableCell>
+                <TableCell>
+                  {countHotCallsByCounsellor(item.students)}
+                </TableCell>
+                <TableCell>
+                  {countColdCallsByCounsellor(item.students)}
+                </TableCell>
+                <TableCell>
+                  {countWarmCallsByCounsellor(item.students)}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -266,7 +279,10 @@ const ReportCards = () => {
           >
             Top Performers
           </Typography>
-          <TableContainer component={Paper} sx={{ height: "calc(100% - 48px)" }}>
+          <TableContainer
+            component={Paper}
+            sx={{ height: "calc(100% - 48px)" }}
+          >
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
