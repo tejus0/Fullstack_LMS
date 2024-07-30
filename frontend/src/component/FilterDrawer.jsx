@@ -50,15 +50,15 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                             <div className='flex flex-col'>
 
                                 <h1>Start Date</h1>
-                                <input name='startDate' type="date" onChange={handleDateChange} />
+                                <input name='startDate' type="date" onChange={handleDateChange} required />
                             </div>
                             <div className='flex flex-col'>
 
                                 <h1>End Date</h1>
-                                <input name='endDate' type="date" onChange={handleDateChange} />
+                                <input name='endDate' type="date" onChange={handleDateChange} required />
                             </div>
                         </div>
-                        <button className='bg-blue-700 p-3 text-white rounded-lg' onClick={filterDate}>Sort </button>
+                        <button disabled={!date.endDate || !date.startDate} className='bg-blue-700 p-3 text-white rounded-lg disabled:bg-gray-600' onClick={filterDate}>Sort </button>
                     </div>
                 </ListItem>
 

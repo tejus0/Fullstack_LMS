@@ -142,7 +142,8 @@ const FollowUpSteps = ({ studentId }) => {
     }
   }
 
-  const addFollowUp = async () => {
+  const addFollowUp = async (e) => {
+    e.preventDefault();
     // Your existing addFollowUp function remains unchanged
     if (SelectedOption !== "") {
       const newItem = {
@@ -183,7 +184,11 @@ const FollowUpSteps = ({ studentId }) => {
             followUpStage: FolloupStage,
             additionalOption: secondDropdown, // Include additionalOption in API call
             preBookingAmount: newItem.preBookingAmount, // Include preBookingAmount in API call
-            url: Url
+            file: file
+          }, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
           });
         }
         else {
@@ -237,22 +242,23 @@ const FollowUpSteps = ({ studentId }) => {
   }
 
 
-  const uploadFee = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios.post(`${baseUrl}/upload-receipt/${studentId}`, { file: file }, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        }
-      })
+  // first create to send image seprately 
+  // const uploadFee = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const { data } = await axios.post(`${baseUrl}/upload-receipt/${studentId}`, { file: file }, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       }
+  //     })
 
-      console.log(data.url);
-      setUrl(data.url)
-    } catch (error) {
-      console.log(error);
-      console.log("error while upaloding");
-    }
-  }
+  //     console.log(data.url);
+  //     setUrl(data.url)
+  //   } catch (error) {
+  //     console.log(error);
+  //     console.log("error while upaloding");
+  //   }
+  // }
 
 
   return (
@@ -348,7 +354,7 @@ const FollowUpSteps = ({ studentId }) => {
 
         {/* Input for Pre-Booking Amount */}
         {showPreBookingAmount && FolloupStage === "FollowUp3" && (
-          <div className="mt-4 gap-4 flex flex-col">
+          <form onSubmit={addFollowUp} encType="multipart/form-data" className="mt-4 gap-4 flex flex-col">
             < label className="block text-sm font-medium text-gray-700">
               Pre-Booking Amount
             </label>
@@ -360,26 +366,26 @@ const FollowUpSteps = ({ studentId }) => {
               placeholder="Enter pre-booking amount..."
             />
 
-            <form onSubmit={uploadFee} encType="multipart/form-data" className="flex gap-6  items-center">
+            <div className="flex gap-6  items-center">
 
               <input className="w-[250px] h-[50px] bg-white border-0 rounded-lg" type="file" name="file" onChange={handleImage} />
 
               {UploadImage && <img className="w-20 h-20 my-5 " src={UploadImage} alt="" />}
-              <button disabled={!UploadImage} type="submit" className="bg-white disabled:bg-gray-500 p-3 rounded-xl">Upload</button>
-
-
-            </form>
+              {/* <button disabled={!UploadImage} type="submit" className="bg-white disabled:bg-gray-500 p-3 rounded-xl">Upload</button> */}
+              
+            </div>
 
             {(FolloupStage === "FollowUp3") && <button
-              disabled={!Url}
+              // disabled={!Url}
               className="bg-white p-3 rounded-xl disabled:bg-slate-300 text-blue-800 "
-              onClick={addFollowUp}
+              // onClick={addFollowUp}
+              type="submit"
             >
               Submit
             </button>}
             <div>Pending Amount: {pendingAmount}</div>
             <div>Total Amount: {totalAmount}</div>
-          </div>
+          </form>
         )
         }
 

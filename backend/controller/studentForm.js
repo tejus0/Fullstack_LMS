@@ -14,6 +14,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { getUri } from "../middleware/dataUri.js";
 import cloudinary from "cloudinary";
+import { group, log } from "console";
 export const loginLoad = async (req, res) => {
   try {
     res.json("this is working");
@@ -284,6 +285,12 @@ export const createFollowUp3 = async (req, res) => {
     } = req.body;
     console.log(preBookingAmount, "amount");
 
+    const file = req.file
+
+    const uri = getUri(file)
+    const cloud = await cloudinary.v2.uploader.upload(uri.content, { folder: `fee-receipt` })
+
+
     const todo = await studentModal.updateOne(
       { _id: _id },
       {
@@ -293,7 +300,8 @@ export const createFollowUp3 = async (req, res) => {
             updatedAt: new Date(),
             additionalOption: additionalOption,
             preBookingAmount: preBookingAmount,
-            url: url
+            url: cloud.secure_url,
+            cloudId: cloud.public_id
           },
         },
       }
@@ -521,26 +529,26 @@ export const verifyLogin = async (req, res) => {
   }
 };
 
-export const uploadPayReceipt = async (req, res) => {
-  try {
-    const id = req.params.id
-    const file = req.file
-    console.log("file");
-    const uri = getUri(file)
-    const cloud = await cloudinary.v2.uploader.upload(uri.content, { folder: `fee-receipt/${id}` })
+// export const uploadPayReceipt = async (req, res) => {
+//   try {
+//     const id = req.params.id
+//     const file = req.file
+//     console.log("file");
+//     const uri = getUri(file)
+//     const cloud = await cloudinary.v2.uploader.upload(uri.content, { folder: `fee-receipt/${id}` })
 
-    return res.status(200).json({
-      success: true,
-      message: "Receipt uploaded successfully",
-      url: cloud.secure_url
-    })
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-}
+//     return res.status(200).json({
+//       success: true,
+//       message: "Receipt uploaded successfully",
+//       url: cloud.secure_url
+//     })
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// }
 
 export const assignAuto = async (req, res) => {
   // Fetch all counsellor ids
@@ -549,12 +557,12 @@ export const assignAuto = async (req, res) => {
 
   const students = await studentModal.find({
     $and: [
-      { sourceId: { $not:{$regex: /office_rec/ }} },  // Regular expression for sourceId
+      { sourceId: { $not: { $regex: /office_rec/ } } },  // Regular expression for sourceId
       { assignedCouns: "" }                    // Check for empty string in assignedCouns
     ]
   });
-  
-  
+
+
   // const students = await studentModal.find({ assignedCouns: ""});
   console.log(students, "stude");
 
@@ -1016,5 +1024,89 @@ export const assignOfflineLeadsToCouncellor = async (req, res) => {
 };
 
 
+// export const getTopPerformer = async (req, res) => {
+//   try {
+//     // Fetch all student records
+//     const students = await studentModal.find();
 
+//     // Group students by their assigned counselors
+//     const groupedStudents = students.reduce((acc, student) => {
+//       const assignedCouns = student.assignedCouns;
+//       if (!acc[assignedCouns]) {
+//         acc[assignedCouns] = [];
+//       }
+//       acc[assignedCouns].push(student);
+//       return acc;
+//     }, {});
+
+
+//     let admissionMap = {};
+//     Object.keys(groupedStudents).forEach(async (key) => {
+//       let totalAdmissions = 0;
+//       let hasPreBookingAmount = false;
+//       groupedStudents[key].forEach(async (student) => {
+//         if (student.remarks.FollowUp3) {
+//           student.remarks.FollowUp3.forEach((followUp) => {
+//             if (parseInt(followUp.preBookingAmount) > 0) {
+//               hasPreBookingAmount = true;
+//             }
+//           });
+//         }
+
+//         if (hasPreBookingAmount) {
+//           totalAdmissions += 1;
+//           hasPreBookingAmount = false;
+//         }
+
+//         admissionMap[key] = totalAdmissions;
+
+//       });
+
+//     });
+
+
+//     return res.status(200).json(admissionMap);
+
+//   } catch (error) {
+//     console.error("Error fetching top performers:", error);
+//     res.status(500).json({ message: "Internal server error." });
+//   }
+// };
+
+
+export const getTopPerformer = async (req, res) => {
+  try {
+
+    const allCouncellor = await counsellorModal.find().select('_id name counsellor_id');
+    const allStudents = await studentModal.find();
+    let totalPerformance = [];
+    allCouncellor.forEach((cons) => {
+      let isPreBookingAmount = false
+      let admission = 0;
+      allStudents.forEach((stud) => {
+        if (stud.assignedCouns == cons._id) {
+          stud.remarks.FollowUp3.forEach((follow) => {
+            if (parseInt(follow.preBookingAmount) > 0) {
+              isPreBookingAmount = true;
+            }
+          })
+
+        }
+        if (isPreBookingAmount) {
+          admission += 1;
+          isPreBookingAmount = false;
+        }
+      });
+      totalPerformance.push({ name: cons.name, id: cons.counsellor_id, admission });
+    });
+
+    return res.status(200).json(
+      {
+        sucess: true,
+        totalPerformance
+      });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
 

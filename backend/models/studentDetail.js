@@ -221,6 +221,10 @@ const studentDetailSchema = new mongoose.Schema(
                     type: String,
                     required: true
                 },
+                cloudId: {
+                    type: String,
+                    required: true
+                },
 
                 // pendingAmount: {
                 //     type: Number,
