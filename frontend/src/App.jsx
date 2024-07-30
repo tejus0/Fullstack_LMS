@@ -19,6 +19,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import SlotBooking from "./component/TimeSlot/SlotBooking";
 import DaysAvaialble from "./pages/admin/DaysAvailable";
 import ReportCards from "./pages/admin/Report/ReportCards";
+import CounsellorTrackerDashboard from './pages/admin/CounsellorDashboard'
+import OfficeDashboard from "./pages/admin/OfficeDashboard";
 
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
@@ -47,7 +49,8 @@ const App = () => {
           <Route path="/adminDashboard" element={<AdminDashboard />} />
           <Route path="/adminAvailableDays" element={<DaysAvaialble />} />
           <Route path="/allCounsellorsReport" element={<ReportCards />} />
-
+          <Route path="/counsellorDashboard/:counsellorId" element={<CounsellorTrackerDashboard/>}/>
+          <Route path="/officeDashboard" element={<OfficeDashboard/>}/>
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>

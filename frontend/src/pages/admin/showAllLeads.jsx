@@ -618,88 +618,106 @@ const ShowAllleads = () => {
                       onClick={() => handleSort("DateToVisit")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                     /> */}
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "leadStatus"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex relative gap-2 items-center">
-                          Lead Status
-                          {isLeadStatusDropdownOpen ? (
-                            <FaChevronUp
-                              onClick={toggleLeadStatusDropdown}
-                              style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                            // </div>
-                            />
-                          ) : (
-                            <FaChevronDown
-                              onClick={toggleLeadStatusDropdown}
-                              style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                            />
-                          )}
-                          {isLeadStatusDropdownOpen && (
-                            <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("All");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                All
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Hot Lead");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Hot Leads
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Warm");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Warm
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Cold Call Done");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Cold Call Done
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </th>
-                    )}
-                  <th scope="col" className="px-6 py-3">
-                    <div className="flex gap-2 items-center">
-                      Update Status
-                      <FaSort
-                        onClick={() => handleSort("DateToVisit")}
-                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                      />
-                    </div></th>
-                </tr>
-              </thead>
-              <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
-                {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
-                  <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="w-4 p-4">
-                      <div className="flex items-center">
-                        {index + 1}
                       </div>
-                    </td>
+                    </th>
+                  )}
+                {columns.find(
+                  (col) => col.visible && col.label === "leadStatus"
+                ) && (
+                    <th scope="col" className="px-6 py-3">
+                      <div className="flex relative gap-2 items-center">
+                        Lead Status
+                        {isLeadStatusDropdownOpen ? (
+                          <FaChevronUp
+                            onClick={toggleLeadStatusDropdown}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          // </div>
+                          />
+                        ) : (
+                          <FaChevronDown
+                            onClick={toggleLeadStatusDropdown}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          />
+                        )}
+                        {isLeadStatusDropdownOpen && (
+                          <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("All");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              All
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("Hot Lead");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Hot Leads
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("Warm");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Warm
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("Cold Call Done");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Cold Call Done
+                            </button>
+                            <button
+                        onClick={() => {
+                          setLeadStatusFilter("Paid Counselling");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Paid Counselling
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLeadStatusFilter("Associate College");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Associate College
+                      </button>
+                    </div>
+                        )}
+                      </div>
+                    </th>
+                  )}
+                <th scope="col" className="px-6 py-3">
+                  <div className="flex gap-2 items-center">
+                    Update Status
+                    <FaSort
+                      onClick={() => handleSort("DateToVisit")}
+                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                    />
+                  </div></th>
+              </tr>
+            </thead>
+            <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
+              {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
+                <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td className="w-4 p-4">
+                    <div className="flex items-center">
+                      {index + 1}
+                    </div>
+                  </td>
 
                     {columns.find(
                       (col) => col.visible && col.label === "name"
