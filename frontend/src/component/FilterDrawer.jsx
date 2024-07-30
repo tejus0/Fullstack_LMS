@@ -15,6 +15,7 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
             
             if(selectedOption==="allLeads"){
                 setShowNewTable(false)
+                setShowUnassignedTable(false)
             }
             else if(selectedOption==="offlineVisits"){
                 setShowNewTable(true)
