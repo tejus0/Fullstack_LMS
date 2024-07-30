@@ -1,7 +1,7 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Drawer, List, ListItem, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
-const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable,showNewTable,setShowNewTable,setShowUnassignedTable }) => {
+const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable, showNewTable, setShowNewTable, setShowUnassignedTable }) => {
     // State for dropdown selection
     const [selectedOption, setSelectedOption] = useState('');
 
@@ -12,22 +12,22 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
 
     useEffect(() => {
         const handleDropdownChange = () => {
-            
-            if(selectedOption==="allLeads"){
+
+            if (selectedOption === "allLeads") {
                 setShowNewTable(false)
                 setShowUnassignedTable(false)
             }
-            else if(selectedOption==="offlineVisits"){
+            else if (selectedOption === "offlineVisits") {
                 setShowNewTable(true)
             }
-            else if(selectedOption==="unassignedLeads"){
+            else if (selectedOption === "unassignedLeads") {
                 setShowUnassignedTable(true)
             }
         };
 
-    handleDropdownChange()
+        handleDropdownChange()
     }, [selectedOption])
-    
+
 
 
     const list = () => (
@@ -52,14 +52,42 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                         <div className='flex gap-2'>
                             <div className='flex flex-col'>
                                 <h1>Start Date</h1>
-                                <input name='startDate' type="date" onChange={handleDateChange} required />
+                                <input
+                                    name='startDate'
+                                    type="date"
+                                    onChange={handleDateChange}
+                                />
                             </div>
                             <div className='flex flex-col'>
                                 <h1>End Date</h1>
-                                <input name='endDate' type="date" onChange={handleDateChange} required />
+                                <input
+                                    name='endDate'
+                                    type="date"
+                                    onChange={handleDateChange}
+                                />
                             </div>
                         </div>
-                        <button disabled={!date.endDate || !date.startDate} className='bg-blue-700 p-3 text-white rounded-lg disabled:bg-gray-600' onClick={filterDate}>Sort </button>
+                        <button
+                            className='bg-blue-700 p-3 text-white rounded-lg mt-2'
+                            onClick={filterDate}
+                        >
+                            Sort
+                        </button>
+                        <div className='mt-4'>
+                            <FormControl fullWidth>
+                                <p id="filter-label">Leads To Show</p>
+                                <Select
+                                    labelId="filter-label"
+                                    value={selectedOption}
+                                    onChange={event => setSelectedOption(event.target.value)}
+                                    displayEmpty
+                                >
+                                    <MenuItem value="allLeads" >All Leads</MenuItem>
+                                    <MenuItem value="offlineVisits">Offline Visits</MenuItem>
+                                    <MenuItem value="unassignedLeads">Unassigned Leads</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
                     </div>
 
                 </ListItem>
