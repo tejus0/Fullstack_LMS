@@ -15,6 +15,7 @@ import {
 import axios from "axios";
 import { useStateContext } from "../../../context/StateContext";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const ReportCards = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -159,6 +160,7 @@ const ReportCards = () => {
   const handleShowReport = (title) => {
     if (title === "Noida Office Leads") {
       setOffice("N");
+      
     } else if (title === "Kanpur Office Leads") {
       setOffice("K");
     }
@@ -182,7 +184,7 @@ const ReportCards = () => {
           {title}
         </Typography>
         <Button variant="contained" onClick={() => handleShowReport(title)}>
-          Show Office Report
+          <Link to='/officeDashboard'>{title === "Noida Office Leads" ? "Noida" : "Kanpur"} Office Report</Link>
         </Button>
       </Box>
       <TableContainer component={Paper} sx={{ mt: 2 }}>

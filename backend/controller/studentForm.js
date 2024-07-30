@@ -1436,6 +1436,9 @@ export const getOfficeReport = async (req, res) => {
     let networkIssue = 0;
     let firstCallDone = 0;
 
+
+    let pendingAmounts = [];
+
     students.forEach((student) => {
       let hasPreBookingAmount = false;
       let hasFollowUp3 =
@@ -1447,15 +1450,23 @@ export const getOfficeReport = async (req, res) => {
 
       if (hasFollowUp3) {
         totalFollowUp3++;
+        let totalPaid = 0;
+        let packageAmount = 0;
+
 
         student.remarks.FollowUp3.forEach((followUp, index) => {
           const preBookingAmount = parseFloat(followUp.preBookingAmount || 0);
+          totalPaid += preBookingAmount;
           totalRevenue += preBookingAmount;
+
           if (preBookingAmount > 0) {
             hasPreBookingAmount = true;
           }
           // Calculate paid counselling and associate college based on latest remark
           if (index === student.remarks.FollowUp3.length - 1) {
+            const packageAmountMatch = followUp.additionalOption.match(/\d+/);
+            packageAmount = packageAmountMatch ? parseInt(packageAmountMatch[0]) * 1000 : 0;
+
             if (followUp.subject.includes("Paid Counselling")) {
               paidCounselling++;
             } else if (followUp.subject.includes("Associate College")) {
@@ -1463,10 +1474,22 @@ export const getOfficeReport = async (req, res) => {
             }
           }
         });
-
+        
         if (hasPreBookingAmount) {
           totalAdmissions++;
         }
+
+        const pendingAmount = packageAmount - totalPaid;
+        if (pendingAmount > 0) {
+          pendingAmounts.push({
+            studentId: student._id,
+            name: student.name,
+            packageAmount,
+            totalPaid,
+            pendingAmount
+          });
+        }
+
       } else if (hasFollowUp2) {
         totalFollowUp2++;
 
@@ -1500,20 +1523,13 @@ export const getOfficeReport = async (req, res) => {
     });
 
     const totalCounsellors = counsellors.length;
+    const conversionExpected = (hotLead/totalFollowUp2)*100.
 
     return res.json({
       totalRevenue,
       totalAdmissions,
       totalCounsellors,
-      // totalFollowUp1,
-      // totalFollowUp2,
-      // totalFollowUp3,
-      // paidCounselling,
-      // associateCollege,
-      // hotLead,
-      // warmLead,
-      // coldLead,
-
+      conversionExpected,
       followUp1: {
         totalFollowUp1,
         switchOff,
@@ -1534,6 +1550,7 @@ export const getOfficeReport = async (req, res) => {
         associateCollege,
       },
       students,
+      pendingAmounts
     });
 
     // return res.json(students)
