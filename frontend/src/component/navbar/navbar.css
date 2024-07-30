@@ -1,3 +1,4 @@
+/* Desktop Navbar Styles */
 .nav-desk {
     position: fixed;
     top: 0;
@@ -19,15 +20,19 @@
 
 .wrapper-desk ul {
     width: 100%;
-}
-.wrapper-desk ul div{
-    padding: 0 0 0 20px;
-    height: 90px;
+    padding: 0;
 }
 
-.wrapper-desk ul div:hover{
+.wrapper-desk ul div {
+    padding: 0 0 0 20px;
+    height: 90px;
+    position: relative;
+}
+
+.wrapper-desk ul div:hover {
     background-color: var(--color-primary-variant);
 }
+
 .nav-desk ul li {
     list-style: none;
     color: white;
@@ -35,17 +40,46 @@
     padding: 30px 0;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
 .nav-desk ul li svg {
-padding-bottom: 4px;
-font-size: 1.8rem;
+    padding-bottom: 4px;
+    font-size: 1.8rem;
+}
+
+.nav-desk .dropdown-content {
+    display: none;
+    position: absolute;
+    left: 70px; /* Aligns dropdown to the right of the navbar */
+    top: 0;
+    background-color: #0D131F;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border: 1px solid #333;
+}
+
+.nav-desk .dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.nav-desk .dropdown-content a:hover {
+    background-color: var(--color-primary-variant);
+}
+
+.nav-desk .dropdown:hover .dropdown-content {
+    display: block;
 }
 
 .nav-desk:hover {
     width: 200px;
 }
 
+/* Mobile Navbar Styles */
 .nav-mobile {
     display: none;
 }
@@ -81,9 +115,33 @@ font-size: 1.8rem;
 
     .wrapper-mobile ul li {
         margin: auto;
+        position: relative;
     }
 
-    .wrapper-mobile ul li p {
+    .wrapper-mobile .dropdown-content {
         display: none;
+        position: absolute;
+        bottom: 60px; /* Aligns dropdown above the mobile navbar */
+        left: 0;
+        background-color: #0D131F;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border: 1px solid #333;
+    }
+
+    .wrapper-mobile .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .wrapper-mobile .dropdown-content a:hover {
+        background-color: var(--color-primary-variant);
+    }
+
+    .wrapper-mobile .dropdown:hover .dropdown-content {
+        display: block;
     }
 }

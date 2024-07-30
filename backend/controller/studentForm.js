@@ -1029,6 +1029,29 @@ export const assignOfflineLeadsToCouncellor = async (req, res) => {
   }
 };
 
+export const removeCounsellor = async (req, res) => {
+  const counsellorId = req.params.id
+  console.log(counsellorId, "id to remove")
+
+  try {
+    // Remove the counsellor document
+    await counsellorModal.findByIdAndDelete(counsellorId);
+
+    // Update student documents
+    await studentModal.updateMany({ assignedCouns: counsellorId }, { $set: { assignedCouns: '' } });
+
+    res.status(200).json({ message: 'Counsellor removed and students updated successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error removing counsellor and updating students.' });
+  }
+};
+
+
+
+
+
+
 export const getCounsellorRevenueDetails = async (req, res) => {
   try {
     const counsellerId = req.params.id;
@@ -1606,3 +1629,22 @@ export const getTopPerformer = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 }
+
+
+export const getUnassignedLeads = async (req, res) => {
+  try {
+    // const counsellerId = req.params.counsellerId;
+    const students = await studentModal.find({ assignedCouns: "" });
+
+    return res.status(200).json({
+      message: "Sucess",
+      data: students
+    })
+
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something Went Wrong"
+    })
+  }
+}
+

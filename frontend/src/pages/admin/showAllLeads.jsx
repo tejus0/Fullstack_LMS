@@ -15,9 +15,10 @@ import { useReactToPrint } from "react-to-print";
 import OrganicTableLeads from "./OrganicTableLeads";
 import { MdCloudUpload } from "react-icons/md";
 
-import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
-import * as XLSX from 'xlsx';
+import { FaSort, FaChevronDown, FaChevronUp,FaPowerOff } from "react-icons/fa";
+import * as XLSX from 'xlsx'; 
 import toast from "react-hot-toast";
+import ShowUnassignedLeads from "./ShowUnassignedLeads";
 
 const ShowAllleads = () => {
 
@@ -51,6 +52,7 @@ const ShowAllleads = () => {
     direction: "asc",
   });
   const [page, setPage] = useState(location.state?.page || 0);
+  console.log(page);
   const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
   const navigate = useNavigate();
 
@@ -77,6 +79,8 @@ const ShowAllleads = () => {
 
   const [allCouncellors, setAllCouncellors] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [showUnassignedTable, setShowUnassignedTable] = useState(false)
 
   const handleToggleTable = () => {
     setShowNewTable(!showNewTable);
@@ -227,18 +231,18 @@ const ShowAllleads = () => {
     }
   };
 
-  const cleanDate = (date) => {
-    const originalDate = new Date(date);
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  // const cleanDate = (date) => {
+  //   const originalDate = new Date(date);
+  //   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  //   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    const day = days[originalDate.getUTCDay()];
-    const month = months[originalDate.getUTCMonth()];
-    const dateNum = originalDate.getUTCDate();
-    const year = originalDate.getUTCFullYear();
+  //   const day = days[originalDate.getUTCDay()];
+  //   const month = months[originalDate.getUTCMonth()];
+  //   const dateNum = originalDate.getUTCDate();
+  //   const year = originalDate.getUTCFullYear();
 
-    return `${day} ${month} ${dateNum} ${year}`;
-  }
+  //   return `${day} ${month} ${dateNum} ${year}`;
+  // }
 
   const DateSorting = async () => {
     try {
@@ -279,6 +283,8 @@ const ShowAllleads = () => {
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+
+  
   const paginationDisabled = paginatedUsers.some(
     (item) => item.remarks.length === 20
   );
@@ -293,12 +299,12 @@ const ShowAllleads = () => {
     setDrawerOpen(open);
   };
 
-  const generatePDF = useReactToPrint({
-    content: () => componentToPdf.current,
-    documentTitle: "UserData",
-    onAfterPrint: () => alert("Data saved in PDF")
-  });
-  // console.log(users,"uders in all leads"  );
+// const generatePDF = useReactToPrint({
+//   content: () => componentToPdf.current,
+//   documentTitle: "UserData",
+//   onAfterPrint: ()=>alert("Data saved in PDF")
+// });
+// console.log(users,"uders in all leads"  );
 
   const triggerFileInput = () => {
     document.getElementById("file-input").click();
@@ -381,10 +387,20 @@ const ShowAllleads = () => {
     <div>
       <Box className="flex">
         <Navbar />
-
-        <div ref={componentToPdf} className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
+         
+        <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
           <div className="flex justify-end">
-            <div>
+           <div>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+        className="mb-4"
+      >
+        Assign Leads to Counsellors
+      </Button>
+        </div>
+            {/* <div>
               <Button
                 variant="contained"
                 color="primary"
@@ -393,7 +409,7 @@ const ShowAllleads = () => {
               >
                 {showNewTable ? 'Show Old Table' : 'Show Visits'}
               </Button>
-            </div>
+            </div> */}
             <div className="flex justify-center mb-3 ">
               <select
                 value={SearchBy}
@@ -422,9 +438,9 @@ const ShowAllleads = () => {
                 style={{ display: "none" }}
                 onChange={handleFileUpload}
               />
-              <Tooltip title="Delete">
+              <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
-                  <LogoutIcon />
+                  <FaPowerOff />
                 </IconButton>
               </Tooltip>
 
@@ -444,12 +460,17 @@ const ShowAllleads = () => {
                   filterDate={DateSorting}
                   setdate={setDate}
                   date={date}
+                  handleToggleTable={handleToggleTable}
+                  showNewTable={showNewTable}
+                  setShowNewTable={setShowNewTable}
+                  setShowUnassignedTable={setShowUnassignedTable}
+                  
                 />
               </div>
             </div>
           </div>
 
-          {!showNewTable ? <div>
+          { showUnassignedTable ? <ShowUnassignedLeads/> :  (  !showNewTable ?  <div>
             {/* Modal */}
             {modalOpen && (
               <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -763,55 +784,46 @@ const ShowAllleads = () => {
                                     <td className="px-6 py-4">{user.courseSelected}</td>
                                     <td className="px-6 py-4">{user.contactNumber}</td>
                                      */}
-                    {columns.find(col => col.visible && col.label === 'counsillor') && <td className="px-6 py-4">{counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}</td>}
-                    {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
-                      ? user.remarks.FollowUp3[
-                        user.remarks.FollowUp3.length - 1
+                  {columns.find(col => col.visible && col.label === 'counsillor') && <td className="px-6 py-4">{counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}</td>}
+                  {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
+                    ? user.remarks.FollowUp3[
+                      user.remarks.FollowUp3.length - 1
+                    ].subject
+                    : user.remarks.FollowUp2.length > 0
+                      ? user.remarks.FollowUp2[
+                        user.remarks.FollowUp2.length - 1
                       ].subject
-                      : user.remarks.FollowUp2.length > 0
-                        ? user.remarks.FollowUp2[
-                          user.remarks.FollowUp2.length - 1
+                      : user.remarks.FollowUp1.length > 0
+                        ? user.remarks.FollowUp1[
+                          user.remarks.FollowUp1.length - 1
                         ].subject
-                        : user.remarks.FollowUp1.length > 0
-                          ? user.remarks.FollowUp1[
-                            user.remarks.FollowUp1.length - 1
-                          ].subject
-                          : "No Remarks "}</td>}
-                    <td className="px-6 py-4">
-                      <Button variant="contained">
-                        <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page, origin: 'showAllLeads' }}> Edit </Link>
-                      </Button>
-                    </td>
-                  </tr>
-                )) : <h1>No Data to Show</h1>}
-              </tbody>
-            </table>
-            <TablePagination
-              component="div"
-              count={sortedUsers.length}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              disabled={paginationDisabled}
-            />
-
-          </div> : <OrganicTableLeads />}
-          <div>
-            <Button variant="contained" onClick={generatePDF}>
-              PDF
-            </Button>
-          </div>
-          {!showNewTable ? <div>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setModalOpen(true)}
-              className="mb-4"
-            >
-              Assign Leads to Counsellors
-            </Button>
-          </div> : ""}
+                      : "No Remarks "}</td>}
+                                    <td className="px-6 py-4">
+                                        <Button variant="contained">
+                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page , origin: 'showAllLeads'}}> Edit </Link>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            )): <h1>No Data to Show</h1> }
+                        </tbody>
+                    </table>
+                    <TablePagination
+                        component="div"
+                        count={sortedUsers.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        disabled={paginationDisabled}
+                    />
+                   
+                   </div>:<OrganicTableLeads/>)}
+        {/* <div>
+        <Button variant="contained" onClick={generatePDF}>
+          PDF
+        </Button>
+        </div> */}
+        
         </div>
       </Box>
     </div>
