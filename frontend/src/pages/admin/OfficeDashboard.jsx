@@ -267,18 +267,17 @@ const OfficeDashboard = () => {
                 {/* Follow Up Report */}
                 {
                     chartData.map((item, i) => (
-                        <div className='flex  flex-col  gap-4 w-[30%]' key={i}>       
+                        <div className='flex  flex-col  gap-4 w-[30%]' key={i}>
                             <p className='text-lg md:text-2xl font-semibold flex gap-5 justify-center'>
                                 <span>{item.label}</span>
                                 <span className=' bg-gray-400 px-4 rounded-sm text-white'>{item.total}</span>
                             </p>
-                            {console.log(Object.values(item.data2).every((val) => val != 0))}
                             {students.length ? Object.values(item.data2).every((val) => val == 0) ?
-                                <p className='w-full h-full flex justify-center items-center text-lg font-medium text-gray-700'>No Data Available</p>
+                                <p className='bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-full h-[150px] flex justify-center items-center text-lg font-medium text-gray-700'>No Data Available</p>
 
                                 :
                                 <div
-                                    className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto"
+                                    className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto border-[1px] border-gray-100"
                                     style={{ height: "300px" }}
                                 >
                                     <NivoPieChart data={item.data} students={students} />
@@ -294,11 +293,15 @@ const OfficeDashboard = () => {
                 {/* Pending Amount Table Container */}
                 <div className="flex-1 w-full p-5 bg-purple-50 rounded-lg flex shadow-purple-400 shadow-2xl border-[0.1px] flex-col gap-4">
                     <p className='text-xl font-semibold'>Pending Amount</p>
-                    <MaterialTable rows={pendingAmountData} bgColor="purple" />
+                    {pendingAmountData.length ? <MaterialTable rows={pendingAmountData} bgColor="purple" /> :
+                        <div className='w-full h-[150px] flex justify-center items-center'>
+                            <p className='text-xl text-gray-500'>No Data Available</p>
+                        </div>
+                    }
                 </div>
                 <div className="flex-1 bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4 flex flex-col gap-5">
                     <p className='text-xl font-semibold'>Top Performer</p>
-                    <div className='flex flex-col gap-5 p-9 overflow-y-auto h-[250px] border-[10px] rounded-lg border-purple-400'>
+                    {topPerformer.length ? <div className='flex flex-col gap-5 p-9 overflow-y-auto h-[250px] border-[10px] rounded-lg border-purple-400'>
                         {
                             topPerformer.map((item, i) => (
 
@@ -309,7 +312,11 @@ const OfficeDashboard = () => {
 
                             ))
                         }
-                    </div>
+                    </div> :
+                        <div className='w-full h-[150px] flex justify-center items-center'>
+                            <p className='text-xl text-gray-500'>No Data Available</p>
+                        </div>
+                    }
                 </div>
             </div>
 

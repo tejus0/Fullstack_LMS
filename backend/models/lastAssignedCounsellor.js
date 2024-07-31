@@ -5,6 +5,10 @@ const assignmentConfigSchema = new mongoose.Schema({
   lastAssignedCounsellorIndex: {
     type: Number,
     default: 0
+  },
+  lastCounsellorLength:{
+    type: Number,
+    default: 0
   }
 },{timestamps:true});
 

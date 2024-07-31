@@ -24,11 +24,11 @@ const SignUp = () => {
   const [otpVerified, setOtpVerified] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCollege, setSelectedCollege] = useState(null);
+  const [officeLocation , setOfficeLocation] = useState(null);
   
   const navigate = useNavigate();
 
   const [formdata, setformdata] = useState({
-    employeeId: '',
     userName: '',
     emailAddress: '',
     mobileNumber: '',
@@ -109,13 +109,16 @@ const SignUp = () => {
         alert("Please verify your mobile number.");
         return;
       }
+      if(!officeLocation){
+        alert("Please Select Office Location")
+      }
 
       let requestBody = {
-        employee_id: formdata.employeeId,
         username: formdata.userName,
         email: formdata.emailAddress,
         mobile: formdata.mobileNumber,
         password: formdata.password,
+        office_location: officeLocation
       };
 
       if (selectedCollege) {
@@ -155,10 +158,7 @@ const SignUp = () => {
         {/* name & id field */}
         <div className='flex md:flex-row flex-col gap-3 md:gap-10 '>
 
-          <div className='w-full'>
-            <InputField label={"User ID"} value={formdata.employeeId} name="employeeId" onChange={handleChange} />
-            {err && <p className=" text-red-500">{err.employeeId}</p>}
-          </div>
+          
 
           <div className='w-full'>
             <InputField label={"Enter Name"} value={formdata.userName} name="userName" onChange={handleChange} />
@@ -234,6 +234,14 @@ const SignUp = () => {
           />
           <label htmlFor="counselorCheckbox">Are you a counselor of a particular college?</label>
         </div>
+
+        {/* select option for selection office location */}
+        <select name="office_location" className='p-2 border-[2px] border-gray-400 rounded-lg' onChange={(e)=>setOfficeLocation(e.target.value)}>
+          <option selected disabled>Select Office Location</option>
+          <option value="Noida">Noida</option>
+          <option value="Kanpur">Kanpur</option>
+        </select>
+
 
         {/* Dropdown for Colleges */}
         {showDropdown && (

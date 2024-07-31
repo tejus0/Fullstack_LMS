@@ -380,12 +380,32 @@ export const insertUser = async (req, res) => {
     if (olduser) {
       return res.send({ error: "User Exists !" });
     }
+    let officeLocation = req.body.office_location
+    if(!officeLocation){
+      return res.status(400).json({
+        message:"Office Location needed"
+      })
+    }
 
+    if(officeLocation == "Noida"){
+      officeLocation = "CKN"+(new Date()).getFullYear();
+    }else if(officeLocation == "Kanpur"){
+      officeLocation = "CKK"+(new Date()).getFullYear();
+    }
+    
+    let counsellorId = officeLocation;
+    let counsellorLength = await assignmentConfigModal.findOne({});
+    if(!counsellorLength.lastCounsellorLength){
+      counsellorLength.lastCounsellorLength = await counsellorModal.countDocuments({});
+      await counsellorLength.save()
+    }
+    counsellorLength = counsellorLength.lastCounsellorLength + 1;
+    counsellorId += `${counsellorLength}`.padStart(3 , "0");
     const spassword = await securePassword(req.body.password);
     console.log(spassword);
 
     const user = new counsellorModal({
-      counsellor_id: req.body.employee_id,
+      counsellor_id: counsellorId,
       name: req.body.username,
       email: req.body.email,
       mobile: req.body.mobile,
@@ -396,17 +416,21 @@ export const insertUser = async (req, res) => {
     });
 
     const userData = await user.save();
+    // update counsellor length count
+    await assignmentConfigModal.updateOne({} , {
+      $set: {lastCounsellorLength: counsellorLength}
+    });
     console.log(userData);
     res.send(userData);
 
-    if (userData) {
-      // sendVerifyMail(req.body.username, req.body.email, userData._id);
-      alert("Your registration is successfull, Kindly verify your mail !");
-    } else {
-      alert("Registration failed!");
-    }
+    // if (userData) {
+    //   // sendVerifyMail(req.body.username, req.body.email, userData._id);
+    // } 
   } catch (error) {
     console.log(error.message);
+    return res.status(500).json({
+      message: "Something Went Wrong"
+    })
   }
 };
 

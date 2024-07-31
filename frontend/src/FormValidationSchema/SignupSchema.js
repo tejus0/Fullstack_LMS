@@ -2,7 +2,6 @@ import * as Yup from 'yup'
 
 
 const validationSchema = Yup.object({
-    employeeId: Yup.string().required("First Name is Required"),
     userName: Yup.string().required("User Name is Required"),
     emailAddress: Yup.string()
         .required("Email is Required")
