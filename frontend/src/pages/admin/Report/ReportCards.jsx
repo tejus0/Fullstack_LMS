@@ -16,6 +16,9 @@ import axios from "axios";
 import { useStateContext } from "../../../context/StateContext";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { FaSortAlphaDown } from "react-icons/fa";
+import OfficeWiseTopPerformer from "../../../component/OfficeWiseTopPerformer";
+
 
 const ReportCards = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -23,7 +26,11 @@ const ReportCards = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [CounstopPerformer, setCounsTopPerformer] = useState();
   // const { office, setOffice } = useStateContext();
-
+  const [sortDes, setSortDes] = useState(true)
+  const [searchBy, setSearchBy] = useState("all")
+  const [data, setData] = useState()
+  console.log(searchBy);
+  const [loading, setLoading] = useState()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -145,12 +152,15 @@ const ReportCards = () => {
 
   const topPerformer = async () => {
     try {
+      setLoading(true)
       const { data } = await axios.get(`${baseUrl}/getTopPerformer`);
       const totalPerformance = data.totalPerformance;
       const sortedPerformance = [...totalPerformance].sort(
         (a, b) => b.admission - a.admission
       );
       setCounsTopPerformer(sortedPerformance);
+      setData(sortedPerformance)
+      setLoading(false)
       console.log(sortedPerformance);
     } catch (error) {
       toast("Error in fetching");
@@ -166,7 +176,18 @@ const ReportCards = () => {
   //   }
   // };
 
-  console.log(CounstopPerformer);
+  const handleButtonClick = () => {
+    if (searchBy === 'all') {
+      setCounsTopPerformer(data)
+    }
+    else {
+      
+      const prefix = searchBy === 'noida' ? 'ckn' : 'ckk';
+      console.log(prefix);
+      const a = data.filter(item => item.id.toLowerCase().startsWith(prefix));
+      setCounsTopPerformer(a)
+    }
+  }
 
   const renderTable = (data, title) => (
     <Box sx={{ my: 3 }}>
@@ -250,7 +271,7 @@ const ReportCards = () => {
   );
 
   return (
-    <Box sx={{ display: "flex", p: 2, height: "100vh" }}>
+    <Box sx={{ display: "flex", p: 0, height: "100vh" }}>
       <Box
         sx={{
           width: "300px",
@@ -268,7 +289,8 @@ const ReportCards = () => {
             bgcolor: "#f5f5f5",
             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
             height: "100%",
-            overflowY: "auto",
+            overflowY: "hidden",
+            overflowX: "hidden",
           }}
         >
           <Typography
@@ -279,6 +301,21 @@ const ReportCards = () => {
           >
             Top Performers
           </Typography>
+          <Typography
+            variant="h6"
+            gutterBottom
+            textAlign="center"
+            display="flex"
+            alignItems="center"
+            sx={{ mb: 2, color: "#333" }}
+          >
+            <select value={searchBy} onChange={(e) => setSearchBy(e.target.value)} name="" id="" className="p-2">
+              <option value="all">All</option>
+              <option value="noida">Noida</option>
+              <option value="kanpur">Kanpur</option>
+            </select>
+            <button onClick={handleButtonClick} className="text-sm bg-blue-800 text-white p-2">Filter</button>
+          </Typography>
           <TableContainer
             component={Paper}
             sx={{ height: "calc(100% - 48px)" }}
@@ -287,11 +324,14 @@ const ReportCards = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
-                  <TableCell align="center">Admission</TableCell>
+                  <TableCell display="flex" align="center" justifyContent="center"  padding="0px" cursor="pointer" alignItems="center">
+                    Addmission
+                  </TableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>
-                {CounstopPerformer?.map((performer, index) => (
+                {loading ? "Loading...." : CounstopPerformer?.map((performer, index) => (
                   <TableRow key={index}>
                     <TableCell>{performer.name}</TableCell>
                     <TableCell align="center">{performer.admission}</TableCell>
