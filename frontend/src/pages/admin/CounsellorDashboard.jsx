@@ -217,7 +217,7 @@ const CounsellorDashboard = () => {
   const followUp_3 = [
     {
       id: "Paid Counselling",
-      label: "Paid Counselling",
+      label: `Paid Counselling (${counsellorLeadDetails.paidCounselling})`,
       value: (
         (counsellorLeadDetails.paidCounselling / totalFollowUp3) *
         100
@@ -226,7 +226,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "Associate College",
-      label: "Associate College",
+      label: `Associate College (${counsellorLeadDetails?.associateCollege})`,
       value: (
         (counsellorLeadDetails?.associateCollege / totalFollowUp3) *
         100
@@ -238,7 +238,7 @@ const CounsellorDashboard = () => {
   const followUp_2 = [
     {
       id: "Hot Lead",
-      label: "Hot Lead",
+      label: `Hot Lead (${counsellorLeadDetails?.hotLeads})`,
       value: ((counsellorLeadDetails?.hotLeads / totalFollowUp2) * 100).toFixed(
         2
       ),
@@ -246,7 +246,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "Warm",
-      label: "Warm",
+      label: `Warm (${counsellorLeadDetails?.warmLeads})`,
       value: (
         (counsellorLeadDetails?.warmLeads / totalFollowUp2) *
         100
@@ -255,7 +255,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "Cold Call Done",
-      label: "Cold Call Done",
+      label: `Cold Call Done (${counsellorLeadDetails?.coldLeads})`,
       value: (
         (counsellorLeadDetails?.coldLeads / totalFollowUp2) *
         100
@@ -267,7 +267,7 @@ const CounsellorDashboard = () => {
   const followUp_1 = [
     {
       id: "Switch Off",
-      label: "Switch Off",
+      label: `Switch Off (${counsellorLeadDetails?.switchOff})`,
       value: (
         (counsellorLeadDetails?.switchOff / totalFollowUp1) *
         100
@@ -276,7 +276,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "Not Reachable",
-      label: "Not Reachable",
+      label: `Not Reachable (${counsellorLeadDetails?.notReachable})`,
       value: (
         (counsellorLeadDetails?.notReachable / totalFollowUp1) *
         100
@@ -285,7 +285,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "Disconnect",
-      label: "Disconnect",
+      label: `Disconnect (${counsellorLeadDetails?.disconnect})`,
       value: (
         (counsellorLeadDetails?.disconnect / totalFollowUp1) *
         100
@@ -294,7 +294,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "Network Issue",
-      label: "Network Issue",
+      label: `Network Issue (${counsellorLeadDetails?.networkIssue})`,
       value: (
         (counsellorLeadDetails?.networkIssue / totalFollowUp1) *
         100
@@ -303,7 +303,7 @@ const CounsellorDashboard = () => {
     },
     {
       id: "First Call Done",
-      label: "First Call Done",
+      label: `First Call Done (${counsellorLeadDetails?.firstCallDone})`,
       value: (
         (counsellorLeadDetails?.firstCallDone / totalFollowUp1) *
         100
@@ -363,9 +363,9 @@ const CounsellorDashboard = () => {
                 FollowUp 3: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp3}</span>
               </p>
               <div
-                className="bg-purple-50 rounded-lg p-12 shadow-purple-400 shadow-2xl w-auto"
-                style={{ height: "300px" }}
-              >
+                  className="bg-purple-50 rounded-lg shadow-purple-400 shadow-2xl w-full md:w-auto flex justify-center items-center"
+                  style={{ height: "300px" }}
+                >
                 <NivoPieChart data={followUp_3} students={assignedStudents} />
                 {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
@@ -375,9 +375,9 @@ const CounsellorDashboard = () => {
                 FollowUp 2: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp2}</span>
               </p>
               <div
-                className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl"
-                style={{ height: "300px" }}
-              >
+                  className="bg-purple-50 rounded-lg shadow-purple-400 shadow-2xl w-full md:w-auto flex justify-center items-center"
+                  style={{ height: "300px" }}
+                >
                 <NivoPieChart data={followUp_2} students={assignedStudents} />
                 {/* <div className="text-center">Total FollowUp2 : {totalFollowUp2}</div> */}
               </div>
@@ -387,14 +387,17 @@ const CounsellorDashboard = () => {
                 FollowUp 1: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp1}</span>
               </p>
               <div
-                className="bg-purple-50 rounded-lg p-5 shadow-purple-400 shadow-2xl"
-                style={{ height: "300px" }}
-              >
+                  className="bg-purple-50 rounded-lg shadow-purple-400 shadow-2xl w-full md:w-auto flex justify-center items-center"
+                  style={{ height: "300px" }}
+                >
                 <NivoPieChart data={followUp_1} students={assignedStudents} />
                 {/* <div className="text-center">Total FollowUp1 : {totalFollowUp1}</div> */}
               </div>
             </div>
           </div>
+
+
+
 
           <div className="flex justify-between gap-12 w-full flex-col md:flex-row">
             {/* Pending Amount Table Container */}
