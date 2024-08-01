@@ -27,10 +27,10 @@ const counsellorDetail = mongoose.Schema({
     type:String
   },
   // startDate:{type:String}, endDate:{type:String},
-  kanpurStartDate:{type:String},
-  kanpurEndDate:{type:String},
-  noidaEndDate:{type:String},
-  noidaStartDate:{type:String},
+  kanpurStartDate:{type:String,default:""},
+  kanpurEndDate:{type:String,default:""},
+  noidaEndDate:{type:String,default:""},
+  noidaStartDate:{type:String,default:""},
   is_admin: {
     type: Number,
     required: true,
@@ -44,6 +44,7 @@ const counsellorDetail = mongoose.Schema({
     type: String,
     default: "",
   },
+  who_am_i:{type:String,default:"Counsellor"}
 },{timestamps:true}
 );
 

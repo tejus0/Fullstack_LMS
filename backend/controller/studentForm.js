@@ -579,14 +579,37 @@ export const assignAuto = async (req, res) => {
   const counsellors = await counsellorModal.find({ allLeads: 0 });
   const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-  const students = await studentModal.find({
+  const students= await studentModal.countDocuments({
     $and: [
-      { sourceId: { $not: { $regex: /office_rec/ } } }, // Regular expression for sourceId
-      { assignedCouns: "" }, // Check for empty string in assignedCouns
-    ],
+      { sourceId: { $not: { $regex: /office_rec/ } } }, // Exclude records with 'office_rec' in sourceId
+      { assignedCouns: "" }, // Filter records with empty 'assignedCouns'
+      {neetScore: { $regex: /^\d+$/, $lt: "350" }}
+      // {
+      //   $expr: {
+      //     $lt: [
+      //       {
+      //         $convert: {
+      //           input: {
+      //             $regexFind: {
+      //               input: "$neetScore",
+      //               regex: /(\d+)/ // Extract the first sequence of digits from neetScore
+      //             }
+      //           },
+      //           to: "int",
+      //           onError: 0, // Default to 0 if conversion fails
+      //           // onNull: 0  // Default to 0 if value is null or empty
+      //         }
+      //       },
+      //       350
+      //     ]
+      //   }
+      // }
+    ]
   });
+  
+  
+  
 
-  // const students = await studentModal.find({ assignedCouns: ""});
   console.log(students, "stude");
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
