@@ -1689,7 +1689,7 @@ export const getTopPerformer = async (req, res) => {
           isPreBookingAmount = false;
         }
       });
-      totalPerformance.push({ name: cons.name, id: cons.counsellor_id, admission });
+      totalPerformance.push({ name: cons.name, id: cons.counsellor_id, admission, id: cons._id });
     });
 
     return res.status(200).json(

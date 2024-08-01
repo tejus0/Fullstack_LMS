@@ -15,10 +15,10 @@ import {
 import axios from "axios";
 import { useStateContext } from "../../../context/StateContext";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaSortAlphaDown } from "react-icons/fa";
 import OfficeWiseTopPerformer from "../../../component/OfficeWiseTopPerformer";
-
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 const ReportCards = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -26,11 +26,14 @@ const ReportCards = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [CounstopPerformer, setCounsTopPerformer] = useState();
   // const { office, setOffice } = useStateContext();
-  const [sortDes, setSortDes] = useState(true)
-  const [searchBy, setSearchBy] = useState("all")
-  const [data, setData] = useState()
+  const [sortDes, setSortDes] = useState(true);
+  const [searchBy, setSearchBy] = useState("all");
+  const [data, setData] = useState();
   console.log(searchBy);
-  const [loading, setLoading] = useState()
+  const [loading, setLoading] = useState();
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -152,15 +155,15 @@ const ReportCards = () => {
 
   const topPerformer = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const { data } = await axios.get(`${baseUrl}/getTopPerformer`);
       const totalPerformance = data.totalPerformance;
       const sortedPerformance = [...totalPerformance].sort(
         (a, b) => b.admission - a.admission
       );
       setCounsTopPerformer(sortedPerformance);
-      setData(sortedPerformance)
-      setLoading(false)
+      setData(sortedPerformance);
+      setLoading(false);
       console.log(sortedPerformance);
     } catch (error) {
       toast("Error in fetching");
@@ -177,20 +180,23 @@ const ReportCards = () => {
   // };
 
   const handleButtonClick = () => {
-    if (searchBy === 'all') {
-      setCounsTopPerformer(data)
-    }
-    else {
-      
-      const prefix = searchBy === 'noida' ? 'ckn' : 'ckk';
+    if (searchBy === "all") {
+      setCounsTopPerformer(data);
+    } else {
+      const prefix = searchBy === "noida" ? "ckn" : "ckk";
       console.log(prefix);
-      const a = data.filter(item => item.id.toLowerCase().startsWith(prefix));
-      setCounsTopPerformer(a)
+      const a = data.filter((item) => item.id.toLowerCase().startsWith(prefix));
+      setCounsTopPerformer(a);
     }
-  }
+  };
+
+  useEffect(() => {
+    console.log(CounstopPerformer);
+  }, [CounstopPerformer]);
 
   const renderTable = (data, title) => (
     <Box sx={{ my: 3 }}>
+      {console.log(data)}
       <Box
         sx={{
           display: "flex",
@@ -211,7 +217,7 @@ const ReportCards = () => {
           }`}
         >
           <Button variant="contained" onClick={() => handleShowReport(title)}>
-          {title === "Noida Office Leads" ? "Noida" : "Kanpur"} Office Report
+            {title === "Noida Office Leads" ? "Noida" : "Kanpur"} Office Report
           </Button>
         </Link>
       </Box>
@@ -248,19 +254,29 @@ const ReportCards = () => {
           <TableBody>
             {data.map((item) => (
               <TableRow key={item.counsellor.counsellor_id}>
-                <TableCell>{item.counsellor.name}</TableCell>
-                <TableCell>{item.counsellor.mobile}</TableCell>
-                <TableCell>{item.counsellor.email}</TableCell>
-                <TableCell>{leadsUnlocked(item.students)}</TableCell>
-                <TableCell>{totalCallsDone(item.students)}</TableCell>
-                <TableCell>
+                <TableCell align="left">{item.counsellor.name}</TableCell>
+                <TableCell align="left">{item.counsellor.mobile}</TableCell>
+                <TableCell align="left">{item.counsellor.email}</TableCell>
+                <TableCell align="center">{leadsUnlocked(item.students)}</TableCell>
+                <TableCell align="center">{totalCallsDone(item.students)}</TableCell>
+                <TableCell align="center">
                   {countHotCallsByCounsellor(item.students)}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {countColdCallsByCounsellor(item.students)}
                 </TableCell>
-                <TableCell>
+                <TableCell align="center">
                   {countWarmCallsByCounsellor(item.students)}
+                </TableCell>
+                <TableCell align="center">
+                  <Link to={`/counsellorDashboard/${item.counsellor._id}`}>
+                    <HiOutlineDocumentReport
+                      fontSize={30}
+                      color="blue"
+                      className="cursor-pointer"
+                      title="Overall Summary"
+                    />
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
@@ -309,12 +325,23 @@ const ReportCards = () => {
             alignItems="center"
             sx={{ mb: 2, color: "#333" }}
           >
-            <select value={searchBy} onChange={(e) => setSearchBy(e.target.value)} name="" id="" className="p-2">
+            <select
+              value={searchBy}
+              onChange={(e) => setSearchBy(e.target.value)}
+              name=""
+              id=""
+              className="p-2"
+            >
               <option value="all">All</option>
               <option value="noida">Noida</option>
               <option value="kanpur">Kanpur</option>
             </select>
-            <button onClick={handleButtonClick} className="text-sm bg-blue-800 text-white p-2">Filter</button>
+            <button
+              onClick={handleButtonClick}
+              className="text-sm bg-blue-800 text-white p-2"
+            >
+              Filter
+            </button>
           </Typography>
           <TableContainer
             component={Paper}
@@ -324,19 +351,31 @@ const ReportCards = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
-                  <TableCell display="flex" align="center" justifyContent="center"  padding="0px" cursor="pointer" alignItems="center">
+                  <TableCell
+                    // display="flex"
+                    align="left"
+                    // justifyContent="center"
+                    // padding="0px"
+                    cursor="pointer"
+                    // alignItems="center"
+                  >
                     Addmission
                   </TableCell>
-
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {loading ? "Loading...." : CounstopPerformer?.map((performer, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{performer.name}</TableCell>
-                    <TableCell align="center">{performer.admission}</TableCell>
-                  </TableRow>
-                ))}
+              <TableBody className="cursor-pointer">
+                {loading
+                  ? "Loading...."
+                  : CounstopPerformer?.map((performer, index) => (
+                      // <Link to={`/counsellorDashboard/${performer.id}`}>
+                        <TableRow key={index} onClick={() => navigate(`/counsellorDashboard/${performer.id}`)}>
+                          <TableCell>{performer.name}</TableCell>
+                          <TableCell align="left">
+                            {performer.admission}
+                          </TableCell>
+                        </TableRow>
+                      // </Link>
+                    ))}
               </TableBody>
             </Table>
           </TableContainer>
