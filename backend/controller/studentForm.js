@@ -375,37 +375,44 @@ export const sendVerifyMail = async (name, email, user_id) => {
 export const insertUser = async (req, res) => {
   console.log("Reached");
   try {
+    let counsellorId,counsellorLength,officeLocation;
     const mobileNo = req.body.mobile;
     const olduser = await counsellorModal.findOne({ mobile: mobileNo });
     if (olduser) {
       return res.send({ error: "User Exists !" });
     }
-    let officeLocation = req.body.office_location
-    if(!officeLocation){
-      return res.status(400).json({
-        message:"Office Location needed"
-      })
-    }
+    let isAdmissionHead = false;
+    if(req.body.pageFor == "admissionHead"){
+      isAdmissionHead = true;
+    }else{
+      officeLocation = req.body.office_location
+      if(!officeLocation){
+        return res.status(400).json({
+          message:"Office Location needed"
+        })
+      }
+  
+      if(officeLocation == "Noida"){
+        officeLocation = "CKN"+(new Date()).getFullYear();
+      }else if(officeLocation == "Kanpur"){
+        officeLocation = "CKK"+(new Date()).getFullYear();
+      }
 
-    if(officeLocation == "Noida"){
-      officeLocation = "CKN"+(new Date()).getFullYear();
-    }else if(officeLocation == "Kanpur"){
-      officeLocation = "CKK"+(new Date()).getFullYear();
     }
-    
-    let counsellorId = officeLocation;
-    let counsellorLength = await assignmentConfigModal.findOne({});
+    counsellorId = officeLocation;
+    counsellorLength = await assignmentConfigModal.findOne({});
     if(!counsellorLength.lastCounsellorLength){
       counsellorLength.lastCounsellorLength = await counsellorModal.countDocuments({});
       await counsellorLength.save()
     }
     counsellorLength = counsellorLength.lastCounsellorLength + 1;
     counsellorId += `${counsellorLength}`.padStart(3 , "0");
+    
     const spassword = await securePassword(req.body.password);
     console.log(spassword);
 
     const user = new counsellorModal({
-      counsellor_id: counsellorId,
+      counsellor_id: isAdmissionHead ? "": counsellorId,
       name: req.body.username,
       email: req.body.email,
       mobile: req.body.mobile,
@@ -413,6 +420,7 @@ export const insertUser = async (req, res) => {
       password: spassword,
       is_admin: 0,
       college_website: req.body.college_website,
+      who_am_i: isAdmissionHead ? "admissionHead" : "counsellor"
     });
 
     const userData = await user.save();
@@ -987,28 +995,27 @@ export const getCounsellorsWithStudents = async (req, res) => {
   try {
     // Fetch all counsellors with allLeads equal to 0
     const counsellors = await counsellorModal.find({ allLeads: 0 });
-
+    console.log(counsellors , "Kfjdsljfl")
+    
     // Fetch all students where assignedCouns is not empty
-    const students = await studentModal.find({ assignedCouns: { $ne: "" } });
-
-    // Group students by counsellor id
-    const counsellorMap = students.reduce((acc, student) => {
-      const counsellorId = student.assignedCouns.toString(); // Ensure counsellorId is converted to string for comparison
-      if (acc[counsellorId]) {
-        acc[counsellorId].students.push(student);
-      } else {
-        const counsellor = counsellors.find(
-          (c) => c._id.toString() === counsellorId
-        );
-        if (counsellor) {
-          acc[counsellorId] = {
-            counsellor,
-            students: [student],
-          };
-        }
-      }
+    const students = await studentModal.find({});
+    
+    // Initialize a map with all counsellors
+    const counsellorMap = counsellors.reduce((acc, counsellor) => {
+      acc[counsellor._id.toString()] = {
+        counsellor,
+        students: []
+      };
       return acc;
     }, {});
+
+    // Group students by counsellor id
+    students.forEach((student) => {
+      const counsellorId = student.assignedCouns.toString(); // Ensure counsellorId is converted to string for comparison
+      if (counsellorMap[counsellorId]) {
+        counsellorMap[counsellorId].students.push(student);
+      }
+    });
 
     // Convert map to array of objects
     const counsellorsWithStudents = Object.values(counsellorMap);
@@ -1019,6 +1026,7 @@ export const getCounsellorsWithStudents = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+  
 
 export const getVisitLeads = async (req, res) => {
   const visitedStud = await studentModal.find({

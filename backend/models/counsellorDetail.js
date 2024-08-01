@@ -1,6 +1,6 @@
 
 
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 const counsellorDetail = mongoose.Schema({
     counsellor_id: {
     type: String,
@@ -27,10 +27,10 @@ const counsellorDetail = mongoose.Schema({
     type:String
   },
   // startDate:{type:String}, endDate:{type:String},
-  kanpurStartDate:{type:String},
-  kanpurEndDate:{type:String},
-  noidaEndDate:{type:String},
-  noidaStartDate:{type:String},
+  kanpurStartDate:{type:String,default:""},
+  kanpurEndDate:{type:String,default:""},
+  noidaEndDate:{type:String,default:""},
+  noidaStartDate:{type:String,default:""},
   is_admin: {
     type: Number,
     required: true,
@@ -38,12 +38,26 @@ const counsellorDetail = mongoose.Schema({
   },
   is_verified: {
     type: Number,
-    default: 0,
+    default: 0,        
   },
   token: {
     type: String,
     default: "",
   },
+  who_am_i: {
+    type: String,
+    default: "counsellor"
+  },
+  allLeads:{
+    type:Number,
+    default:0
+  },
+  assignedCounsellors:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Counsellor"
+    }
+  ]
 },{timestamps:true}
 );
 

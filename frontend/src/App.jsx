@@ -35,7 +35,7 @@ const App = () => {
             path="/counsellor-profile/:id"
             element={<CounsellorDashboard />}
           />
-          <Route path="/registration" element={<SignUp />} />
+          <Route path="/registration" element={<SignUp apiPath={"/register"}/>} />
           <Route path="/student/:id" element={<StudentProfile />} />
           <Route path="/assignAuto" element={<AssignAuto />} />
           <Route path="/forgot-password" element={<ForgetPass />} />
@@ -51,6 +51,8 @@ const App = () => {
           <Route path="/allCounsellorsReport" element={<ReportCards />} />
           <Route path="/counsellorDashboard/:counsellorId" element={<CounsellorTrackerDashboard/>}/>
           <Route path="/officeDashboard" element={<OfficeDashboard/>}/>
+          <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead"/>}/>
+          
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>

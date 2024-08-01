@@ -124,7 +124,7 @@ const NivoPieChart = ({ data, students }) => {
         theme={{
           legends: {
             text: {
-              fontSize: 14, // Increase the font size
+              fontSize: 12, // Increase the font size
             },
           },
         }}
