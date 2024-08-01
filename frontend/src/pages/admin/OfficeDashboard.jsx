@@ -27,6 +27,9 @@ const OfficeDashboard = () => {
     disconnect: 0,
     networkIssue: 0,
     firstCallDone: 0,
+    notReceived: 0,
+    incomingNotAvailable: 0,
+
   });
   const [followUp_2_data, setFollowUp_2_data] = useState({
     hotLead: 0,
@@ -175,6 +178,28 @@ const OfficeDashboard = () => {
         100
       ).toFixed(2),
       count: followUp_1_data?.firstCallDone,
+      // value: followUp_1_data?.firstCallDone,
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Incoming Not Available",
+      label: `Incoming Not Available (${followUp_1_data?.incomingNotAvailable})`,
+      value: (
+        (followUp_1_data?.incomingNotAvailable / followUp_1_data.totalFollowUp1) *
+        100
+      ).toFixed(2),
+      count: followUp_1_data?.incomingNotAvailable,
+      // value: followUp_1_data?.firstCallDone,
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Not Received",
+      label: `Not Received (${followUp_1_data?.notReceived})`,
+      value: (
+        (followUp_1_data?.notReceived / followUp_1_data.totalFollowUp1) *
+        100
+      ).toFixed(2),
+      count: followUp_1_data?.notReceived,
       // value: followUp_1_data?.firstCallDone,
       color: "hsl(239, 70%, 50%)",
     },

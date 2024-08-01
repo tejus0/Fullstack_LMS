@@ -1288,10 +1288,14 @@ export const getCounsellorLeadDetails = async (req, res) => {
     stage1Obj.notReachable = 0;
     stage1Obj.disconnect = 0;
     stage1Obj.networkIssue = 0;
+    stage1Obj.notReceived = 0;
+    stage1Obj.incomingNotAvailable = 0;
+
     const stage2Obj = {};
     stage2Obj.hotLeads = 0;
     stage2Obj.warmLeads = 0;
     stage2Obj.coldLeads = 0;
+    
     const stage3Obj = {};
     stage3Obj.paidCounselling = 0;
     stage3Obj.associateCollege = 0;
@@ -1326,6 +1330,18 @@ export const getCounsellorLeadDetails = async (req, res) => {
         )
       ) {
         stage1Obj.networkIssue += 1;
+      } else if (
+        stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes(
+          "Not Received"
+        )
+      ) {
+        stage1Obj.notReceived += 1;
+      } else if (
+        stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes(
+          "Incoming Not Available"
+        )
+      ) {
+        stage1Obj.incomingNotAvailable += 1;
       }
     }
 
@@ -1490,6 +1506,8 @@ export const getOfficeReport = async (req, res) => {
     let disconnect = 0;
     let networkIssue = 0;
     let firstCallDone = 0;
+    let incomingNotAvailable = 0;
+    let notReceived = 0;
 
 
     let pendingAmounts = [];
@@ -1573,6 +1591,10 @@ export const getOfficeReport = async (req, res) => {
           networkIssue++;
         } else if (latestFollowUp1.subject.includes("First Call Done")) {
           firstCallDone++;
+        } else if (latestFollowUp1.subject.includes("Not Received")) {
+          notReceived++;
+        } else if (latestFollowUp1.subject.includes("Incoming Not Available")) {
+          incomingNotAvailable++;
         }
       }
     });
@@ -1592,6 +1614,8 @@ export const getOfficeReport = async (req, res) => {
         disconnect,
         networkIssue,
         firstCallDone,
+        notReceived,
+        incomingNotAvailable,
       },
       followUp2: {
         totalFollowUp2,
