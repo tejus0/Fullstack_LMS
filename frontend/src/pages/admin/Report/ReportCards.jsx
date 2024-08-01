@@ -352,12 +352,12 @@ const ReportCards = () => {
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell
-                    // display="flex"
+                    display="flex"
                     align="left"
-                    // justifyContent="center"
-                    // padding="0px"
+                    justifyContent="center"
+                    padding="0px"
                     cursor="pointer"
-                    // alignItems="center"
+                    alignItems="center"
                   >
                     Addmission
                   </TableCell>
@@ -368,7 +368,7 @@ const ReportCards = () => {
                   ? "Loading...."
                   : CounstopPerformer?.map((performer, index) => (
                       // <Link to={`/counsellorDashboard/${performer.id}`}>
-                        <TableRow key={index} onClick={() => navigate(`/counsellorDashboard/${performer.id}`)}>
+                        <TableRow key={index} onClick={() => navigate(`/counsellorDashboard/${performer.objectId}`)}>
                           <TableCell>{performer.name}</TableCell>
                           <TableCell align="left">
                             {performer.admission}

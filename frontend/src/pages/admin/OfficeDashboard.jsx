@@ -8,6 +8,7 @@ import { IoSchool } from "react-icons/io5";
 import { FaMoneyBill1, FaPeopleGroup, FaTrophy } from "react-icons/fa6";
 import { SiConvertio } from "react-icons/si";
 import MaterialTable from "../../component/MaterialTable";
+import toast, { ToastBar } from "react-hot-toast";
 
 const OfficeDashboard = () => {
   let office = useQuery().get("office") ?? "k";
@@ -227,9 +228,18 @@ const OfficeDashboard = () => {
 
   const fetchReportDetails = async () => {
     try {
-      const res = await axios.get(
-        `${baseUrl}/getOfficeReport?office=${office}`
-      );
+      const res = await toast.promise(
+        axios.get(
+          `${baseUrl}/getOfficeReport?office=${office}`
+        ),
+
+        {
+          loading: "Fetching Data ...",
+          success: "Data Fetched Successfully.",
+          error: "Failed to fetch data"
+        }
+
+      )
       setOfficeReportDetails(res.data);
       setStudents(res.data.students);
       setFollowUp_1_data(res.data.followUp1);
