@@ -1,6 +1,6 @@
 
 
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 const counsellorDetail = mongoose.Schema({
     counsellor_id: {
     type: String,
@@ -38,13 +38,26 @@ const counsellorDetail = mongoose.Schema({
   },
   is_verified: {
     type: Number,
-    default: 0,
+    default: 0,        
   },
   token: {
     type: String,
     default: "",
   },
-  who_am_i:{type:String,default:"Counsellor"}
+  who_am_i: {
+    type: String,
+    default: "counsellor"
+  },
+  allLeads:{
+    type:Number,
+    default:0
+  },
+  assignedCounsellors:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Counsellor"
+    }
+  ]
 },{timestamps:true}
 );
 

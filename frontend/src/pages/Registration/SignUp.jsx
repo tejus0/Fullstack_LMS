@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import InputField from '../../component/InputField'
 import validationSchema from '../../FormValidationSchema/SignupSchema'
 import firebase from "../../component/firebase_config";
@@ -15,7 +15,8 @@ import { CollegeNames } from './CollegeNames';
 const auth = getAuth(firebase);
 
 
-const SignUp = () => {
+
+const SignUp = ({apiPath  , pageFor="counsellor"}) => {
   const baseUrl = import.meta.env.VITE_API;
   const [err, setErr] = useState([])
   const [verifyButton, setverifyButton] = useState(false)
@@ -105,11 +106,11 @@ const SignUp = () => {
     try {
       await validationSchema.validate(formdata, { abortEarly: false })
       setErr([])
-      if (!otpVerified) {
-        alert("Please verify your mobile number.");
-        return;
-      }
-      if(!officeLocation){
+      // if (!otpVerified) {
+      //   alert("Please verify your mobile number.");
+      //   return;
+      // }
+      if(!officeLocation && pageFor != "admissionHead"){
         alert("Please Select Office Location")
       }
 
@@ -118,16 +119,20 @@ const SignUp = () => {
         email: formdata.emailAddress,
         mobile: formdata.mobileNumber,
         password: formdata.password,
-        office_location: officeLocation
       };
+
+      pageFor == "counsellor" ? requestBody.office_location = officeLocation : requestBody.pageFor = "admissionHead";
 
       if (selectedCollege) {
         requestBody.college_website = selectedCollege.website;
       }
+      else if(!selectedCollege && pageFor == "admissionHead"){
+        alert("Please Select a College")
+      }
 
       // calling api to store data  
       await axios
-        .post(`${baseUrl}/register`, requestBody)
+        .post(`${baseUrl}${apiPath}`, requestBody)
         .then((response) => {
           console.log(response);
           if (response.status === 200) {
@@ -148,6 +153,13 @@ const SignUp = () => {
       setErr(newError)
     }
   }
+
+
+  useEffect(()=>{
+    if(pageFor == "admissionHead"){
+      setShowDropdown(true)
+    }
+  })
 
 
   return (
@@ -224,7 +236,7 @@ const SignUp = () => {
         }
 
          {/* Checkbox for Counselor */}
-         <div className='flex items-center gap-2'>
+        {pageFor == "counsellor" && <div className='flex items-center gap-2'>
           <input
             type="checkbox"
             id="counselorCheckbox"
@@ -233,14 +245,14 @@ const SignUp = () => {
             checked={showDropdown}
           />
           <label htmlFor="counselorCheckbox">Are you a counselor of a particular college?</label>
-        </div>
+        </div>}
 
         {/* select option for selection office location */}
-        <select name="office_location" className='p-2 border-[2px] border-gray-400 rounded-lg' onChange={(e)=>setOfficeLocation(e.target.value)}>
+       {pageFor == "counsellor" ? <select name="office_location" className='p-2 border-[2px] border-gray-400 rounded-lg' onChange={(e)=>setOfficeLocation(e.target.value)}>
           <option selected disabled>Select Office Location</option>
           <option value="Noida">Noida</option>
           <option value="Kanpur">Kanpur</option>
-        </select>
+        </select>:""}
 
 
         {/* Dropdown for Colleges */}
