@@ -2,7 +2,7 @@
 
 import mongoose, { mongo } from "mongoose";
 const counsellorDetail = mongoose.Schema({
-    counsellor_id: {
+  counsellor_id: {
     type: String,
     // required: true,
   },
@@ -12,7 +12,7 @@ const counsellorDetail = mongoose.Schema({
   },
   email: {
     type: String,
-    unique:true
+    unique: true
     // required: true,
   },
   mobile: {
@@ -23,14 +23,14 @@ const counsellorDetail = mongoose.Schema({
     type: String,
     // required: true,
   },
-  college_website:{
-    type:String
+  college_website: {
+    type: String
   },
   // startDate:{type:String}, endDate:{type:String},
-  kanpurStartDate:{type:String,default:""},
-  kanpurEndDate:{type:String,default:""},
-  noidaEndDate:{type:String,default:""},
-  noidaStartDate:{type:String,default:""},
+  kanpurStartDate: { type: String, default: "" },
+  kanpurEndDate: { type: String, default: "" },
+  noidaEndDate: { type: String, default: "" },
+  noidaStartDate: { type: String, default: "" },
   is_admin: {
     type: Number,
     required: true,
@@ -38,7 +38,7 @@ const counsellorDetail = mongoose.Schema({
   },
   is_verified: {
     type: Number,
-    default: 0,        
+    default: 0,
   },
   token: {
     type: String,
@@ -48,18 +48,21 @@ const counsellorDetail = mongoose.Schema({
     type: String,
     default: "counsellor"
   },
-  allLeads:{
-    type:Number,
-    default:0
+  allLeads: {
+    type: Number,
+    default: 0
   },
-  assignedCounsellors:[
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref:"Counsellor"
-    }
-  ]
-},{timestamps:true}
+  assignedCounsellors: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Counsellor"
+      },
+    ],
+    default: []
+  }
+}, { timestamps: true }
 );
 
 const counsellorModal = mongoose.model("Counsellor", counsellorDetail);
-export default  counsellorModal;
+export default counsellorModal;

@@ -424,6 +424,15 @@ export const insertUser = async (req, res) => {
     });
 
     const userData = await user.save();
+
+    if(req.body.pageFor == "counsellor"){
+      const admissionHead = await counsellorModal.findOne({college_website: req.body.college_website , who_am_i: "admissionHead"});
+      if(admissionHead){
+        // add counsellor under admissionHead
+        admissionHead.assignedCounsellors.push(userData._id);
+        await admissionHead.save();
+      }
+    }
     // update counsellor length count
     await assignmentConfigModal.updateOne({} , {
       $set: {lastCounsellorLength: counsellorLength}
@@ -1802,6 +1811,24 @@ export const getCounsellorByNumber = async(req , res)=>{
   } catch (err) {
     return res.status(500).json({
       message:"Something Went Wrong"
+    })
+  }
+}
+
+export const getAdmissionHeadCounsellors = async (req , res)=>{
+  try {
+      const admId = req.params.admissionHeadId;
+      const counsellorData = await counsellorModal.findOne({_id: admId , who_am_i: "admissionHead"}).populate("assignedCounsellors");
+
+      return res.status(200).json({
+        message:"Success",
+        data: counsellorData
+      })
+
+  } catch (err) {
+    return res.status(500).json({
+      message:"Something Went Wrong",
+      error: err.message
     })
   }
 }
