@@ -52,25 +52,27 @@ const ForgetPass = () => {
       const userData = await fetchUserDetails();
       if (!userData) {
         toast.error("User Does not Exists")
+        setLoading(false)
+      }else{
+        setLoading(true);
+        onCaptchVerify();
+  
+        const appVerifier = window.recaptchaVerifier;
+  
+        const formatPh = "+91" + ph;
+  
+        signInWithPhoneNumber(auth, formatPh, appVerifier)
+          .then((confirmationResult) => {
+            window.confirmationResult = confirmationResult;
+            setLoading(false);
+            setShowOTP(true);
+            toast.success("OTP sent successfully!");
+          })
+          .catch((error) => {
+            console.log(error);
+            setLoading(false);
+          });
       }
-      setLoading(true);
-      onCaptchVerify();
-
-      const appVerifier = window.recaptchaVerifier;
-
-      const formatPh = "+91" + ph;
-
-      signInWithPhoneNumber(auth, formatPh, appVerifier)
-        .then((confirmationResult) => {
-          window.confirmationResult = confirmationResult;
-          setLoading(false);
-          setShowOTP(true);
-          toast.success("OTP sent successfully!");
-        })
-        .catch((error) => {
-          console.log(error);
-          setLoading(false);
-        });
     } catch (err) {
 
     }
