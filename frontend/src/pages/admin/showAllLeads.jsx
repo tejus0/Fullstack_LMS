@@ -464,7 +464,7 @@ const ShowAllleads = () => {
                   showNewTable={showNewTable}
                   setShowNewTable={setShowNewTable}
                   setShowUnassignedTable={setShowUnassignedTable}
-                  
+                  isAdmin= {true}                
                 />
               </div>
             </div>
@@ -724,10 +724,10 @@ const ShowAllleads = () => {
                 <th scope="col" className="px-6 py-3">
                   <div className="flex gap-2 items-center">
                     Update Status
-                    <FaSort
+                    {/* <FaSort
                       onClick={() => handleSort("DateToVisit")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    />
+                    /> */}
                   </div></th>
               </tr>
             </thead>

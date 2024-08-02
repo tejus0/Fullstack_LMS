@@ -538,7 +538,7 @@ export const verifyLogin = async (req, res) => {
                 type: "admin",
               });
             } else {
-              if (userData.college_website != "") {
+              if (userData.college_website != "" && userData.who_am_i == "admissionHead") {
                 return res.json({
                   status: "ok",
                   data: userData._id,
@@ -1818,6 +1818,7 @@ export const getCounsellorByNumber = async(req , res)=>{
 export const getAdmissionHeadCounsellors = async (req , res)=>{
   try {
       const admId = req.params.admissionHeadId;
+      console.log(admId,"id in  head")
       const counsellorData = await counsellorModal.findOne({_id: admId , who_am_i: "admissionHead"}).populate("assignedCounsellors");
 
       return res.status(200).json({
@@ -1832,3 +1833,30 @@ export const getAdmissionHeadCounsellors = async (req , res)=>{
     })
   }
 }
+
+export const showCounsCollegeLeads = async (req, res) => {
+  const id = req.params.id;
+  console.log(id, "in show counsellor Specific leads");
+  try {
+    const agentName = await counsellorModal.find({ _id: id });
+    console.log(agentName, "agent");
+    const collegeWebsite = agentName[0].college_website;
+    console.log(collegeWebsite, "website");
+
+    const studentList = await studentModal.find(
+
+      {$and:[
+      {sourceId: { $regex: collegeWebsite, $options: "i" }},
+    {assignedCouns:id}],
+    });
+    // $regex is used for case-insensitive substring matching
+
+    if (studentList.length === 0) {
+      return res.status(404).json({ msg: "Students data not found" });
+    }
+
+    res.status(200).json(studentList);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};

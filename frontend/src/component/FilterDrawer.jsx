@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, List, ListItem, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
-const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable, showNewTable, setShowNewTable, setShowUnassignedTable }) => {
+const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable, showNewTable, setShowNewTable, setShowUnassignedTable,isAdmin }) => {
     // State for dropdown selection
     const [selectedOption, setSelectedOption] = useState('');
 
@@ -40,16 +40,17 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                         {columns.map((pro, i) => (
                             <div key={i} className='flex gap-2'>
                                 <input
+                                    id={i}
                                     type="checkbox"
                                     checked={pro.visible}
                                     onChange={() => handleSelectRow(pro.label)}
                                 />
-                                <label>{pro.label}</label>
+                                <label htmlFor={i}>{pro.label}</label>
                             </div>
                         ))}
                     </div>
 
-                    <div className='flex flex-col gap-2 mt-4'>
+                    { isAdmin ? <div className='flex flex-col gap-2 mt-4'>
                         <div className='flex gap-2'>
                             <div className='flex flex-col'>
                                 <h1>Start Date</h1>
@@ -74,7 +75,7 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                         >
                             Sort
                         </button>
-                        <div className='mt-4'>
+                         <div className='mt-4'>
                             <FormControl fullWidth>
                                 <p id="filter-label">Leads To Show</p>
                                 <Select
@@ -89,7 +90,7 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                                 </Select>
                             </FormControl>
                         </div>
-                    </div>
+                    </div> :""}
 
                 </ListItem>
             </List>
