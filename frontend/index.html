@@ -69,23 +69,23 @@
   <script>
     // disable contextmenu event
     document.body.addEventListener("contextmenu", (ev) => {
-      ev.preventDefault();
-      alert("Not Allowed")
+      // ev.preventDefault();
+      // alert("Not Allowed")
     })
     document.addEventListener('keydown', function (event) {
       // Disable context menu on Shift + F10
-      if (event.shiftKey && event.key === 'F10') {
-        event.preventDefault();
-      }
+      // if (event.shiftKey && event.key === 'F10') {
+      //   event.preventDefault();
+      // }
       // Disable developer tools on Ctrl + Shift + I or Cmd + Shift + I
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'i') {
-        event.preventDefault();
-      }
+      // if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'i') {
+      //   event.preventDefault();
+      // }
       // Disable print on Ctrl + P or Cmd + P
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
-        event.preventDefault();
-        alert("Print Operation , Not Allowed!!")
-      }
+      // if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
+      //   event.preventDefault();
+      //   alert("Print Operation , Not Allowed!!")
+      // }
 
     });
 

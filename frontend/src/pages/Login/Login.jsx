@@ -260,6 +260,7 @@ function Login() {
                             component="span"
                             // onClick={() => nagigateToOtp()}
                             style={{ marginTop: "10px", cursor: "pointer" }}
+                            onClick={() => navigate("/forgot-pass")}
                           >
                             Forgot password?
                           </Typography>

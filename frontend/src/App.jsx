@@ -52,6 +52,7 @@ const App = () => {
           <Route path="/counsellorDashboard/:counsellorId" element={<CounsellorTrackerDashboard/>}/>
           <Route path="/officeDashboard" element={<OfficeDashboard/>}/>
           <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead"/>}/>
+          <Route path="/forgot-pass" element={<ForgetPass/>}/>
           
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>

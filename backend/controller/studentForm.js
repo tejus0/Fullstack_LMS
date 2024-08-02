@@ -1697,3 +1697,64 @@ export const getUnassignedLeads = async (req, res) => {
   }
 }
 
+
+export const updatePassword = async (req, res) => {
+  try {
+    const bodyData = req.body;
+    const newPass = bodyData.newPassword;
+    const userId = bodyData.userId; // Assuming you get the user ID from the request body
+
+    if (!newPass) {
+      return res.status(400).json({
+        message: "Please Provide Password"
+      });
+    }
+
+    // Generate a salt and hash the new password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(newPass, saltRounds);
+
+    // Find the user and update the password
+    const user = await counsellorModal.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({
+      message: "Password updated successfully"
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Something went wrong"
+    });
+  }
+}
+
+
+export const getCounsellorByNumber = async(req , res)=>{
+  try {
+    const bodyData = req.body;
+    if(!bodyData.mobileNo){
+      return res.status(400).json({
+        message:"Please Provide Mobile No"
+      })
+    }
+    const counsellor = await counsellorModal.findOne({mobile: bodyData.mobileNo});
+
+    return res.status(200).json({
+      message:"Success",
+      data: counsellor
+    })
+  } catch (err) {
+    return res.status(500).json({
+      message:"Something Went Wrong"
+    })
+  }
+}
