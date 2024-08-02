@@ -36,6 +36,8 @@ const CounsellorDashboard = () => {
     coldLeads: 0,
     paidCounselling: 0,
     associateCollege: 0,
+    incomingNotAvailable: 0,
+    notReceived: 0
   });
   const [pendingAmountTableData, setPendingAmountTableData] = useState([]);
   const [totalFollowUp1, setTotalFollowUp1] = useState(0);
@@ -178,6 +180,8 @@ const CounsellorDashboard = () => {
         notReachable: res.stage1Obj.notReachable,
         disconnect: res.stage1Obj.disconnect,
         networkIssue: res.stage1Obj.networkIssue,
+        incomingNotAvailable: res.stage1Obj.incomingNotAvailable,
+        notReceived: res.stage1Obj.notReceived,
         hotLeads: res.stage2Obj.hotLeads,
         coldLeads: res.stage2Obj.coldLeads,
         warmLeads: res.stage2Obj.warmLeads,
@@ -306,6 +310,24 @@ const CounsellorDashboard = () => {
       label: `First Call Done (${counsellorLeadDetails?.firstCallDone})`,
       value: (
         (counsellorLeadDetails?.firstCallDone / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Not Received",
+      label: `Not Received (${counsellorLeadDetails?.notReceived})`,
+      value: (
+        (counsellorLeadDetails?.notReceived / totalFollowUp1) *
+        100
+      ).toFixed(2),
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Incoming Not Available",
+      label: `Incoming Not Available (${counsellorLeadDetails?.incomingNotAvailable})`,
+      value: (
+        (counsellorLeadDetails?.incomingNotAvailable / totalFollowUp1) *
         100
       ).toFixed(2),
       color: "hsl(239, 70%, 50%)",

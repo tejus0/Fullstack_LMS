@@ -799,9 +799,11 @@ const ShowAllleads = () => {
                         ].subject
                       : "No Remarks "}</td>}
                                     <td className="px-6 py-4">
-                                        <Button variant="contained">
-                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page , origin: 'showAllLeads'}}> Edit </Link>
-                                        </Button>
+                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page , origin: 'showAllLeads'}}>
+                                              <Button variant="contained">
+                                                Edit 
+                                              </Button>
+                                            </Link> 
                                     </td>
                                 </tr>
                             )): <h1>No Data to Show</h1> }

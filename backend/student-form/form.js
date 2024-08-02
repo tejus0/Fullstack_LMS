@@ -554,7 +554,7 @@ async function submitForm(event) {
 
 const url = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/form" : "https://ntechzy.in/api/v1/form";
 
-const DataToSheet = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/formToSheet" : "https://ntechzy.in/api/v1/formToSheet";
+// const DataToSheet = window.location.href.includes('localhost') ? "http://localhost:4000/api/v1/formToSheet" : "https://ntechzy.in/api/v1/formToSheet";
 
 const sendData = async (formData) => {
   const carlos   = getUrlParameter("counsId");
@@ -586,13 +586,13 @@ const sendData = async (formData) => {
       },
       body: JSON.stringify(Data),
     });
-    const SheetResponse = await fetch(DataToSheet, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(Data),
-    });
+    // const SheetResponse = await fetch(DataToSheet, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(Data),
+    // });
 
     if (!response.ok) {
       const err = await response.json();

@@ -12,6 +12,12 @@ export const followUpOne = [
         option: "Network Issue"
     },
     {
+        option: "Incoming Not Available"
+    },
+    {
+        option: "Not Received"
+    },
+    {
         option: "First Call Done"
     },
 ]

@@ -15,10 +15,11 @@ import { object } from "yup";
 import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 
+
 const Table = () => {
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
-  console.log(location)
+  console.log(location);
   const id = location.state?.id;
   const [users, setUsers] = useState([]);
   const [sortConfig, setSortConfig] = useState({
@@ -228,6 +229,11 @@ const Table = () => {
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
           <div className="flex justify-end">
+            <Link to={`/counsellorDashboard/${id}`}>
+              <Button variant="contained" color="primary" className="mb-4">
+                See Report
+              </Button>
+            </Link>
             <select
               value={SearchBy}
               onChange={(e) => setSearchBy(e.target.value)}
@@ -403,13 +409,17 @@ const Table = () => {
                         </li>
                         <li
                           className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() => handleLeadStatusFilter("Paid Counselling")}
+                          onClick={() =>
+                            handleLeadStatusFilter("Paid Counselling")
+                          }
                         >
                           Paid Counselling
                         </li>
                         <li
                           className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() => handleLeadStatusFilter("Associate College")}
+                          onClick={() =>
+                            handleLeadStatusFilter("Associate College")
+                          }
                         >
                           Associate College
                         </li>
@@ -461,9 +471,14 @@ const Table = () => {
                       : "No Remarks "}
                   </td>
                   <td className="px-6 py-4">
-                    <Link 
+                    <Link
                       to={`/student/${user._id}`}
-                      state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
+                      state={{
+                        id: `${user._id}`,
+                        counsellorID: id,
+                        page,
+                        origin: "counsellorProfile",
+                      }}
                     >
                       <Button variant="contained">Edit</Button>
                     </Link>

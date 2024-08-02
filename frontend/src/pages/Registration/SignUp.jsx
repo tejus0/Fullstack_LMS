@@ -26,6 +26,7 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [officeLocation , setOfficeLocation] = useState(null);
+  const [passwordMessage, setPasswordMessage] = useState("");
   
   const navigate = useNavigate();
 
@@ -40,7 +41,21 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
   const handleChange = (e) => {
     const { name, value } = e.target
     setformdata({ ...formdata, [name]: value })
+    if (name === "password") {
+      updatePasswordMessage(value);
+    }
   }
+
+  const updatePasswordMessage = (password) => {
+    const errors = [];
+    if (password.length < 8) errors.push("Password must be at least 8 characters.");
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) errors.push("Password must contain at least one symbol.");
+    if (!/[0-9]/.test(password)) errors.push("Password must contain at least one number.");
+    if (!/[A-Z]/.test(password)) errors.push("Password must contain at least one uppercase letter.");
+    if (!/[a-z]/.test(password)) errors.push("Password must contain at least one lowercase letter.");
+
+    setPasswordMessage(errors);
+  };
 
   // for sending otp to user
   const changeMobile = (e) => {
@@ -246,16 +261,8 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
           />
           <label htmlFor="counselorCheckbox">Are you a counselor of a particular college?</label>
         </div>}
-
-        {/* select option for selection office location */}
-       {pageFor == "counsellor" ? <select name="office_location" className='p-2 border-[2px] border-gray-400 rounded-lg' onChange={(e)=>setOfficeLocation(e.target.value)}>
-          <option selected disabled>Select Office Location</option>
-          <option value="Noida">Noida</option>
-          <option value="Kanpur">Kanpur</option>
-        </select>:""}
-
-
-        {/* Dropdown for Colleges */}
+          
+          {/* Dropdown for Colleges */}
         {showDropdown && (
           <div className='flex flex-col w-full gap-3'>
             <label htmlFor="collegeDropdown">Select College</label>
@@ -278,10 +285,27 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
           </div>
         )}
 
+        {/* select option for selection office location */}
+       {pageFor == "counsellor" ? <select name="office_location" className='p-2 border-[2px] border-gray-400 rounded-lg' onChange={(e)=>setOfficeLocation(e.target.value)}>
+          <option selected disabled>Select Office Location</option>
+          <option value="Noida">Noida</option>
+          <option value="Kanpur">Kanpur</option>
+        </select>:""}
+
+
+        
+
         {/* for passsword */}
         <div className='flex flex-col w-full gap-3'>
           <InputField label={"Enter Password"} value={formdata.password} name="password" onChange={handleChange} />
-
+          {/* {passwordMessage && <p className="text-red-500">{passwordMessage}</p>} */}
+          {passwordMessage.length > 0 && (
+            <ul className="text-red-500">
+              {passwordMessage.map((msg, index) => (
+                <li key={index}>{msg}</li>
+              ))}
+            </ul>
+          )}
           {err && <p className=' text-red-500'>{err.password}</p>}
         </div>
 

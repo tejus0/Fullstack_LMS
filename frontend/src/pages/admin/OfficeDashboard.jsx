@@ -8,6 +8,7 @@ import { IoSchool } from "react-icons/io5";
 import { FaMoneyBill1, FaPeopleGroup, FaTrophy } from "react-icons/fa6";
 import { SiConvertio } from "react-icons/si";
 import MaterialTable from "../../component/MaterialTable";
+import toast, { ToastBar } from "react-hot-toast";
 
 const OfficeDashboard = () => {
   let office = useQuery().get("office") ?? "k";
@@ -26,6 +27,9 @@ const OfficeDashboard = () => {
     disconnect: 0,
     networkIssue: 0,
     firstCallDone: 0,
+    notReceived: 0,
+    incomingNotAvailable: 0,
+
   });
   const [followUp_2_data, setFollowUp_2_data] = useState({
     hotLead: 0,
@@ -177,6 +181,28 @@ const OfficeDashboard = () => {
       // value: followUp_1_data?.firstCallDone,
       color: "hsl(239, 70%, 50%)",
     },
+    {
+      id: "Incoming Not Available",
+      label: `Incoming Not Available (${followUp_1_data?.incomingNotAvailable})`,
+      value: (
+        (followUp_1_data?.incomingNotAvailable / followUp_1_data.totalFollowUp1) *
+        100
+      ).toFixed(2),
+      count: followUp_1_data?.incomingNotAvailable,
+      // value: followUp_1_data?.firstCallDone,
+      color: "hsl(239, 70%, 50%)",
+    },
+    {
+      id: "Not Received",
+      label: `Not Received (${followUp_1_data?.notReceived})`,
+      value: (
+        (followUp_1_data?.notReceived / followUp_1_data.totalFollowUp1) *
+        100
+      ).toFixed(2),
+      count: followUp_1_data?.notReceived,
+      // value: followUp_1_data?.firstCallDone,
+      color: "hsl(239, 70%, 50%)",
+    },
   ];
 
   const chartData = [
@@ -227,9 +253,18 @@ const OfficeDashboard = () => {
 
   const fetchReportDetails = async () => {
     try {
-      const res = await axios.get(
-        `${baseUrl}/getOfficeReport?office=${office}`
-      );
+      const res = await toast.promise(
+        axios.get(
+          `${baseUrl}/getOfficeReport?office=${office}`
+        ),
+
+        {
+          loading: "Fetching Data ...",
+          success: "Data Fetched Successfully.",
+          error: "Failed to fetch data"
+        }
+
+      )
       setOfficeReportDetails(res.data);
       setStudents(res.data.students);
       setFollowUp_1_data(res.data.followUp1);

@@ -587,14 +587,37 @@ export const assignAuto = async (req, res) => {
   const counsellors = await counsellorModal.find({ allLeads: 0 });
   const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-  const students = await studentModal.find({
+  const students= await studentModal.countDocuments({
     $and: [
-      { sourceId: { $not: { $regex: /office_rec/ } } }, // Regular expression for sourceId
-      { assignedCouns: "" }, // Check for empty string in assignedCouns
-    ],
+      { sourceId: { $not: { $regex: /office_rec/ } } }, // Exclude records with 'office_rec' in sourceId
+      { assignedCouns: "" }, // Filter records with empty 'assignedCouns'
+      {neetScore: { $regex: /^\d+$/, $lt: "350" }}
+      // {
+      //   $expr: {
+      //     $lt: [
+      //       {
+      //         $convert: {
+      //           input: {
+      //             $regexFind: {
+      //               input: "$neetScore",
+      //               regex: /(\d+)/ // Extract the first sequence of digits from neetScore
+      //             }
+      //           },
+      //           to: "int",
+      //           onError: 0, // Default to 0 if conversion fails
+      //           // onNull: 0  // Default to 0 if value is null or empty
+      //         }
+      //       },
+      //       350
+      //     ]
+      //   }
+      // }
+    ]
   });
+  
+  
+  
 
-  // const students = await studentModal.find({ assignedCouns: ""});
   console.log(students, "stude");
 
   const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
@@ -1265,10 +1288,14 @@ export const getCounsellorLeadDetails = async (req, res) => {
     stage1Obj.notReachable = 0;
     stage1Obj.disconnect = 0;
     stage1Obj.networkIssue = 0;
+    stage1Obj.notReceived = 0;
+    stage1Obj.incomingNotAvailable = 0;
+
     const stage2Obj = {};
     stage2Obj.hotLeads = 0;
     stage2Obj.warmLeads = 0;
     stage2Obj.coldLeads = 0;
+    
     const stage3Obj = {};
     stage3Obj.paidCounselling = 0;
     stage3Obj.associateCollege = 0;
@@ -1303,6 +1330,18 @@ export const getCounsellorLeadDetails = async (req, res) => {
         )
       ) {
         stage1Obj.networkIssue += 1;
+      } else if (
+        stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes(
+          "Not Received"
+        )
+      ) {
+        stage1Obj.notReceived += 1;
+      } else if (
+        stage1Students[i].remarks.FollowUp1.at(-1)?.subject.includes(
+          "Incoming Not Available"
+        )
+      ) {
+        stage1Obj.incomingNotAvailable += 1;
       }
     }
 
@@ -1467,6 +1506,8 @@ export const getOfficeReport = async (req, res) => {
     let disconnect = 0;
     let networkIssue = 0;
     let firstCallDone = 0;
+    let incomingNotAvailable = 0;
+    let notReceived = 0;
 
 
     let pendingAmounts = [];
@@ -1550,6 +1591,10 @@ export const getOfficeReport = async (req, res) => {
           networkIssue++;
         } else if (latestFollowUp1.subject.includes("First Call Done")) {
           firstCallDone++;
+        } else if (latestFollowUp1.subject.includes("Not Received")) {
+          notReceived++;
+        } else if (latestFollowUp1.subject.includes("Incoming Not Available")) {
+          incomingNotAvailable++;
         }
       }
     });
@@ -1569,6 +1614,8 @@ export const getOfficeReport = async (req, res) => {
         disconnect,
         networkIssue,
         firstCallDone,
+        notReceived,
+        incomingNotAvailable,
       },
       followUp2: {
         totalFollowUp2,
@@ -1666,7 +1713,7 @@ export const getTopPerformer = async (req, res) => {
           isPreBookingAmount = false;
         }
       });
-      totalPerformance.push({ name: cons.name, id: cons.counsellor_id, admission });
+      totalPerformance.push({ name: cons.name, id: cons.counsellor_id, admission, objectId: cons._id });
     });
 
     return res.status(200).json(
