@@ -14,9 +14,30 @@ import Typography from "@mui/material/Typography";
 import { object } from "yup";
 import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+import FilterDrawer from "../../../component/FilterDrawer";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+
 
 
 const Table = () => {
+
+  const [columns, setColumns] = useState([
+    { visible: true, label: "name" },
+    { visible: true, label: "registeredOn" },
+    { visible: true, label: "neetScore" },
+    { visible: true, label: "state" },
+    { visible: true, label: "course" },
+    { visible: true, label: "contactNo" },
+    { visible: true, label: "leadStatus" },
+  ]);
+
+  const handleSelectRow = (key) => {
+    setColumns((prevColumns) =>
+      prevColumns.map((col) =>
+        col.label === key ? { ...col, visible: !col.visible } : col
+      )
+    );
+  };
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   console.log(location);
@@ -34,14 +55,44 @@ const Table = () => {
   const [SearchBy, setSearchBy] = useState("name");
 
   const [filter, setfilter] = useState([]);
+  const [date, setDate] = useState({
+    startDate: "",
+    endDate: ""
+  })
 
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
   const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] =
     useState(false);
-
+    
+    const [showNewTable, setShowNewTable] = useState(false);
   const navigate = useNavigate();
+
+  const [activeButton, setActiveButton] = useState('assigned'); // 'assigned' or 'college'
+
+  // Function to fetch College Leads data
+  const fetchCollegeLeads = async () => {
+    try {
+      const response = await axios
+        .get(`${baseUrl}/showCounsCollegeLeads/${id}`)
+        console.log(response,"response in pecific college leads")
+      setUsers(response.data);
+      setfilter(response.data);
+      setFilteredUsers(response.data);
+      setActiveButton("college")
+      setPage(0)
+    } catch (error) {
+      console.error('Error fetching college leads:', error);
+    }
+  };
+
+  
+
+  const handleToggleTable = () => {
+    setShowNewTable(!showNewTable);
+  };
+
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -58,26 +109,28 @@ const Table = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      //  this is wrong
-
-      const response = await axios
-        .get(`${baseUrl}/getCounsellorDataList/${id}`)
-        .catch((err) => {
-          console.log(err, "error");
-        });
-
-      // const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
-      //   console.log(err, "error");
-      // });
-      setUsers(response.data);
-      setfilter(response.data);
-      setFilteredUsers(response.data);
-    };
-
+    
     fetchData();
   }, [id]);
 
+  const fetchData = async () => {
+    //  this is wrong
+
+    const response = await axios
+      .get(`${baseUrl}/getCounsellorDataList/${id}`)
+      .catch((err) => {
+        console.log(err, "error");
+      });
+
+    // const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
+    //   console.log(err, "error");
+    // });
+    setUsers(response.data);
+    setfilter(response.data);
+    setFilteredUsers(response.data);
+    setActiveButton('assigned')
+  };
+  
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];
     if (sortConfig !== null) {
@@ -123,6 +176,21 @@ const Table = () => {
     }
     setPage(0);
   };
+
+  const DateSorting = async () => {
+    try {
+      const data = await axios.post(`${baseUrl}/sortondate`, { start: date.startDate, end: date.endDate })
+      if (data.data.students.length === 0) {
+        toast.error("No data found");
+        setUsers([])
+        return;
+      }
+      setUsers(data.data.students);
+      console.log(data.data.students);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -193,6 +261,12 @@ const Table = () => {
     setIsLeadStatusDropdownOpen((prev) => !prev);
   };
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const toggleDrawer = (open) => () => {
+    setDrawerOpen(open);
+  };
+
   const handleLeadStatusFilter = (status) => {
     setLeadStatusFilter(status);
     setIsLeadStatusDropdownOpen(false);
@@ -252,6 +326,45 @@ const Table = () => {
               value={search}
               onChange={handelChange}
             />
+            <div>
+                <IconButton onClick={toggleDrawer(true)}>
+                  <FilterAltIcon />
+                </IconButton>
+                <FilterDrawer
+                  open={drawerOpen}
+                  onClose={toggleDrawer(false)}
+                  searchBy={SearchBy}
+                  setSearchBy={setSearchBy}
+                  onChange={handelChange}
+                  search={search}
+                  columns={columns}
+                  handleSelectRow={handleSelectRow}
+                  filterDate={DateSorting}
+                  setdate={setDate}
+                  date={date}
+                  isAdmin= {false}
+                  // handleToggleTable={handleToggleTable}
+                  // showNewTable={showNewTable}
+                  // setShowNewTable={setShowNewTable}
+                  // setShowUnassignedTable={setShowUnassignedTable}
+                  
+                />
+              </div>
+          </div>
+          <div className=" flex align-middle">
+          <Button
+        onClick={fetchData}
+        disabled={activeButton === 'assigned'}
+      >
+        Assigned Leads
+      </Button>
+      <Button
+        onClick={fetchCollegeLeads}
+        disabled={activeButton === 'college'}
+      >
+        College Leads
+      </Button>
+          <h2>{activeButton === 'assigned' ? 'Assigned Leads' : 'College Leads'}</h2>
           </div>
 
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -260,70 +373,98 @@ const Table = () => {
                 <th scope="col" className="px-6 py-3">
                   S. No.
                 </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Name
-                    {/* <FaSort
-                      onClick={() => handleSort("name")}
-                      f
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Registered ON
-                    {/* <FaSort
-                      onClick={() => handleSort("createdAt")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Neet Score
-                    {/* <FaSort
-                      onClick={() => handleSort("neetScore")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Slot Date
-                    {/* <FaSort
-                      onClick={() => handleSort("DateToVisit")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    State
-                    {/* <FaSort
-                      onClick={() => handleSort("state")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Course
-                    {/* <FaSort
-                      onClick={() => handleSort("courseSelected")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center">
-                    Contact No
-                    {/* <FaSort
-                      onClick={() => handleSort("contactNumber")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                  </div>
-                </th>
+                {columns.find((col) => col.visible && col.label === "name") && (
+                    <th scope="col" className="px-6 py-3">
+                      <div className="flex items-center">
+                        Name
+                        {/* <FaSort
+                          onClick={() => handleSort("name")}
+                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                        /> */}
+                      </div>
+                    </th>
+                  )}
+                {columns.find(
+                    (col) => col.visible && col.label === "registeredOn"
+                  ) && (
+                      <th scope="col" className="px-6 py-3">
+                        <div className="flex gap-2 items-center">
+                          Registered ON
+                          {/* <FaSort
+                            onClick={() => handleSort("createdAt")}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          /> */}
+                        </div>
+                      </th>
+                    )}
+                 {columns.find(
+                    (col) => col.visible && col.label === "neetScore"
+                  ) && (
+                      <th scope="col" className="px-6 py-3">
+                        <div className="flex gap-2 items-center">
+                          Neet Score
+                          {/* <FaSort
+                            onClick={() => handleSort("neetScore")}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          /> */}
+                        </div>
+                      </th>
+                    )}
+                {columns.find(
+                    (col) => col.visible && col.label === "DateToVisit"
+                  ) && (
+                      <th scope="col" className="px-6 py-3">
+                        <div className="flex gap-2 items-center">
+                          Slot Date
+                          {/* <FaSort
+                            onClick={() => handleSort("DateToVisit")}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          /> */}
+                        </div>
+                      </th>
+                    )}
+                {columns.find(
+                    (col) => col.visible && col.label === "state"
+                  ) && (
+                      <th scope="col" className="px-6 py-3">
+                        <div className="flex gap-2 items-center">
+                          State
+                          {/* <FaSort
+                            onClick={() => handleSort("state")}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          /> */}
+                        </div>
+                      </th>
+                    )}
+                {columns.find(
+                    (col) => col.visible && col.label === "course"
+                  ) && (
+                      <th scope="col" className="px-6 py-3">
+                        <div className="flex gap-2 items-center">
+                          Course
+                          {/* <FaSort
+                            onClick={() => handleSort("courseSelected")}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          /> */}
+                        </div>
+                      </th>
+                    )}
+                {columns.find(
+                    (col) => col.visible && col.label === "contactNo"
+                  ) && (
+                      <th scope="col" className="px-6 py-3">
+                        <div className="flex gap-2 items-center">
+                          Contact No
+                          {/* <FaSort
+                            onClick={() => handleSort("contactNumber")}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          /> */}
+                        </div>
+                      </th>
+                    )}
+                    {columns.find(
+                  (col) => col.visible && col.label === "leadStatus"
+                ) && (
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center relative">
                     Lead Status
@@ -339,48 +480,7 @@ const Table = () => {
                       />
                     )}
                     {isLeadStatusDropdownOpen && (
-                      // <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                      //   <button
-                      //     onClick={() => {
-                      //       setLeadStatusFilter("All");
-                      //       toggleLeadStatusDropdown();
-                      //       setPage(0);
-                      //     }}
-                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      //   >
-                      //     All
-                      //   </button>
-                      //   <button
-                      //     onClick={() => {
-                      //       setLeadStatusFilter("Hot Lead");
-                      //       toggleLeadStatusDropdown();
-                      //       setPage(0);
-                      //     }}
-                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      //   >
-                      //     Hot Leads
-                      //   </button>
-                      //   <button
-                      //     onClick={() => {
-                      //       setLeadStatusFilter("Warm");
-                      //       toggleLeadStatusDropdown();
-                      //       setPage(0);
-                      //     }}
-                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      //   >
-                      //     Warm
-                      //   </button>
-                      //   <button
-                      //     onClick={() => {
-                      //       setLeadStatusFilter("Cold Call Done");
-                      //       toggleLeadStatusDropdown();
-                      //       setPage(0);
-                      //     }}
-                      //     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      //   >
-                      //     Cold Call Done
-                      //   </button>
-                      // </div>
+                      
 
                       <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
                         <li
@@ -427,13 +527,14 @@ const Table = () => {
                     )}
                   </div>
                 </th>
+                )}
                 <th scope="col" className="px-6 py-3">
                   Update Status
                 </th>
               </tr>
             </thead>
             <tbody>
-              {paginatedUsers.map((user, index) => (
+              {/* {paginatedUsers.map((user, index) => (
                 <tr
                   key={user._id}
                   className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -454,7 +555,6 @@ const Table = () => {
                   <td className="px-6 py-4">{user.state}</td>
                   <td className="px-6 py-4">{user.courseSelected}</td>
                   <td className="px-6 py-4">{user.contactNumber}</td>
-                  {/* <td className="px-6 py-4"> {object.keys(user.remarks).length > 0 ? user.remarks[user.remarks.length - 1].subject : "No remarks"}</td> */}
                   <td className="px-6 py-4">
                     {user.remarks.FollowUp3.length > 0
                       ? user.remarks.FollowUp3[
@@ -484,7 +584,79 @@ const Table = () => {
                     </Link>
                   </td>
                 </tr>
-              ))}
+              ))} */}
+
+{paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
+                <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td className="w-4 p-4">
+                    <div className="flex items-center">
+                      {index + 1}
+                    </div>
+                  </td>
+
+                    {columns.find(
+                      (col) => col.visible && col.label === "name"
+                    ) && (
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          {user.name}
+                        </th>
+                      )}
+                    {columns.find(
+                      (col) => col.visible && col.label === "registeredOn"
+                    ) && (
+                        <td className="px-6 py-4">
+                          {formatDate(user.createdAt)}
+                        </td>
+                      )}
+                    {columns.find(
+                      (col) => col.visible && col.label === "neetScore"
+                    ) && <td className="px-6 py-4">{user.neetScore}</td>}
+                    {columns.find(
+                      (col) => col.visible && col.label === "DateToVisit"
+                    ) && (
+                        <td className="px-6 py-4">
+                          {formatDate(user.DateToVisit)}
+                        </td>
+                      )}
+                    {columns.find(
+                      (col) => col.visible && col.label === "state"
+                    ) && <td className="px-6 py-4">{user.state}</td>}
+                    {columns.find(
+                      (col) => col.visible && col.label === "course"
+                    ) && <td className="px-6 py-4">{user.courseSelected}</td>}
+                    {columns.find(
+                      (col) => col.visible && col.label === "contactNo"
+                    ) && <td className="px-6 py-4">{user.contactNumber}</td>}
+
+                    
+                  {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
+                    ? user.remarks.FollowUp3[
+                      user.remarks.FollowUp3.length - 1
+                    ].subject
+                    : user.remarks.FollowUp2.length > 0
+                      ? user.remarks.FollowUp2[
+                        user.remarks.FollowUp2.length - 1
+                      ].subject
+                      : user.remarks.FollowUp1.length > 0
+                        ? user.remarks.FollowUp1[
+                          user.remarks.FollowUp1.length - 1
+                        ].subject
+                      : "No Remarks "}</td>}
+                                    <td className="px-6 py-4">
+                                    <Link 
+                      to={`/student/${user._id}`}
+                      state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
+                    >
+                                        <Button variant="contained">
+                                        Edit
+                                        </Button>
+                                           </Link>
+                                    </td>
+                                </tr>
+                            )): <h1>No Data to Show</h1> }
             </tbody>
           </table>
           <TablePagination
