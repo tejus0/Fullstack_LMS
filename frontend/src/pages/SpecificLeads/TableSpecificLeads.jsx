@@ -16,6 +16,7 @@ import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import FilterDrawer from "../../component/FilterDrawer";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 
 const Table = () => {
@@ -349,6 +350,15 @@ const Table = () => {
             <IconButton>
               <Link to={`/?counsId=${id}`} target="_blank">
                 <GroupAddIcon />
+              </Link>
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Counsellors Report">
+            <IconButton>
+              <Link to={`/showCounsellorReport`} target="_blank">
+              <FaPeopleGroup />
               </Link>
               {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
               {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}

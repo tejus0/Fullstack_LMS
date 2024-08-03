@@ -1834,6 +1834,44 @@ export const getAdmissionHeadCounsellors = async (req , res)=>{
   }
 }
 
+export const getAdmissionHeadCounsellorsWithStudents = async (req , res)=>{
+  try {
+      const admId = req.params.admissionHeadId;
+      console.log(admId,"id in  head")
+      const counsellorData = await counsellorModal.findOne({_id: admId , who_am_i: "admissionHead"}).populate("assignedCounsellors");
+
+      const counsellorWithStudents = {};
+    // Iterate through each counsellor to find their specific students
+    for (const counsellor of counsellorData.assignedCounsellors) {
+      const counsellorId = counsellor._id;
+      const collegeWebsite = counsellor.college_website;
+
+      // Fetch students assigned to this counsellor whose sourceId matches the college website
+      const students = await studentModal.find({
+        assignedCouns: counsellorId,
+        sourceId: collegeWebsite
+      });
+
+      counsellorWithStudents[counsellorId] = {
+        counsellor,
+        students
+      };
+    }
+
+    // Response
+    return res.status(200).json({
+      message: "Success",
+      data: counsellorWithStudents
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      message:"Something Went Wrong",
+      error: err.message
+    })
+  }
+}
+
 export const showCounsCollegeLeads = async (req, res) => {
   const id = req.params.id;
   console.log(id, "in show counsellor Specific leads");

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile, getTodos, createTodos, deleteTodos, insertUser, getStudentProfile, verifyLogin, assignAuto, getCounsellorDataList, loginLoad, renameKey, cleatAllAssignedCouns, getArnavCounsellorDataList, createFollowUp3, insertAgent, slotBook, bookedSlot, formToSheet, insertFromSheet, getAgentLeads, showSpecificLeads, updateAdminAvailableDays, getAdminAvailableDays, getCounsellorInfo, getCounsellorsWithStudents, getVisitLeads, getCounsellorNames, assignOfflineLeadsToCouncellor, dateSorting, getTopPerformer , getCounsellorRevenueDetails, getCoursesCounselled, getCounsellorLeadDetails, getCounsellorPendingAmount, getAssignedCounsellorStudents, getOfficeReport,removeCounsellor,getUnassignedLeads, updatePassword, getCounsellorByNumber, getAdmissionHeadCounsellors,showCounsCollegeLeads} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile, getTodos, createTodos, deleteTodos, insertUser, getStudentProfile, verifyLogin, assignAuto, getCounsellorDataList, loginLoad, renameKey, cleatAllAssignedCouns, getArnavCounsellorDataList, createFollowUp3, insertAgent, slotBook, bookedSlot, formToSheet, insertFromSheet, getAgentLeads, showSpecificLeads, updateAdminAvailableDays, getAdminAvailableDays, getCounsellorInfo, getCounsellorsWithStudents, getVisitLeads, getCounsellorNames, assignOfflineLeadsToCouncellor, dateSorting, getTopPerformer , getCounsellorRevenueDetails, getCoursesCounselled, getCounsellorLeadDetails, getCounsellorPendingAmount, getAssignedCounsellorStudents, getOfficeReport,removeCounsellor,getUnassignedLeads, updatePassword, getCounsellorByNumber, getAdmissionHeadCounsellors,showCounsCollegeLeads, getAdmissionHeadCounsellorsWithStudents} from "../controller/studentForm.js";
 import { createCounsellor } from "../controller/counsellorDetail.js";
 import { upload } from "../middleware/multer.js";
 
@@ -62,6 +62,7 @@ router.route("/getUnassignedLeads").get(getUnassignedLeads)
 router.route("/updatePass").post(updatePassword)
 router.route("/getCounsellorByNumber").post(getCounsellorByNumber)
 router.route("/getAdmissionHeadCounsellors/:admissionHeadId").get(getAdmissionHeadCounsellors)
+router.route("/getAdmissionHeadCounsellorsWithStudents/:admissionHeadId").get(getAdmissionHeadCounsellorsWithStudents)
 
 
 
