@@ -16,7 +16,7 @@
 
     <script type="module" src="./src/main.jsx" id="main-script"></script>
 
-    <!--   <script>
+    <!-- <script>
     function loadSecondScript() {
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -47,14 +47,14 @@
   
     document.getElementById('main-script').addEventListener('load', renderForm);
   </script>
-  <script type="module" src="./src/main.jsx" onload="loadSecondScript()"></script>
+  <script type="module" src="./src/main.jsx" onload="loadSecondScript()"></script> -->
 
-  <script>
+  <!-- <script>
     function loadSecondScript() {
       console.log(" in index.html")
       const script = document.createElement('script');
       script.type = 'module';
-      script.src = 'https://ntechzy.in/api/v1/student-form/form.js';
+      script.src = 'http:/localhost:4000/api/v1/student-form/form.js';
       script.path = '["/", "/dynamicForm/index.html"]';
       script.divid = 'formsID7375';
       script.courses = '["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]';
@@ -63,28 +63,29 @@
       script.contact = '+123-456-7890';
       document.body.appendChild(script);
     }
-  </script> -->
-    <script>
-      // disable contextmenu event
-      document.body.addEventListener("contextmenu", (ev) => {
-        // ev.preventDefault();
-        // alert("Not Allowed")
-      });
-      document.addEventListener("keydown", function (event) {
-        // Disable context menu on Shift + F10
-        // if (event.shiftKey && event.key === 'F10') {
-        //   event.preventDefault();
-        // }
-        // Disable developer tools on Ctrl + Shift + I or Cmd + Shift + I
-        // if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'i') {
-        //   event.preventDefault();
-        // }
-        // Disable print on Ctrl + P or Cmd + P
-        // if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
-        //   event.preventDefault();
-        //   alert("Print Operation , Not Allowed!!")
-        // }
-      });
+  </script>  -->
+  <script>
+    // disable contextmenu event
+    document.body.addEventListener("contextmenu", (ev) => {
+      // ev.preventDefault();
+      // alert("Not Allowed")
+    })
+    document.addEventListener('keydown', function (event) {
+      // Disable context menu on Shift + F10
+      // if (event.shiftKey && event.key === 'F10') {
+      //   event.preventDefault();
+      // }
+      // Disable developer tools on Ctrl + Shift + I or Cmd + Shift + I
+      // if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key.toLowerCase() === 'i') {
+      //   event.preventDefault();
+      // }
+      // Disable print on Ctrl + P or Cmd + P
+      // if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'p') {
+      //   event.preventDefault();
+      //   alert("Print Operation , Not Allowed!!")
+      // }
+
+    });
 
       // disable copy event
       document.addEventListener("copy", (e) => {
@@ -93,18 +94,28 @@
       });
     </script>
 
-    <!-- <script type="module" src="https://ntechzy.in/api/v1/student-form/form.js"  -->
-    <script
-      type="module"
-      src="http://localhost:4000/api/v1/student-form/form.js"
-      path='["/", "/dynamicForm/index.html"]'
-      divid="formsID7375"
-      courses='["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]'
-      styles="basic"
-      logo=""
-      contact="+123-456-7890"
-    ></script>
-    <!-- <script type="module" src="https://abhigyadufare.github.io/dynamicForm/form.js" path='["/", "/student/:id"]' courses='["BAMS", "BHMS", "BUMS", "MBBS", "BDS", "Remote Link"]'></script> -->
-  </body>
-  <!-- <iframe src="http://localhost:5173/?u_name=carlos&u_pass=1234" frameborder="0" title="sdfghn" width="500px" height="50px"></iframe> -->
+  <!-- <script type="module" src="https://ntechzy.in/api/v1/student-form/form.js"  -->
+  <!-- <script type="module" src="http://localhost:4000/api/v1/student-form/form.js" path='["/", "/dynamicForm/index.html"]'
+    divid='formsID7375' courses='["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]' styles="basic" logo=""
+    contact="+123-456-7890"></script> -->
+
+    <script>
+      window.mainScriptLoaded = function() {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = 'https://ntechzy.in/api/v1/student-form/form.js';
+        // script.src = 'http://localhost:4000/api/v1/student-form/form.js';
+        script.setAttribute('path', '["/", "/dynamicForm/index.html"]');
+        script.setAttribute('divid', 'formsID7375');
+        script.setAttribute('courses', '["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]');
+        script.setAttribute('styles', 'basic');
+        script.setAttribute('logo', '');
+        script.setAttribute('contact', '+123-456-7890');
+        document.body.appendChild(script);
+      };
+    </script>
+  <!-- <script type="module" src="https://abhigyadufare.github.io/dynamicForm/form.js" path='["/", "/student/:id"]' courses='["BAMS", "BHMS", "BUMS", "MBBS", "BDS", "Remote Link"]'></script> -->
+</body>
+<!-- <iframe src="http://localhost:5173/?u_name=carlos&u_pass=1234" frameborder="0" title="sdfghn" width="500px" height="50px"></iframe> -->
+
 </html>

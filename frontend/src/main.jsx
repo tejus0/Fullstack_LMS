@@ -6,12 +6,17 @@ import { Provider } from "react-redux";
 import store from "./redux/store.js";
 import StateContext from "./context/StateContext.jsx";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  // <React.StrictMode>
-  <Provider store={store}>
-    <StateContext>
-      <App />
-    </StateContext>
-  </Provider>
-  // </React.StrictMode>,
-);
+function loadScript(){
+  ReactDOM.createRoot(document.getElementById("root")).render(
+    // <React.StrictMode>
+    <Provider store={store}>
+      <StateContext>
+        <App />
+      </StateContext>
+    </Provider>
+    // </React.StrictMode>,
+  );
+  window.mainScriptLoaded();
+}
+
+loadScript();

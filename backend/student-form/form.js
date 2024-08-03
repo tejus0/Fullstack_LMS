@@ -1,5 +1,5 @@
 import { districtData } from "./district.js";
-document.addEventListener("DOMContentLoaded", () => {
+// document.addEventListener("DOMContentLoaded", () => {
     const nameId =
     getUrlParameter("u_name") !== null && getUrlParameter("u_pass") !== null
     ? 
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     :
     initializeForm();
 
-  });
+  // });
   
   // Initialize Firebase
   // const firebaseConfig = {
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // const firebase= initializeApp(firebaseConfig);
   // const auth = firebase.auth();
   
-  document.addEventListener("DOMContentLoaded", () => {
+  // document.addEventListener("DOMContentLoaded", () => {
     const stateSelect = document.getElementById("state");
     
     // const stateSelect = document.getElementById('state');
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       option.textContent = stateObj.state;
       option.value = stateObj.state;
       stateSelect.appendChild(option);
-    });
+    // });
     
     // Optional: Add event listener to populate districts based on selected state
     stateSelect.addEventListener("change", () => {
