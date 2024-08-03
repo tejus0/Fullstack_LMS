@@ -357,7 +357,7 @@ const Table = () => {
           </Tooltip>
           <Tooltip title="Counsellors Report">
             <IconButton>
-              <Link to={`/showCounsellorReport`} target="_blank">
+              <Link to={`/showCounsellorReport`} state={{id}}>
               <FaPeopleGroup />
               </Link>
               {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}

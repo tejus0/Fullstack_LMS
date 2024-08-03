@@ -1880,23 +1880,120 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req , res)=>{
       console.log(admId,"id in  head")
       const counsellorData = await counsellorModal.findOne({_id: admId , who_am_i: "admissionHead"}).populate("assignedCounsellors");
 
-      const counsellorWithStudents = {};
-    // Iterate through each counsellor to find their specific students
-    for (const counsellor of counsellorData.assignedCounsellors) {
-      const counsellorId = counsellor._id;
-      const collegeWebsite = counsellor.college_website;
+      const counsellorWithStudents = [];
+    
+      for (const counsellor of counsellorData.assignedCounsellors) {
+        const counsellorId = counsellor._id;
+        const collegeWebsite = counsellor.college_website;
+  
+        // Fetch students assigned to this counsellor whose sourceId matches the college website
+        const students = await studentModal.find({
+          assignedCouns: counsellorId,
+          sourceId: collegeWebsite,
+        });
+  
+        let totalLeads = students.length;
+        let totalFollowUp3Leads = 0;
+        let paidCounselingCount = 0;
+        let associateCollegeCount = 0;
+        let totalFollowUp2Leads = 0;
+        let hotLeadCount = 0;
+        let coldLeadCount = 0;
+        let warmLeadCount = 0;
+        let totalFollowUp1Leads = 0;
+        let firstCallDoneCount = 0;
+        let disconnectCount = 0;
+        let notReceivedCount = 0;
+        let notReachableCount = 0;
+        let totalCallsDone = 0;
+        let totalRevenue = 0;
+        let totalAdmissions = 0;
+        
+  
+        // Process each student
+        students.forEach((student) => {
+          let hasPreBookingAmount = false;
+          const remarks = student.remarks || {};
 
-      // Fetch students assigned to this counsellor whose sourceId matches the college website
-      const students = await studentModal.find({
-        assignedCouns: counsellorId,
-        sourceId: collegeWebsite
-      });
+          if (
+            remarks.FollowUp1 && remarks.FollowUp1.length > 0 ||
+            remarks.FollowUp2 && remarks.FollowUp2.length > 0 ||
+            remarks.FollowUp3 && remarks.FollowUp3.length > 0
+          ) {
+            totalCallsDone++;
+          }
+  
+          // Check for FollowUp3 entries
+          if (remarks.FollowUp3 && remarks.FollowUp3.length > 0) {
+            totalFollowUp3Leads++;
 
-      counsellorWithStudents[counsellorId] = {
-        counsellor,
-        students
-      };
-    }
+            remarks.FollowUp3.forEach((followUp) => {
+              if (followUp.preBookingAmount) {
+                totalRevenue += parseFloat(followUp.preBookingAmount) || 0;
+              }
+
+              if(followUp.preBookingAmount > 0){
+                hasPreBookingAmount = true
+              }
+            });
+
+            if(hasPreBookingAmount){
+              totalAdmissions++;
+            }
+
+            const latestRemark = remarks.FollowUp3[remarks.FollowUp3.length - 1];
+            if (latestRemark.subject.includes("Paid Counselling")) {
+              paidCounselingCount++;
+            } else if (latestRemark.subject.includes("Associate College")) {
+              associateCollegeCount++;
+            }
+          } else if (remarks.FollowUp2 && remarks.FollowUp2.length > 0) {
+            totalFollowUp2Leads++;
+            const latestRemark = remarks.FollowUp2[remarks.FollowUp2.length - 1];
+            if (latestRemark.subject.includes("Hot Lead")) {
+              hotLeadCount++;
+            } else if (latestRemark.subject.includes("Cold")) {
+              coldLeadCount++;
+            } else if (latestRemark.subject.includes("Warm")) {
+              warmLeadCount++;
+            }
+          } else if (remarks.FollowUp1 && remarks.FollowUp1.length > 0) {
+            totalFollowUp1Leads++;
+            remarks.FollowUp1.forEach((remark) => {
+              if (remark.subject.includes("First Call Done")) {
+                firstCallDoneCount++;
+              } else if (remark.subject.includes("Disconnect")) {
+                disconnectCount++;
+              } else if (remark.subject.includes("Not Received")) {
+                notReceivedCount++;
+              } else if (remark.subject.includes("Not Reachable")) {
+                notReachableCount++;
+              }
+            });
+          }
+        });
+  
+        counsellorWithStudents.push({
+          counsellor,
+          students,
+          totalLeads,
+          totalFollowUp3Leads,
+          paidCounselingCount,
+          associateCollegeCount,
+          totalFollowUp2Leads,
+          hotLeadCount,
+          coldLeadCount,
+          warmLeadCount,
+          totalFollowUp1Leads,
+          firstCallDoneCount,
+          disconnectCount,
+          notReceivedCount,
+          notReachableCount,
+          totalCallsDone,
+          totalRevenue,
+          totalAdmissions,
+        });
+      }
 
     // Response
     return res.status(200).json({
