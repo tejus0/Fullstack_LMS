@@ -120,12 +120,21 @@ const FollowUpSteps = ({ studentId }) => {
     // Conditionally set additional dropdown and input based on selected option
     switch (option) {
       case 'Paid Counselling':
-        setAdditionalDropdown(paidCounselling);
+        let filteredPaidCounselling = paidCounselling;
+        if(notesByStage?.FollowUp3.length){
+          filteredPaidCounselling = paidCounselling.filter((item)=> item.option == notesByStage?.FollowUp3[0].additionalOption);
+        }
+        setAdditionalDropdown(filteredPaidCounselling);
         setShowAdditionalDropdown(true);
         break;
       case 'Associate College':
+        let filteredAssociateCollege = associateCollegeOptions;
+        console.log("Paid conselling" , paidCounselling)
+        if(notesByStage?.FollowUp3.length){
+          filteredAssociateCollege = associateCollegeOptions.filter((item)=> item.option == notesByStage?.FollowUp3[0].additionalOption);
+        }
         // Assuming options are fetched from an external JavaScript file
-        setAdditionalDropdown(associateCollegeOptions); // Replace with your actual options from an external file
+        setAdditionalDropdown(filteredAssociateCollege); // Replace with your actual options from an external file
         setShowAdditionalDropdown(true);
         break;
       default:
@@ -177,6 +186,16 @@ const FollowUpSteps = ({ studentId }) => {
       // console.log(studentId,preBookingAmount,"amount data client side");
       try {
         if (FolloupStage === "FollowUp3") {
+          if(!preBookingAmount){
+            toast.error("Please Enter Prebooking Amount")
+            throw new Error("Please Enter Prebooking Amount")
+          }else if(preBookingAmount > pendingAmount){
+            toast.error("Prebooking Amount Should Be Less Than Pending Amount");
+            throw new Error("Prebooking Amount Should Be Less Than Pending Amount")
+          }
+          if(!file || !UploadImage){
+            toast.error("Please Upload Fee Receipt")
+          }
           // console.log(SelectedOption,secondDropdown,preBookingAmount,"follow3 hai")
           await axios.post(`${baseUrl}/createFollowUp3`, {
             _id: studentId,
@@ -211,6 +230,8 @@ const FollowUpSteps = ({ studentId }) => {
         setSecondDropdown("")
         setPreBookingAmount("")
         setText("")
+        setfile(null)
+        setUploadImage(null)
         closeModal();
       } catch (error) {
         console.error("Error adding follow-up:", error);
@@ -238,6 +259,20 @@ const FollowUpSteps = ({ studentId }) => {
         setUploadImage(reader.result)
         setfile(file)
       }
+    }
+  }
+
+  const handleChangePreBookingAmount = (e)=>{
+    try {
+      let val = e.target.value;
+      let reg = /^\d*$/;
+      if(reg.test(val)){
+        setPreBookingAmount(val)
+      }else{
+        toast.error("Please Enter Valid Input")
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 
@@ -361,7 +396,7 @@ const FollowUpSteps = ({ studentId }) => {
             <input
               type="text"
               value={preBookingAmount}
-              onChange={(e) => setPreBookingAmount(e.target.value)}
+              onChange={(e) => handleChangePreBookingAmount(e)}
               className="w-[250px] p-3 border rounded-lg"
               placeholder="Enter pre-booking amount..."
             />
