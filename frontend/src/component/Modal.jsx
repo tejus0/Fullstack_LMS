@@ -258,7 +258,7 @@ const ModalComponent = ({ open, handleClose, title, data }) => {
                       <td className="px-6 py-4">
                         <Link
                           to={`/student/${user._id}`}
-                        //   state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
+                          state={{ id: `${user._id}`}}
                         >
                           <Button variant="contained">Edit</Button>
                         </Link>
