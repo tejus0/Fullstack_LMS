@@ -42,7 +42,7 @@ const ModalComponent = ({ open, handleClose, title, data }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={{...style, overflow: 'auto', maxHeight: '80vh'}}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {title}
         </Typography>
