@@ -1628,8 +1628,7 @@ export const getOfficeReport = async (req, res) => {
       } else if (hasFollowUp1) {
         totalFollowUp1++;
 
-        const latestFollowUp1 =
-          student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
+        const latestFollowUp1 = student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
         if (latestFollowUp1.subject.includes("Switch Off")) {
           switchOff++;
         } else if (latestFollowUp1.subject.includes("Not Reachable")) {
@@ -1649,7 +1648,7 @@ export const getOfficeReport = async (req, res) => {
     });
 
     const totalCounsellors = counsellors.length;
-    const conversionExpected = (hotLead/totalFollowUp2)*100.
+    const conversionExpected = Math.round((hotLead/totalFollowUp2)*100);
 
     return res.json({
       totalRevenue,
