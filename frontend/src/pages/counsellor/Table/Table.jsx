@@ -116,11 +116,19 @@ const Table = () => {
   const fetchData = async () => {
     //  this is wrong
 
-    const response = await axios
-      .get(`${baseUrl}/getCounsellorDataList/${id}`)
-      .catch((err) => {
-        console.log(err, "error");
-      });
+    const response = await toast.promise(
+      axios.get(`${baseUrl}/getCounsellorDataList/${id}`)
+        .catch((err) => {
+          console.log(err, "error");
+        }),
+
+        {
+          loading: "Fetching Data ...",
+          success: "Data fetched Successfully",
+          error: "Failed to fetch Data"
+        }
+
+    )
 
     // const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
     //   console.log(err, "error");
