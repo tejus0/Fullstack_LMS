@@ -596,31 +596,32 @@ export const assignAuto = async (req, res) => {
   const counsellors = await counsellorModal.find({ allLeads: 0 });
   const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-  const students = await studentModal.countDocuments({
+  const students = await studentModal.find({
     $and: [
-      { sourceId: { $not: { $regex: /office_rec/ } } }, // Exclude records with 'office_rec' in sourceId
+      {
+        sourceId: {
+          $not: {
+            $in: [
+              /off_rec/,
+              /localhost/,
+              
+            ]
+          }
+        }
+      },
+      {
+        sourceId: {
+          $ne: ""  // $ne (not equal) to an empty string
+        }
+      },
+      {
+        sourceId: {
+          $ne: null  // $ne (not equal) to an empty string
+        }
+      },
+       // Exclude records with 'office_rec' in sourceId
       { assignedCouns: "" }, // Filter records with empty 'assignedCouns'
-      { neetScore: { $regex: /^\d+$/, $lt: "350" } }
-      // {
-      //   $expr: {
-      //     $lt: [
-      //       {
-      //         $convert: {
-      //           input: {
-      //             $regexFind: {
-      //               input: "$neetScore",
-      //               regex: /(\d+)/ // Extract the first sequence of digits from neetScore
-      //             }
-      //           },
-      //           to: "int",
-      //           onError: 0, // Default to 0 if conversion fails
-      //           // onNull: 0  // Default to 0 if value is null or empty
-      //         }
-      //       },
-      //       350
-      //     ]
-      //   }
-      // }
+      {neetScore: { $regex: /^\d+$/, $lt: "350" }}
     ]
   });
 
@@ -629,42 +630,42 @@ export const assignAuto = async (req, res) => {
 
   console.log(students, "stude");
 
-  const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
-  let counsellorIndex = assignmentConfig
-    ? assignmentConfig.lastAssignedCounsellorIndex
-    : 0;
+  // const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
+  // let counsellorIndex = assignmentConfig
+  //   ? assignmentConfig.lastAssignedCounsellorIndex
+  //   : 0;
 
-  // Assign counsellor ids in a round-robin fashion
-  for (let i = 0; i < students.length; i++) {
-    const student = students[i];
-    const newCounsellorId = counsellorIds[counsellorIndex];
-    console.log(newCounsellorId, typeof newCounsellorId);
+  // // Assign counsellor ids in a round-robin fashion
+  // for (let i = 0; i < students.length; i++) {
+  //   const student = students[i];
+  //   const newCounsellorId = counsellorIds[counsellorIndex];
+  //   console.log(newCounsellorId, typeof newCounsellorId);
 
-    // if(student.assignedCouns == ""){
-    await studentModal.updateOne(
-      { _id: student._id },
-      { $set: { assignedCouns: newCounsellorId } }
-    );
-    // }
-    console.log(
-      "student id :- ",
-      student._id,
-      "assigned councellor:- ",
-      student.assignedCouns
-    );
-    counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
-  }
+  //   // if(student.assignedCouns == ""){
+  //   await studentModal.updateOne(
+  //     { _id: student._id },
+  //     { $set: { assignedCouns: newCounsellorId } }
+  //   );
+  //   // }
+  //   console.log(
+  //     "student id :- ",
+  //     student._id,
+  //     "assigned councellor:- ",
+  //     student.assignedCouns
+  //   );
+  //   counsellorIndex = (counsellorIndex + 1) % counsellorIds.length;
+  // }
 
-  // Update the last assigned counsellor index
-  await assignmentConfigModal.updateOne(
-    {},
-    { $set: { lastAssignedCounsellorIndex: counsellorIndex } },
-    { upsert: true }
-  );
+  // // Update the last assigned counsellor index
+  // await assignmentConfigModal.updateOne(
+  //   {},
+  //   { $set: { lastAssignedCounsellorIndex: counsellorIndex } },
+  //   { upsert: true }
+  // );
 
-  console.log("Updated students with counsellor ids successfully.");
-  // return res.status(200).json(students);
-  return res.status(200).json(counsellorIds);
+  // console.log("Updated students with counsellor ids successfully.");
+  return res.status(200).json(students);
+  // return res.status(200).json(counsellorIds);
 };
 
 export const getCounsellorInfo = async (req, res) => {
@@ -1062,7 +1063,7 @@ export const getCounsellorsWithStudents = async (req, res) => {
 
 export const getVisitLeads = async (req, res) => {
   const visitedStud = await studentModal.find({
-    sourceId: { $regex: /office_rec/ },
+    sourceId: { $regex: /off_rec/ },
   });
   res.json(visitedStud);
 };

@@ -280,7 +280,7 @@ const OrganicTableLeads = () => {
     console.log(rangeStart, "start", rangeEnd, "end")
     // const endIndex = rangeEnd ? filteredUsers.length - 1 : parseInt(rangeEnd, 10);
 
-    if (rangeEnd >= filteredUsers.length) {
+    if (rangeEnd > filteredUsers.length) {
       toast.error("End value exceeds the maximum limit of the table.");
       return;
     }

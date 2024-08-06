@@ -13,6 +13,8 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import FilterDrawer from "../../component/FilterDrawer";
 import { toast } from "react-hot-toast";
 import Modal from '@mui/material/Modal';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { CircularProgress, Backdrop } from '@mui/material';
 // import TextField from "@mui/material";
 // import MenuItem from "@mui/material";
 // import Select from "@mui/material";
@@ -84,7 +86,8 @@ const ShowUnassignedLeads = () => {
   const [allCouncellors, setAllCouncellors] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
+  const [isOpen, setIsOpen] = useState(false);
+  
 
 
   const handleRowSelect = (rowId) => {
@@ -124,23 +127,23 @@ const ShowUnassignedLeads = () => {
   };
 
   useEffect(() => {
-    console.log(page, "unassigned page in all leads");
-
+    
     const fetchData = async () => {
       //  this is wrong
-
       //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
-      //     console.log(err, "error");
-      //   });
-      const response = await axios.get(`${baseUrl}/getUnassignedLeads`).catch((err) => {
-        console.log(err, "error");
-      });
-      console.log(response.data, "unassigned leads");
-      setUsers(response.data.data);
-      setfilter(response.data.data);
+        //     console.log(err, "error");
+        //   });
+        const response = await axios.get(`${baseUrl}/getUnassignedLeads`).catch((err) => {
+          console.log(err, "error");
+        });
+        console.log(response.data, "unassigned leads");
+        setUsers(response.data.data);
+        setfilter(response.data.data);
+        console.log(users.length, "unassigned page in all leads");
     };
 
     console.log(users);
+
 
     const fetchCounsellors = async () => {
       try {
@@ -314,6 +317,50 @@ const ShowUnassignedLeads = () => {
     setModalOpen(false);
   };
 
+  const handleOpen = () => {
+    
+    setIsOpen(true);
+    
+  };
+  
+  
+  const handleClose = () => {
+    
+    setIsOpen(false);
+    
+  };
+  
+  
+  const handleConfirm = async() => {
+
+    // Set loading to true when API call starts
+    setLoading(true);
+    
+    // Call API to distribute fresh leads
+    
+    try {
+      const response = await axios.post(`${baseUrl}/autoassign`);
+      
+      // Handle successful response
+      if (response.status === 200) {
+        toast.success('Leads successfully distributed.');
+
+      } else {
+        toast.error('Failed to distribute leads.');
+
+      }
+    } catch (error) {
+      // Handle error response
+      console.error('Error distributing leads:', error);
+      toast.error('An error occurred while distributing leads.');
+
+    }finally {
+      // Always turn off loading animation after API call is complete
+      setLoading(false);
+      handleClose();
+    }
+  };
+
 
   
 
@@ -386,6 +433,43 @@ const ShowUnassignedLeads = () => {
           </div>
         </div>
       )}
+      <div>
+
+<Button variant="contained" color="error" onClick={handleOpen}>
+
+  Assign Fresh Leads
+
+</Button>
+
+{/* Loading Spinner */}
+<Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
+<Dialog open={isOpen} onClose={handleClose}>
+
+  <DialogTitle>Assign Fresh Leads</DialogTitle>
+
+  <DialogContent>
+
+    This will distribute equally all the {users.length} fresh unassigned leads that are not assigned to {allCouncellors.length} counsellors. Are you sure?
+
+  </DialogContent>
+
+  <DialogActions>
+
+    <Button onClick={handleClose}>No</Button>
+
+    <Button onClick={handleConfirm}>Yes</Button>
+
+  </DialogActions>
+
+</Dialog>
+
+</div>
 
 
       {/* new table */}
@@ -394,18 +478,6 @@ const ShowUnassignedLeads = () => {
 
 
           <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-all-search"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  checked={isAllChecked}
-                  onChange={handleSelectAll}
-                />
-                <label htmlFor="checkbox-all-search" className="sr-only">checkbox</label>
-              </div>
-            </th>
             <th scope="col" className="px-6 py-3">S. No.</th>
             {columns.find(col => col.visible && col.label === "name") && <th scope="col" className="px-6 py-3">Name</th>}
             {columns.find(col => col.visible && col.label === "registeredOn") && <th scope="col" className="px-6 py-3">
@@ -533,18 +605,7 @@ const ShowUnassignedLeads = () => {
         <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
           {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
             <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input
-                    id={`checkbox-table-${user._id}`}
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    checked={selectedRows.includes(user._id)}
-                    onChange={() => handleRowSelect(user._id)}
-                  />
-                  <label htmlFor={`checkbox-table-${user._id}`} className="sr-only">checkbox</label>
-                </div>
-              </td>
+              
               <td className="w-4 p-4">
                 <div className="flex items-center">
                   {index + 1}
@@ -592,15 +653,6 @@ const ShowUnassignedLeads = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         disabled={paginationDisabled}
       />
-
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setModalOpen(true)}
-        className="mb-4"
-      >
-        Assign Leads to Counsellors
-      </Button>
     </div>
   )
 }

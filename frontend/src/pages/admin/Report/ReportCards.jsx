@@ -51,6 +51,7 @@ const ReportCards = () => {
 
         )
         setAllCounsData(response.data);
+        console.log(response.data,"all couns data in admin report table")
       } catch (err) {
         console.log(err, "error");
       }
@@ -67,16 +68,23 @@ const ReportCards = () => {
     item.counsellor.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  console.log(filteredData);
+
   const countColdCallsByCounsellor = (students) => {
     let totalColdCalls = 0;
     students.forEach((student) => {
-      if (student.remarks.FollowUp2 && student.remarks.FollowUp2.length) {
-        const lastFollowUp =
-          student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
-        if (lastFollowUp && lastFollowUp.subject.includes("Cold Call Done")) {
-          totalColdCalls += 1;
+      if (student.remarks && student.remarks.FollowUp2.length>0) {
+        if(student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Cold")){
+          totalColdCalls+=1;
         }
       }
+      // if (student.remarks.FollowUp2 && student.remarks.FollowUp2.length>0) {
+      //   const lastFollowUp =
+      //     student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
+      //   if (lastFollowUp && lastFollowUp.subject.includes("Cold Call Done")) {
+      //     totalColdCalls += 1;
+      //   }
+      // }
     });
     return totalColdCalls;
   };
@@ -84,17 +92,21 @@ const ReportCards = () => {
   const countHotCallsByCounsellor = (students) => {
     let totalHotLeads = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2) {
-        const hotCallCount = student.remarks.FollowUp2.reduce(
-          (count, followup) => {
-            if (followup.subject.includes("Lead")) {
-              return count + 1;
-            }
-            return count;
-          },
-          0
-        );
-        totalHotLeads += hotCallCount;
+      if (student.remarks && student.remarks.FollowUp2.length>0) {
+        if(student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Hot")){
+          totalHotLeads+=1;
+        }
+        // const hotCallCount = student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Hot")
+        // const hotCallCount = student.remarks.FollowUp2.reduce(
+        //   (count, followup) => {
+        //     if (followup.subject.includes("Lead")) {
+        //       return count + 1;
+        //     }
+        //     return count;
+        //   },
+        //   0
+        // );
+        // totalHotLeads += hotCallCount;
       }
     });
     return totalHotLeads;
@@ -103,17 +115,20 @@ const ReportCards = () => {
   const countWarmCallsByCounsellor = (students) => {
     let totalWarmCalls = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2) {
-        const warmCallCount = student.remarks.FollowUp2.reduce(
-          (count, followup) => {
-            if (followup.subject.includes("Warm")) {
-              return count + 1;
-            }
-            return count;
-          },
-          0
-        );
-        totalWarmCalls += warmCallCount;
+      if (student.remarks && student.remarks.FollowUp2.length>0) {
+        if(student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Warm")){
+          totalWarmCalls+=1;
+        }
+        // const warmCallCount = student.remarks.FollowUp2.reduce(
+        //   (count, followup) => {
+        //     if (followup.subject.includes("Warm")) {
+        //       return count + 1;
+        //     }
+        //     return count;
+        //   },
+        //   0
+        // );
+        // totalWarmCalls += warmCallCount;
       }
     });
     return totalWarmCalls;
@@ -137,34 +152,40 @@ const ReportCards = () => {
         student.remarks.FollowUp1 &&
         student.remarks.FollowUp1.length > 0
       ) {
-        const totalCallsCount = student.remarks.FollowUp1.reduce(
-          (count, followup) => {
-            if (followup.subject.includes("First")) {
-              return count + 1;
-            }
-            return count;
-          },
-          0
-        );
-        totalCallsDone += totalCallsCount;
+        if(student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1].subject.includes("First")){
+          totalCallsDone+=1;
+        }
+        // const totalCallsCount = student.remarks.FollowUp1.reduce(
+        //   (count, followup) => {
+        //     if (followup.subject.includes("First")) {
+        //       return count + 1;
+        //     }
+        //     return count;
+        //   },
+        //   0
+        // );
+        // totalCallsDone += totalCallsCount;
       }
     });
     return totalCallsDone;
   };
 
-  const noidaCounsData = filteredData.filter((item) =>
-    item.counsellor.counsellor_id.toLowerCase().includes("n")
+  const noidaCounsData = filteredData.filter((item) => {
+    return item.counsellor.counsellor_id.charAt(2).toLowerCase() === "n"
+  }
   );
-  const kanpurCounsData = filteredData.filter((item) =>
-    item.counsellor.counsellor_id.toLowerCase().includes("k")
-  );
+  const kanpurCounsData = filteredData.filter((item) =>{
+    
+    return item.counsellor.counsellor_id.charAt(2).toLowerCase() == 'k'
+  }
+);
 
-  useEffect(() => {
-    topPerformer();
-  }, []);
+useEffect(() => {
+  topPerformer();
+}, []);
 
-  const topPerformer = async () => {
-    try {
+const topPerformer = async () => {
+  try {
       setLoading(true);
       const { data } = await axios.get(`${baseUrl}/getTopPerformer`);
       const totalPerformance = data.totalPerformance;

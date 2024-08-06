@@ -35,6 +35,9 @@ const TableComponent = ({ data, title, leadsUnlocked, totalCallsDone, countHotCa
         <Table>
           <TableHead>
             <TableRow>
+            <TableCell>
+                <Typography variant="h6">S. No.</Typography>
+              </TableCell>
               <TableCell>
                 <Typography variant="h6">Name</Typography>
               </TableCell>
@@ -62,8 +65,9 @@ const TableComponent = ({ data, title, leadsUnlocked, totalCallsDone, countHotCa
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item) => (
+            {data.map((item,index) => (
               <TableRow key={item.counsellor.counsellor_id}>
+                <TableCell align="left">{index+1}</TableCell>
                 <TableCell align="left">{item.counsellor.name}</TableCell>
                 <TableCell align="left">{item.counsellor.mobile}</TableCell>
                 <TableCell align="left">{item.counsellor.email}</TableCell>

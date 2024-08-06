@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { json, Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TablePagination from "@mui/material/TablePagination";
 import Button from "@mui/material/Button";
@@ -16,17 +16,20 @@ import OrganicTableLeads from "./OrganicTableLeads";
 import { MdCloudUpload } from "react-icons/md";
 
 import { FaSort, FaChevronDown, FaChevronUp,FaPowerOff } from "react-icons/fa";
-import { RiLogoutBoxLine } from "react-icons/ri";
 import * as XLSX from 'xlsx'; 
 import toast from "react-hot-toast";
 import ShowUnassignedLeads from "./ShowUnassignedLeads";
 import { requiredFields } from "../../data/requiredFieldBulk";
 import BulkUpload from "../../component/BulkUpload";
 
+
+
 const ShowAllleads = () => {
-
+  
+  
+  
   // const dispatch = useDispatch();
-
+  
   const [columns, setColumns] = useState([
     { visible: true, label: "name" },
     { visible: true, label: "registeredOn" },
@@ -37,74 +40,78 @@ const ShowAllleads = () => {
     { visible: true, label: "leadStatus" },
     { visible: true, label: "counsillor" },
   ]);
-
+  
   const handleSelectRow = (key) => {
     setColumns((prevColumns) =>
       prevColumns.map((col) =>
         col.label === key ? { ...col, visible: !col.visible } : col
-      )
-    );
-  };
+  )
+);
+};
 
-  const componentToPdf = useRef();
-  const baseUrl = import.meta.env.VITE_API;
-  const location = useLocation();
-  const [users, setUsers] = useState([]);
+const componentToPdf = useRef();
+const baseUrl = import.meta.env.VITE_API;
+const location = useLocation();
+const [users, setUsers] = useState([]);
   const [allUsers , setAllUsers] = useState([])
-  const [sortConfig, setSortConfig] = useState({
-    key: "createdAt",
-    direction: "asc",
-  });
-  const [page, setPage] = useState(location.state?.page || 0);
-  // console.log(page);
-  const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
-  const navigate = useNavigate();
+const [sortConfig, setSortConfig] = useState({
+  key: "createdAt",
+  direction: "asc",
+});
+const [page, setPage] = useState(location.state?.page || 0);
+// console.log(page);
+const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page
+const navigate = useNavigate();
 
-  const [search, setsearch] = useState("");
-  const [SearchBy, setSearchBy] = useState("name");
-  const [filter, setfilter] = useState([]);
-  const [date, setDate] = useState({
-    startDate: "",
-    endDate: ""
-  })
+const [search, setsearch] = useState("");
+const [SearchBy, setSearchBy] = useState("name");
+const [filter, setfilter] = useState([]);
+const [date, setDate] = useState({
+  startDate: "",
+  endDate: ""
+})
 
-  const [leadStatusFilter, setLeadStatusFilter] = useState("All");
-  const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] =
-    useState(false);
+const [leadStatusFilter, setLeadStatusFilter] = useState("All");
+const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] =
+useState(false);
 
-  const [counsellors, setCounsellors] = useState([]);
+const [counsellors, setCounsellors] = useState([]);
 
-  const [showNewTable, setShowNewTable] = useState(false);
+const [showNewTable, setShowNewTable] = useState(false);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [rangeStart, setRangeStart] = useState('');
-  const [rangeEnd, setRangeEnd] = useState('');
-  const [selectedCounsellor, setSelectedCounsellor] = useState('');
+const [modalOpen, setModalOpen] = useState(false);
+const [rangeStart, setRangeStart] = useState('');
+const [rangeEnd, setRangeEnd] = useState('');
+const [selectedCounsellor, setSelectedCounsellor] = useState('');
 
-  const [allCouncellors, setAllCouncellors] = useState([]);
-  const [loading, setLoading] = useState(true);
+const [allCouncellors, setAllCouncellors] = useState([]);
+const [loading, setLoading] = useState(true);
 
-  const [showUnassignedTable, setShowUnassignedTable] = useState(false)
+
+const [showUnassignedTable, setShowUnassignedTable] = useState(false)
   const [bulkOpen, setbulkOpen] = useState(false)
-  const handleToggleTable = () => {
-    setShowNewTable(!showNewTable);
-  };
+  // const [unAssignedUsersLength, setUnAssignedUsersLength] = useState(0)
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const dateOptions = { year: "numeric", month: "long", day: "numeric" };
-    const timeOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
+const handleToggleTable = () => {
+  setShowNewTable(!showNewTable);
+};
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const dateOptions = { year: "numeric", month: "long", day: "numeric" };
+  const timeOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
     };
     const formattedDate = date.toLocaleDateString(undefined, dateOptions);
     const formattedTime = date.toLocaleTimeString(undefined, timeOptions);
     return `${formattedDate}, ${formattedTime}`;
   };
-
+  
   useEffect(() => {
+    console.log(page, "page in all leads");
 
     const fetchData = async () => {
       //  this is wrong
@@ -112,20 +119,10 @@ const ShowAllleads = () => {
       //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
       //     console.log(err, "error");
       //   });
-      const response = await toast.promise(
-        axios.get(`${baseUrl}/dashboard`).catch((err) => {
-          console.log(err, "error");
-        }),
-
-        {
-          loading: "Fetching Data ...",
-          success: "Data fetched Successfully",
-          error: "Failed to fetch Data"
-        }
-
-      )
+      const response = await axios.get(`${baseUrl}/dashboard`).catch((err) => {
+        console.log(err, "error");
+      });
       setUsers(response.data.data);
-      setAllUsers(response.data.data);
       setfilter(response.data.data);
     };
 
@@ -244,6 +241,18 @@ const ShowAllleads = () => {
     }
   };
 
+  // const cleanDate = (date) => {
+  //   const originalDate = new Date(date);
+  //   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  //   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  //   const day = days[originalDate.getUTCDay()];
+  //   const month = months[originalDate.getUTCMonth()];
+  //   const dateNum = originalDate.getUTCDate();
+  //   const year = originalDate.getUTCFullYear();
+
+  //   return `${day} ${month} ${dateNum} ${year}`;
+  // }
 
   const DateSorting = async () => {
     try {
@@ -279,16 +288,13 @@ const ShowAllleads = () => {
       });
     }
   }, [sortedUsers, leadStatusFilter]);
-  let paginatedUsers;
-  if(search != ''){
-    paginatedUsers = filteredUsers;
-  }else{
-    paginatedUsers = allUsers.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
-    );
-  }
 
+  const paginatedUsers = filteredUsers.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  
   const paginationDisabled = paginatedUsers.some(
     (item) => item.remarks.length === 20
   );
@@ -303,127 +309,53 @@ const ShowAllleads = () => {
     setDrawerOpen(open);
   };
 
-  // const generatePDF = useReactToPrint({
-  //   content: () => componentToPdf.current,
-  //   documentTitle: "UserData",
-  //   onAfterPrint: ()=>alert("Data saved in PDF")
-  // });
-  // console.log(users,"uders in all leads"  );
+// const generatePDF = useReactToPrint({
+//   content: () => componentToPdf.current,
+//   documentTitle: "UserData",
+//   onAfterPrint: ()=>alert("Data saved in PDF")
+// });
+// console.log(users,"uders in all leads"  );
 
   const triggerFileInput = () => {
-    setbulkOpen(!bulkOpen)
-    // document.getElementById("file-input").click();
+    document.getElementById("file-input").click();
   };
 
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
-
     if (file) {
       const reader = new FileReader();
-
       reader.onload = async (e) => {
-
-        const ab = e.target.result;
-        const workbook = XLSX.read(ab, { type: 'array' });
-
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
         const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet);
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        if (jsonData.length === 0) {
-          toast.error("The Sheet you uploaded don't have values");
-        }
-        else {
-          const uploadedField = Object.keys(jsonData[0])
+        try {
+          const response = await toast.promise(
+            axios.post(`${baseUrl}/insertFromSheet`, jsonData, {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }),
 
-          const allFieldPresent = requiredFields.every(field => uploadedField.includes(field))
-          const noExtraFields = uploadedField.every(field => requiredFields.includes(field))
-
-          if (!allFieldPresent || !noExtraFields) {
-            toast.error("Sheet you uploaded don't have required fields")
-          }
-          else {
-            let isIncorrect = false
-            const fieldsToCheckType = ['contactNumber', 'whatsappNumber', 'neetScore']
-            jsonData.forEach((elem) => (
-              fieldsToCheckType.forEach((item) => {
-                if (typeof elem[item] === 'string') {
-                  return isIncorrect = true
-                }
-              })
-            ))
-
-            if (isIncorrect) {
-              toast.error("Some data is not in correct format")
+            {
+              loading: "File is Uploading ...",
+              success: "File Uploaded Successfully",
+              error: "Failed to upload file",
             }
-            else {
-              let arr = []
-              jsonData.forEach(row => {
-                fieldsToCheckType.forEach(field => {
-                  row[field] = String(row[field]);
-                });
-                arr.push(row)
-              });
-              try {
-                await toast.promise(
-                  axios.post(`${baseUrl}/insertFromSheet`, jsonData, {
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  }),
+            // console.log("File uploaded and data inserted successfully", response.data);
 
-                  {
-                    loading: "File is Uploading ...",
-                    success: "File Uploaded Successfully",
-                    error: "Failed to upload file",
-                  }
-
-                )
-              } catch (error) {
-                console.error("Error uploading file and inserting data", error);
-              }
-            }
-
-
-
-          }
+          )
+        } catch (error) {
+          console.error("Error uploading file and inserting data", error);
         }
       };
-
       reader.readAsArrayBuffer(file);
     }
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onload = async (e) => {
-    //     const data = new Uint8Array(e.target.result);
-    //     const workbook = XLSX.read(data, { type: "array" });
-    //     const sheetName = workbook.SheetNames[0];
-    //     const worksheet = workbook.Sheets[sheetName];
-    //     const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-    //     try {
-    //       const response = await toast.promise(
-    //         axios.post(`${baseUrl}/insertFromSheet`, jsonData, {
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         }),
-
-    //         {
-    //           loading: "File is Uploading ...",
-    //           success: "File Uploaded Successfully",
-    //           error: "Failed to upload file",
-    //         }
-
-    //       )
-    //     } catch (error) {
-    //       console.error("Error uploading file and inserting data", error);
-    //     }
-    //   };
-    //   reader.readAsArrayBuffer(file);
-    // }
   };
+
 
   const handleAssignLeads = async () => {
     console.log(rangeStart, "start", rangeEnd, "end")
@@ -466,10 +398,10 @@ const ShowAllleads = () => {
     <div>
       <Box className="flex">
         <Navbar />
-
+         
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
           <div className="flex justify-end gap-12 items-center">
-           <div>
+           {/* <div>
         <Button
         variant="contained"
         color="primary"
@@ -478,17 +410,8 @@ const ShowAllleads = () => {
       >
         Assign Leads to Counsellors
       </Button>
-        </div>
-            {/* <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleToggleTable}
-                style={{ marginBottom: '16px' }}
-              >
-                {showNewTable ? 'Show Old Table' : 'Show Visits'}
-              </Button>
-            </div> */}
+        </div> */}
+        
             <div className="flex justify-center mb-3 ">
               <select
                 value={SearchBy}
@@ -511,21 +434,19 @@ const ShowAllleads = () => {
             </div>
             <div className="flex justify-end items-center">
               <MdCloudUpload fontSize={30} className="cursor-pointer" title="File Upload" onClick={triggerFileInput} />
-              <BulkUpload open={bulkOpen} onClose={triggerFileInput} />
-              {/* < input
+              <input
                 type="file"
                 id="file-input"
-                accept=".xlsx, .xls"
                 style={{ display: "none" }}
                 onChange={handleFileUpload}
-              /> */}
+              />
               <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
-                  <RiLogoutBoxLine />
+                  <FaPowerOff />
                 </IconButton>
               </Tooltip>
 
-              <div title="Filter">
+              <div>
                 <IconButton onClick={toggleDrawer(true)}>
                   <FilterAltIcon />
                 </IconButton>
@@ -545,17 +466,17 @@ const ShowAllleads = () => {
                   showNewTable={showNewTable}
                   setShowNewTable={setShowNewTable}
                   setShowUnassignedTable={setShowUnassignedTable}
-isAdmin= {true}                
+                  isAdmin= {true}                
                 />
               </div>
             </div>
           </div>
 
-          {showUnassignedTable ? <ShowUnassignedLeads /> : (!showNewTable ? <div>
+          {showUnassignedTable ? <ShowUnassignedLeads  /> : (!showNewTable ? <div>
             {/* Modal */}
             {modalOpen && (
-              <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-[#0d131fad]" onClick={()=>setModalOpen(false)}>
-                <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e)=>e.stopPropagation()}>
+              <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="bg-white p-6 rounded shadow-lg w-96">
                   <h2 className="text-lg font-semibold mb-4">Assign Leads to Counsellors</h2>
                   <div className="mb-4">
                     <label htmlFor="rangeStart" className="block text-sm font-medium text-gray-700">Start Index:</label>
@@ -583,7 +504,7 @@ isAdmin= {true}
                       id="dropdown"
                       value={selectedCounsellor}
                       onChange={(e) => setSelectedCounsellor(e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
                       disabled={loading}
                     >
                       <option value="" disabled>Select an option</option>
@@ -595,7 +516,7 @@ isAdmin= {true}
                     </select>
                     {loading && <p>Loading options...</p>}
                   </div>
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-end">
                     <Button
                       variant="contained"
                       color="primary"
@@ -720,106 +641,106 @@ isAdmin= {true}
                       onClick={() => handleSort("DateToVisit")}
                       style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                     /> */}
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "leadStatus"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex relative gap-2 items-center">
-                          Lead Status
-                          {isLeadStatusDropdownOpen ? (
-                            <FaChevronUp
-                              onClick={toggleLeadStatusDropdown}
-                              style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                            // </div>
-                            />
-                          ) : (
-                            <FaChevronDown
-                              onClick={toggleLeadStatusDropdown}
-                              style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                            />
-                          )}
-                          {isLeadStatusDropdownOpen && (
-                            <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("All");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                All
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Hot Lead");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Hot Leads
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Warm");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Warm
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Cold Call Done");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Cold Call Done
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Paid Counselling");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Paid Counselling
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Associate College");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Associate College
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </th>
-                    )}
-                  <th scope="col" className="px-6 py-3">
-                    <div className="flex gap-2 items-center">
-                      Update Status
-                      {/* <FaSort
-                        onClick={() => handleSort("DateToVisit")}
-                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                      /> */}
-                    </div></th>
-                </tr>
-              </thead>
-              <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
-                {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
-                  <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="w-4 p-4">
-                      <div className="flex items-center">
-                        {index + 1}
                       </div>
-                    </td>
+                    </th>
+                  )}
+                {columns.find(
+                  (col) => col.visible && col.label === "leadStatus"
+                ) && (
+                    <th scope="col" className="px-6 py-3">
+                      <div className="flex relative gap-2 items-center">
+                        Lead Status
+                        {isLeadStatusDropdownOpen ? (
+                          <FaChevronUp
+                            onClick={toggleLeadStatusDropdown}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          // </div>
+                          />
+                        ) : (
+                          <FaChevronDown
+                            onClick={toggleLeadStatusDropdown}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          />
+                        )}
+                        {isLeadStatusDropdownOpen && (
+                          <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("All");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              All
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("Hot Lead");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Hot Leads
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("Warm");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Warm
+                            </button>
+                            <button
+                              onClick={() => {
+                                setLeadStatusFilter("Cold Call Done");
+                                toggleLeadStatusDropdown();
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            >
+                              Cold Call Done
+                            </button>
+                            <button
+                        onClick={() => {
+                          setLeadStatusFilter("Paid Counselling");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Paid Counselling
+                      </button>
+                      <button
+                        onClick={() => {
+                          setLeadStatusFilter("Associate College");
+                          toggleLeadStatusDropdown();
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Associate College
+                      </button>
+                    </div>
+                        )}
+                      </div>
+                    </th>
+                  )}
+                <th scope="col" className="px-6 py-3">
+                  <div className="flex gap-2 items-center">
+                    Update Status
+                    {/* <FaSort
+                      onClick={() => handleSort("DateToVisit")}
+                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                    /> */}
+                  </div></th>
+              </tr>
+            </thead>
+            <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
+              {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
+                <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                  <td className="w-4 p-4">
+                    <div className="flex items-center">
+                      {index + 1}
+                    </div>
+                  </td>
 
                     {columns.find(
                       (col) => col.visible && col.label === "name"
@@ -865,48 +786,48 @@ isAdmin= {true}
                                     <td className="px-6 py-4">{user.courseSelected}</td>
                                     <td className="px-6 py-4">{user.contactNumber}</td>
                                      */}
-                    {columns.find(col => col.visible && col.label === 'counsillor') && <td className="px-6 py-4">{counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}</td>}
-                    {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
-                      ? user.remarks.FollowUp3[
-                        user.remarks.FollowUp3.length - 1
+                  {columns.find(col => col.visible && col.label === 'counsillor') && <td className="px-6 py-4">{counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}</td>}
+                  {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
+                    ? user.remarks.FollowUp3[
+                      user.remarks.FollowUp3.length - 1
+                    ].subject
+                    : user.remarks.FollowUp2.length > 0
+                      ? user.remarks.FollowUp2[
+                        user.remarks.FollowUp2.length - 1
                       ].subject
-                      : user.remarks.FollowUp2.length > 0
-                        ? user.remarks.FollowUp2[
-                          user.remarks.FollowUp2.length - 1
+                      : user.remarks.FollowUp1.length > 0
+                        ? user.remarks.FollowUp1[
+                          user.remarks.FollowUp1.length - 1
                         ].subject
-                        : user.remarks.FollowUp1.length > 0
-                          ? user.remarks.FollowUp1[
-                            user.remarks.FollowUp1.length - 1
-                          ].subject
-                          : "No Remarks "}</td>}
-                    <td className="px-6 py-4">
-                      <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page, origin: 'showAllLeads' }}>
-                        <Button variant="contained">
-                          Edit
-                        </Button>
-                      </Link>
-                    </td>
-                  </tr>
-                )) : <h1>No Data to Show</h1>}
-              </tbody>
-            </table>
-            <TablePagination
-              component="div"
-              count={sortedUsers.length}
-              page={page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              disabled={paginationDisabled}
-            />
-
-          </div> : <OrganicTableLeads />)}
-          {/* <div>
+                      : "No Remarks "}</td>}
+                                    <td className="px-6 py-4">
+                                            <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page , origin: 'showAllLeads'}}>
+                                              <Button variant="contained">
+                                                Edit 
+                                              </Button>
+                                            </Link> 
+                                    </td>
+                                </tr>
+                            )): <h1>No Data to Show</h1> }
+                        </tbody>
+                    </table>
+                    <TablePagination
+                        component="div"
+                        count={sortedUsers.length}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        disabled={paginationDisabled}
+                    />
+                   
+                   </div>:<OrganicTableLeads/>)}
+        {/* <div>
         <Button variant="contained" onClick={generatePDF}>
           PDF
         </Button>
         </div> */}
-
+        
         </div>
       </Box>
     </div>
