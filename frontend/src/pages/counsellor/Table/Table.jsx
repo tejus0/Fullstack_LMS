@@ -276,7 +276,7 @@ const Table = () => {
   return (
     <div>
       <Box className="flex">
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-gray-200">
           <Tooltip title="Logout">
             <IconButton onClick={handleLogout}>
               <LogoutIcon />
@@ -302,12 +302,13 @@ const Table = () => {
           </Tooltip>
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
-          <div className="flex justify-end">
+          <div className="flex justify-end items-center gap-12">
             <Link to={`/counsellorDashboard/${id}`}>
               <Button variant="contained" color="primary" className="mb-4">
                 See Report
               </Button>
             </Link>
+            <div className="flex">
             <select
               value={SearchBy}
               onChange={(e) => setSearchBy(e.target.value)}
@@ -326,6 +327,7 @@ const Table = () => {
               value={search}
               onChange={handelChange}
             />
+            </div>
             <div>
                 <IconButton onClick={toggleDrawer(true)}>
                   <FilterAltIcon />
@@ -351,7 +353,7 @@ const Table = () => {
                 />
               </div>
           </div>
-          <div className=" flex align-middle">
+          <div className=" flex align-middle gap-2">
           <Button
         onClick={fetchData}
         disabled={activeButton === 'assigned'}
@@ -364,11 +366,11 @@ const Table = () => {
       >
         College Leads
       </Button>
-          <h2>{activeButton === 'assigned' ? 'Assigned Leads' : 'College Leads'}</h2>
+          <h2 className="bg-gray-400 flex items-center text-white p-2 rounded-md">{activeButton === 'assigned' ? 'Assigned Leads' : 'College Leads'}</h2>
           </div>
 
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   S. No.

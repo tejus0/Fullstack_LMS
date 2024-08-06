@@ -15,8 +15,9 @@ import { useReactToPrint } from "react-to-print";
 import OrganicTableLeads from "./OrganicTableLeads";
 import { MdCloudUpload } from "react-icons/md";
 
-import { FaSort, FaChevronDown, FaChevronUp, FaPowerOff } from "react-icons/fa";
-import * as XLSX from 'xlsx';
+import { FaSort, FaChevronDown, FaChevronUp,FaPowerOff } from "react-icons/fa";
+import { RiLogoutBoxLine } from "react-icons/ri";
+import * as XLSX from 'xlsx'; 
 import toast from "react-hot-toast";
 import ShowUnassignedLeads from "./ShowUnassignedLeads";
 import { requiredFields } from "../../data/requiredFieldBulk";
@@ -458,17 +459,17 @@ const ShowAllleads = () => {
         <Navbar />
 
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
-          <div className="flex justify-end">
-            <div>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setModalOpen(true)}
-                className="mb-4"
-              >
-                Assign Leads to Counsellors
-              </Button>
-            </div>
+          <div className="flex justify-end gap-12 items-center">
+           <div>
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+        className="mb-4"
+      >
+        Assign Leads to Counsellors
+      </Button>
+        </div>
             {/* <div>
               <Button
                 variant="contained"
@@ -511,11 +512,11 @@ const ShowAllleads = () => {
               /> */}
               <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
-                  <FaPowerOff />
+                  <RiLogoutBoxLine />
                 </IconButton>
               </Tooltip>
 
-              <div>
+              <div title="Filter">
                 <IconButton onClick={toggleDrawer(true)}>
                   <FilterAltIcon />
                 </IconButton>
@@ -544,8 +545,8 @@ isAdmin= {true}
           {showUnassignedTable ? <ShowUnassignedLeads /> : (!showNewTable ? <div>
             {/* Modal */}
             {modalOpen && (
-              <div className="fixed inset-0 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded shadow-lg w-96">
+              <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-[#0d131fad]" onClick={()=>setModalOpen(false)}>
+                <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e)=>e.stopPropagation()}>
                   <h2 className="text-lg font-semibold mb-4">Assign Leads to Counsellors</h2>
                   <div className="mb-4">
                     <label htmlFor="rangeStart" className="block text-sm font-medium text-gray-700">Start Index:</label>
@@ -573,7 +574,7 @@ isAdmin= {true}
                       id="dropdown"
                       value={selectedCounsellor}
                       onChange={(e) => setSelectedCounsellor(e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                       disabled={loading}
                     >
                       <option value="" disabled>Select an option</option>
@@ -585,7 +586,7 @@ isAdmin= {true}
                     </select>
                     {loading && <p>Loading options...</p>}
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-end gap-2">
                     <Button
                       variant="contained"
                       color="primary"

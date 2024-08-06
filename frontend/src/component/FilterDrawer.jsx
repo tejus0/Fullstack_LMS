@@ -35,8 +35,8 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
         <div className='p-4'>
             <List>
                 <ListItem className='flex flex-col gap-5 justify-start items-start'>
-                    <h1>Select Fields</h1>
-                    <div className='grid grid-cols-3 gap-3'>
+                    <h1 className='bg-gray-200 p-2 rounded-sm font-semibold'>Select Fields</h1>
+                    <div className='grid grid-cols-4 gap-4'>
                         {columns.map((pro, i) => (
                             <div key={i} className='flex gap-2'>
                                 <input
@@ -44,8 +44,9 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                                     type="checkbox"
                                     checked={pro.visible}
                                     onChange={() => handleSelectRow(pro.label)}
+                                    className='cursor-pointer'
                                 />
-                                <label htmlFor={i}>{pro.label}</label>
+                                <label htmlFor={i} className='font-semibold cursor-pointer'>{pro.label}</label>
                             </div>
                         ))}
                     </div>

@@ -12,6 +12,7 @@ import { IoSchool } from "react-icons/io5";
 import { FaMoneyBill1 } from "react-icons/fa6";
 import { FaMoneyCheck } from "react-icons/fa6";
 import StyledCard from "../../component/StyledCard";
+import SideBar from "../../component/SideBar";
 
 export const baseUrl = import.meta.env.VITE_API;
 
@@ -79,8 +80,8 @@ const CounsellorDashboard = () => {
       icon: <FaMoneyBill1 fontSize={30} color="purple" />,
     },
     {
-      label: "This Month Revenue",
-      value: revenue.thisMonthRevenue,
+      label: "Conversion Expected",
+      value: (Math.round(counsellorLeadDetails.hotLeads/totalFollowUp2)*100 || 0),
       icon: <FaMoneyCheck fontSize={30} color="purple" />,
     },
   ];
@@ -366,7 +367,8 @@ const CounsellorDashboard = () => {
   }, []);
 
   return (
-    <div className="">
+    <div className="flex">
+      <SideBar/>
       <div className="flex flex-col gap-2 justify-between p-0">
         <div className="p-4 md:p-9 text-2xl font-semibold flex flex-col gap-9">
           {/* Name Container */}

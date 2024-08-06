@@ -331,7 +331,7 @@ const Table = () => {
   return (
     <div>
       <Box className="flex">
-        <div className="flex flex-col">
+        <div className="flex flex-col bg-gray-200 p-1">
           <Tooltip title="Logout">
             <IconButton onClick={handleLogout}>
               <LogoutIcon />
@@ -366,7 +366,7 @@ const Table = () => {
           </Tooltip>
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
-          <div className="flex justify-end">
+          <div className="flex justify-end items-center gap-4">
           { activeButton === 'college' ? ( <div>
         <Button
         variant="contained"
@@ -378,12 +378,13 @@ const Table = () => {
       </Button>
         </div>):""}
 
-        <div className="flex justify-center mb-3 ">
+        <div className="flex justify-center mb-3 items-center gap-12 mt-3">
         <Link to={`/counsellorDashboard/${id}`}>
               <Button variant="contained" color="primary" className="mb-4">
                 See Report
               </Button>
             </Link>
+            <div className="flex">
             <select
               value={SearchBy}
               onChange={(e) => setSearchBy(e.target.value)}
@@ -402,6 +403,7 @@ const Table = () => {
               value={search}
               onChange={handelChange}
             />
+            </div>
             </div>
             <div>
                 <IconButton onClick={toggleDrawer(true)}>
@@ -441,13 +443,13 @@ const Table = () => {
       >
         College Leads
       </Button>
-          <h2>{activeButton === 'assigned' ? 'Assigned Leads' : 'College Leads'}</h2>
+          <h2 className="bg-gray-200 p-2 rounded-sm">{activeButton === 'assigned' ? 'Assigned Leads' : 'College Leads'}</h2>
           </div>
 
           {/* Modal */}
           {modalOpen && (
-              <div className="fixed inset-0 flex items-center justify-center z-50">
-                <div className="bg-white p-6 rounded shadow-lg w-96">
+              <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-[#03030362]" onClick={()=>setModalOpen(false)}>
+                <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e)=>e.stopPropagation()}>
                   <h2 className="text-lg font-semibold mb-4">Assign Leads to Counsellors</h2>
                   <div className="mb-4">
                     <label htmlFor="rangeStart" className="block text-sm font-medium text-gray-700">Start Index:</label>
@@ -475,7 +477,7 @@ const Table = () => {
                       id="dropdown"
                       value={selectedCounsellor}
                       onChange={(e) => setSelectedCounsellor(e.target.value)}
-                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
                       disabled={loading}
                     >
                       <option value="" disabled>Select an option</option>
@@ -487,7 +489,7 @@ const Table = () => {
                     </select>
                     {loading && <p>Loading options...</p>}
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-end gap-4">
                     <Button
                       variant="contained"
                       color="primary"
@@ -508,8 +510,8 @@ const Table = () => {
               </div>
             )}
 
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="px-6 py-3">
                   S. No.

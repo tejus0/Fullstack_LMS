@@ -186,7 +186,7 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
     <div className=' rounded-lg gap-8 flex flex-col w-full justify-center z-[999] max-w-[12000px] p-2'>
       <form onSubmit={handleSignup} className='flex flex-col justify-center m-auto w-full rounded-lg md:w-[50%] gap-8 bg-white p-10 pt-2 border-[1px] border-gray-300 shadow-2xl shadow-gray-500  '>
         <div id="recaptcha-container"></div>
-
+        <p className='text-center text-4xl font-semibold '>Register</p>
         {/* name & id field */}
         <div className='flex md:flex-row flex-col gap-3 md:gap-10 '>
 
