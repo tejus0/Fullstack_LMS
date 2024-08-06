@@ -46,6 +46,7 @@ const CounsellorDashboard = () => {
 
   const [assignedStudents, setAssignedStudents] = useState([]);
   const {state} = useLocation();
+  console.log(state);
   // const state = {admissionHeadId : '66aa1bfb3cbc36b246e236b3'}
 
   const rows = [

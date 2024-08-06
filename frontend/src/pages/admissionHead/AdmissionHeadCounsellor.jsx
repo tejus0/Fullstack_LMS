@@ -149,7 +149,7 @@ export const AdmissionHeadCounsellor = () => {
                   <td className="px-4 py-2 text-sm text-center">{counsellorData.warmLeadCount}</td>
                   <td className="px-4 py-2 text-sm text-center">{counsellorData.coldLeadCount}</td>
                   <td className="px-4 py-2 text-sm text-center">
-                    <Link to={`/counsellorDashboard/${counsellorData.counsellor._id}`} state={{ state: id }}>
+                    <Link to={`/counsellorDashboard/${counsellorData.counsellor._id}`} state={{admissionHeadId: id}}>
                       <HiOutlineDocumentReport fontSize={30} color="blue" title="Overall Summary" />
                     </Link>
                   </td>

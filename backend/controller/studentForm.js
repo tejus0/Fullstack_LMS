@@ -1258,9 +1258,10 @@ export const getCounsellorLeadDetails = async (req, res) => {
       assignedCouns: counsellerId,
     }
     college_website ? stuFilter.sourceId = college_website : null;
-    const totalLeads = (
-      await studentModal.find(stuFilter)
-    ).length;
+    const totalLeads = (await studentModal.find(stuFilter)).length;
+    
+
+    console.log(totalLeads)
     // const completedLeads = (await studentModal.find({ assignedCouns: counsellerId,  $where: "this.remarks.FollowUp3.length > 1" }));
     const stage1Students = await studentModal.aggregate([
       {
