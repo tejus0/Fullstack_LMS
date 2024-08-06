@@ -136,7 +136,12 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
         password: formdata.password,
       };
 
-      pageFor == "counsellor" ? requestBody.office_location = officeLocation : requestBody.pageFor = "admissionHead";
+      if(pageFor == "counsellor"){
+        requestBody.office_location = officeLocation
+        requestBody.pageFor = pageFor;
+      } else{
+        requestBody.pageFor = "admissionHead";
+      }
 
       if (selectedCollege) {
         requestBody.college_website = selectedCollege.website;
@@ -178,8 +183,8 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
 
 
   return (
-    <div className=' rounded-lg gap-8 flex flex-col w-full justify-center z-[999] max-w-[12000px]'>
-      <form onSubmit={handleSignup} className='flex flex-col justify-center m-auto w-full rounded-lg md:w-[50%] gap-8 bg-white p-10'>
+    <div className=' rounded-lg gap-8 flex flex-col w-full justify-center z-[999] max-w-[12000px] p-2'>
+      <form onSubmit={handleSignup} className='flex flex-col justify-center m-auto w-full rounded-lg md:w-[50%] gap-8 bg-white p-10 pt-2 border-[1px] border-gray-300 shadow-2xl shadow-gray-500  '>
         <div id="recaptcha-container"></div>
 
         {/* name & id field */}

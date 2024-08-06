@@ -3,13 +3,11 @@ import ModalComponent from "./Modal";
 import React, { useEffect, useState, useMemo } from "react";
 const NivoPieChart = ({ data, students }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  // const [modalData, setModalData] = useState([]);
   const [leadStatus, setLeadStatus] = useState("");
   const [modalTitle, setModalTitle] = useState("");
 
   const handleClick = (node) => {
     setModalTitle(node.label);
-    //   setModalData(node.data);
     setModalOpen(true);
     setLeadStatus(node.id);
   };
@@ -18,13 +16,6 @@ const NivoPieChart = ({ data, students }) => {
     setModalOpen(false);
   };
 
-  // const getFilteredStudents = () =>{
-
-  // }
-
-  // useEffect(() =>{
-  //     getFilteredStudents();
-  // }, [leadStatus])
 
   const filteredStudents = useMemo(() => {
     let filtered = students;

@@ -42,7 +42,7 @@ const ModalComponent = ({ open, handleClose, title, data }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={{...style, overflow: 'auto', maxHeight: '80vh'}}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
           {title}
         </Typography>
@@ -258,7 +258,7 @@ const ModalComponent = ({ open, handleClose, title, data }) => {
                       <td className="px-6 py-4">
                         <Link
                           to={`/student/${user._id}`}
-                        //   state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
+                          state={{ id: `${user._id}`}}
                         >
                           <Button variant="contained">Edit</Button>
                         </Link>

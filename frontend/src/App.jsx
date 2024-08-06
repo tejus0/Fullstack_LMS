@@ -21,6 +21,7 @@ import DaysAvaialble from "./pages/admin/DaysAvailable";
 import ReportCards from "./pages/admin/Report/ReportCards";
 import CounsellorTrackerDashboard from './pages/admin/CounsellorDashboard'
 import OfficeDashboard from "./pages/admin/OfficeDashboard";
+import { AdmissionHeadCounsellor } from "./pages/admissionHead/AdmissionHeadCounsellor";
 
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
@@ -53,7 +54,7 @@ const App = () => {
           <Route path="/officeDashboard" element={<OfficeDashboard/>}/>
           <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead"/>}/>
           <Route path="/forgot-pass" element={<ForgetPass/>}/>
-          
+          <Route path="/showCounsellorReport" element={<AdmissionHeadCounsellor />} />
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>

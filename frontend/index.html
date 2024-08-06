@@ -1,24 +1,22 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite + React</title>
-
-  <!-- <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script> -->
+  </head>
 
-</head>
+  <body>
+    <div id="root"></div>
 
-<body>
-  <div id="root"></div>
+    <script type="module" src="./src/main.jsx" id="main-script"></script>
 
-  <script type="module" src="./src/main.jsx" id="main-script"></script>
-
-  <!--   <script>
+    <!-- <script>
     function loadSecondScript() {
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
@@ -49,14 +47,14 @@
   
     document.getElementById('main-script').addEventListener('load', renderForm);
   </script>
-  <script type="module" src="./src/main.jsx" onload="loadSecondScript()"></script>
+  <script type="module" src="./src/main.jsx" onload="loadSecondScript()"></script> -->
 
-  <script>
+  <!-- <script>
     function loadSecondScript() {
       console.log(" in index.html")
       const script = document.createElement('script');
       script.type = 'module';
-      script.src = 'https://ntechzy.in/api/v1/student-form/form.js';
+      script.src = 'http:/localhost:4000/api/v1/student-form/form.js';
       script.path = '["/", "/dynamicForm/index.html"]';
       script.divid = 'formsID7375';
       script.courses = '["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]';
@@ -65,7 +63,7 @@
       script.contact = '+123-456-7890';
       document.body.appendChild(script);
     }
-  </script> -->
+  </script>  -->
   <script>
     // disable contextmenu event
     document.body.addEventListener("contextmenu", (ev) => {
@@ -89,17 +87,33 @@
 
     });
 
-    // disable copy event
-    document.addEventListener("copy", (e) => {
-      e.preventDefault();
-      alert("Copy Operation . Not Allowed!")
-    })
-  </script>
+      // disable copy event
+      document.addEventListener("copy", (e) => {
+        e.preventDefault();
+        alert("Copy Operation . Not Allowed!");
+      });
+    </script>
 
   <!-- <script type="module" src="https://ntechzy.in/api/v1/student-form/form.js"  -->
-  <script type="module" src="http://localhost:4000/api/v1/student-form/form.js" path='["/", "/dynamicForm/index.html"]'
+  <!-- <script type="module" src="http://localhost:4000/api/v1/student-form/form.js" path='["/", "/dynamicForm/index.html"]'
     divid='formsID7375' courses='["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]' styles="basic" logo=""
-    contact="+123-456-7890"></script>
+    contact="+123-456-7890"></script> -->
+
+    <script>
+      window.mainScriptLoaded = function() {
+        const script = document.createElement('script');
+        script.type = 'module';
+        // script.src = 'https://ntechzy.in/api/v1/student-form/form.js';
+        script.src = 'http://localhost:4000/api/v1/student-form/form.js';
+        script.setAttribute('path', '["/", "/dynamicForm/index.html"]');
+        script.setAttribute('divid', 'formsID7375');
+        script.setAttribute('courses', '["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]');
+        script.setAttribute('styles', 'basic');
+        script.setAttribute('logo', '');
+        script.setAttribute('contact', '+123-456-7890');
+        document.body.appendChild(script);
+      };
+    </script>
   <!-- <script type="module" src="https://abhigyadufare.github.io/dynamicForm/form.js" path='["/", "/student/:id"]' courses='["BAMS", "BHMS", "BUMS", "MBBS", "BDS", "Remote Link"]'></script> -->
 </body>
 <!-- <iframe src="http://localhost:5173/?u_name=carlos&u_pass=1234" frameborder="0" title="sdfghn" width="500px" height="50px"></iframe> -->

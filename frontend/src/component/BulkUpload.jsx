@@ -24,15 +24,6 @@ const BulkUpload = ({ open, onClose }) => {
                 const sheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(sheet);
 
-                const hasEmptyFields = jsonData.some(row => {
-                    return Object.values(row).some(value => value === "" || value === null || value === undefined);
-                });
-
-                if (hasEmptyFields) {
-                    toast.error("Some fields are empty");
-                    return;
-                }
-
                 if (jsonData.length === 0) {
                     toast.error("The Sheet you uploaded don't have values");
                 }
@@ -48,6 +39,26 @@ const BulkUpload = ({ open, onClose }) => {
                     else {
                         let isIncorrect = false
                         const fieldsToCheckType = ['contactNumber', 'whatsappNumber', 'neetScore', 'neetAIR']
+
+                        const hasEmptyFields = jsonData.some(row => {
+                            return requiredFields.some(field => {
+                                const isEmpty = row[field] === "" || row[field] === null || row[field] === undefined;
+                                if (isEmpty) {
+                                    toast.error(`${field} is empty in your excel sheet`)
+                                }
+                                return isEmpty;
+                            });
+                        });
+
+
+
+                        if (hasEmptyFields) {
+                            toast.error("Some fields are empty")
+                            return;
+                        }
+
+
+
                         jsonData.forEach((elem) => (
                             fieldsToCheckType.forEach((item) => {
                                 if (typeof elem[item] === 'string') {
@@ -68,7 +79,7 @@ const BulkUpload = ({ open, onClose }) => {
                                 });
                                 arr.push(row)
                             });
-                            console.log(jsonData, "jsonData");
+
 
                             try {
                                 await toast.promise(

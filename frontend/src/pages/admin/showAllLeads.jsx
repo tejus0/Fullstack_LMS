@@ -49,6 +49,7 @@ const ShowAllleads = () => {
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const [users, setUsers] = useState([]);
+  const [allUsers , setAllUsers] = useState([])
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
     direction: "asc",
@@ -114,6 +115,7 @@ const ShowAllleads = () => {
         console.log(err, "error");
       });
       setUsers(response.data.data);
+      setAllUsers(response.data.data);
       setfilter(response.data.data);
     };
 
@@ -267,12 +269,15 @@ const ShowAllleads = () => {
       });
     }
   }, [sortedUsers, leadStatusFilter]);
-
-  const paginatedUsers = filteredUsers.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
-  );
-
+  let paginatedUsers;
+  if(search != ''){
+    paginatedUsers = filteredUsers;
+  }else{
+    paginatedUsers = allUsers.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage
+    );
+  }
 
   const paginationDisabled = paginatedUsers.some(
     (item) => item.remarks.length === 20
@@ -530,7 +535,7 @@ const ShowAllleads = () => {
                   showNewTable={showNewTable}
                   setShowNewTable={setShowNewTable}
                   setShowUnassignedTable={setShowUnassignedTable}
-
+isAdmin= {true}                
                 />
               </div>
             </div>
@@ -790,10 +795,10 @@ const ShowAllleads = () => {
                   <th scope="col" className="px-6 py-3">
                     <div className="flex gap-2 items-center">
                       Update Status
-                      <FaSort
+                      {/* <FaSort
                         onClick={() => handleSort("DateToVisit")}
                         style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                      />
+                      /> */}
                     </div></th>
                 </tr>
               </thead>

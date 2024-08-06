@@ -64,6 +64,10 @@ const StudentProfile = ({ counsellor_id }) => {
     } else if (origin === 'showAllLeads') {
       navigate('/showAllLeads', { state: { page } });
     }
+    else if (origin === 'admissionHeadProfile'){
+      console.log(origin,counsellorID,page,"in showslicific")
+      navigate(`/showSpecificLeads/`, { state: { page, id: counsellorID } })
+    }
   };
 
   // follow up option

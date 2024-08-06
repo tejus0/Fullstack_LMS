@@ -343,7 +343,6 @@ const OfficeDashboard = () => {
                 {item.total}
               </span>
             </p>
-            {console.log(Object.values(item.data2).every((val) => val != 0))}
             {students.length ? (
               Object.values(item.data2).every((val) => val == 0) ? (
                 <p className="w-full h-full flex justify-center items-center text-lg font-medium text-gray-700">
@@ -380,8 +379,13 @@ const OfficeDashboard = () => {
               Total Amount Pending: {totalPendingAmount}
             </p>
           </div>
-
-          <MaterialTable rows={pendingAmountData} bgColor="purple" />
+          {
+            pendingAmountData.length ? 
+            <MaterialTable rows={pendingAmountData} bgColor="purple" />:
+            <div>
+              <p>No Data Available</p>
+            </div>
+          }
         </div>
         {/* <div className="flex-1 bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4 flex flex-col gap-5">
                     <p className='text-xl font-semibold'>Top Performer</p>

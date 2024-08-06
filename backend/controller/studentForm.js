@@ -135,7 +135,7 @@ export const insertFromSheet = async (req, res) => {
       return entry;
     });
 
-
+    // Assuming studentModal is your Mongoose model
     const insertedStudents = await studentModal.create(dataToInsert);
 
     return res.status(201).json({
@@ -538,7 +538,7 @@ export const verifyLogin = async (req, res) => {
                 type: "admin",
               });
             } else {
-              if (userData.college_website != "") {
+              if (userData.college_website != "" && userData.who_am_i == "admissionHead") {
                 return res.json({
                   status: "ok",
                   data: userData._id,
@@ -1125,11 +1125,19 @@ export const getCounsellorRevenueDetails = async (req, res) => {
         message: "Counsellor Not Found",
       });
     }
+    const admissionHeadId = req.query.admissionHeadId;
+    let college_website;
+    if (admissionHeadId) {
+      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      college_website = admissionHead.college_website;
+    }
+    let stuFilter = {
+      assignedCouns: counsellerId,
+    }
+    college_website ? stuFilter.sourceId = college_website : null;
     const counsellorStudents = await studentModal.aggregate([
       {
-        $match: {
-          assignedCouns: counsellerId,
-        },
+        $match: stuFilter,
       },
       {
         $addFields: {
@@ -1161,7 +1169,7 @@ export const getCounsellorRevenueDetails = async (req, res) => {
     const thisMonthCounsellorStudents = await studentModal.aggregate([
       {
         $match: {
-          assignedCouns: counsellerId,
+          ...stuFilter,
           createdAt: {
             $gte: startOfMonth,
             $lt: endOfMonth,
@@ -1209,9 +1217,19 @@ export const getCounsellorRevenueDetails = async (req, res) => {
 
 export const getCoursesCounselled = async (req, res) => {
   try {
-    const counsellorId = req.params.counsellerId;
+    const counsellerId = req.params.counsellerId;
+    const admissionHeadId = req.query.admissionHeadId;
+    let college_website;
+    if (admissionHeadId) {
+      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      college_website = admissionHead.college_website;
+    }
+    let stuFilter = {
+      assignedCouns: counsellerId,
+    }
+    college_website ? stuFilter.sourceId = college_website : null;
     const coursesAggregated = await studentModal.aggregate([
-      { $match: { assignedCouns: counsellorId } },
+      { $match: stuFilter },
       { $group: { _id: "$courseSelected", count: { $sum: 1 } } },
       { $project: { _id: 0, course: "$_id", count: 1 } },
     ]);
@@ -1230,15 +1248,23 @@ export const getCoursesCounselled = async (req, res) => {
 export const getCounsellorLeadDetails = async (req, res) => {
   try {
     const counsellerId = req.params.counsellerId;
+    const admissionHeadId = req.query.admissionHeadId;
+    let college_website;
+    if (admissionHeadId) {
+      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      college_website = admissionHead.college_website;
+    }
+    let stuFilter = {
+      assignedCouns: counsellerId,
+    }
+    college_website ? stuFilter.sourceId = college_website : null;
     const totalLeads = (
-      await studentModal.find({ assignedCouns: counsellerId })
+      await studentModal.find(stuFilter)
     ).length;
     // const completedLeads = (await studentModal.find({ assignedCouns: counsellerId,  $where: "this.remarks.FollowUp3.length > 1" }));
     const stage1Students = await studentModal.aggregate([
       {
-        $match: {
-          assignedCouns: counsellerId,
-        },
+        $match: stuFilter,
       },
       {
         $addFields: {
@@ -1255,9 +1281,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
     ]);
     const stage2Students = await studentModal.aggregate([
       {
-        $match: {
-          assignedCouns: counsellerId,
-        },
+        $match: stuFilter,
       },
       {
         $addFields: {
@@ -1274,9 +1298,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
     ]);
     const counselledStudents = await studentModal.aggregate([
       {
-        $match: {
-          assignedCouns: counsellerId,
-        },
+        $match: stuFilter,
       },
       {
         $addFields: {
@@ -1406,11 +1428,19 @@ export const getCounsellorLeadDetails = async (req, res) => {
 export const getCounsellorPendingAmount = async (req, res) => {
   try {
     const counsellerId = req.params.counsellerId;
+    const admissionHeadId = req.query.admissionHeadId;
+    let college_website;
+    if (admissionHeadId) {
+      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      college_website = admissionHead.college_website;
+    }
+    let stuFilter = {
+      assignedCouns: counsellerId,
+    }
+    college_website ? stuFilter.sourceId = college_website : null;
     const counselledStudents = await studentModal.aggregate([
       {
-        $match: {
-          assignedCouns: counsellerId,
-        },
+        $match: stuFilter,
       },
       {
         $addFields: {
@@ -1440,7 +1470,7 @@ export const getCounsellorPendingAmount = async (req, res) => {
         );
         let totalAmountPaid = 0;
         for (let j = 0; j < student.remarks.FollowUp3.length; j++) {
-          totalAmountPaid += student.remarks.FollowUp3[j].preBookingAmount;
+          totalAmountPaid += parseInt(student.remarks.FollowUp3[j].preBookingAmount);
         }
         let pendingAmount = studentPackage - totalAmountPaid;
         studentObj.pendingAmount = pendingAmount < 0 ? 0 : pendingAmount;
@@ -1449,7 +1479,7 @@ export const getCounsellorPendingAmount = async (req, res) => {
       }
     }
 
-    console.log(counselledStudents);
+    // console.log(counselledStudents);
     return res.status(200).json({
       message: "Success",
       data: studentData,
@@ -1466,7 +1496,17 @@ export const getCounsellorPendingAmount = async (req, res) => {
 export const getAssignedCounsellorStudents = async (req, res) => {
   try {
     const counsellerId = req.params.counsellerId;
-    const students = await studentModal.find({ assignedCouns: counsellerId });
+    const admissionHeadId = req.query.admissionHeadId;
+    let college_website;
+    if (admissionHeadId) {
+      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      college_website = admissionHead.college_website;
+    }
+    let stuFilter = {
+      assignedCouns: counsellerId,
+    }
+    college_website ? stuFilter.sourceId = college_website : null;
+    const students = await studentModal.find(stuFilter);
 
     return res.status(200).json({
       message: "Sucess",
@@ -1588,8 +1628,7 @@ export const getOfficeReport = async (req, res) => {
       } else if (hasFollowUp1) {
         totalFollowUp1++;
 
-        const latestFollowUp1 =
-          student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
+        const latestFollowUp1 = student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
         if (latestFollowUp1.subject.includes("Switch Off")) {
           switchOff++;
         } else if (latestFollowUp1.subject.includes("Not Reachable")) {
@@ -1609,7 +1648,7 @@ export const getOfficeReport = async (req, res) => {
     });
 
     const totalCounsellors = counsellors.length;
-    const conversionExpected = (hotLead / totalFollowUp2) * 100.
+    const conversionExpected = Math.round((hotLead / totalFollowUp2) * 100);
 
     return res.json({
       totalRevenue,
@@ -1818,6 +1857,7 @@ export const getCounsellorByNumber = async (req, res) => {
 export const getAdmissionHeadCounsellors = async (req, res) => {
   try {
     const admId = req.params.admissionHeadId;
+    console.log(admId, "id in  head")
     const counsellorData = await counsellorModal.findOne({ _id: admId, who_am_i: "admissionHead" }).populate("assignedCounsellors");
 
     return res.status(200).json({
@@ -1832,3 +1872,166 @@ export const getAdmissionHeadCounsellors = async (req, res) => {
     })
   }
 }
+
+export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
+  try {
+    const admId = req.params.admissionHeadId;
+    console.log(admId, "id in  head")
+    const counsellorData = await counsellorModal.findOne({ _id: admId, who_am_i: "admissionHead" }).populate("assignedCounsellors");
+
+    const counsellorWithStudents = [];
+
+    for (const counsellor of counsellorData.assignedCounsellors) {
+      const counsellorId = counsellor._id;
+      const collegeWebsite = counsellor.college_website;
+
+      // Fetch students assigned to this counsellor whose sourceId matches the college website
+      const students = await studentModal.find({
+        assignedCouns: counsellorId,
+        sourceId: collegeWebsite,
+      });
+
+      let totalLeads = students.length;
+      let totalFollowUp3Leads = 0;
+      let paidCounselingCount = 0;
+      let associateCollegeCount = 0;
+      let totalFollowUp2Leads = 0;
+      let hotLeadCount = 0;
+      let coldLeadCount = 0;
+      let warmLeadCount = 0;
+      let totalFollowUp1Leads = 0;
+      let firstCallDoneCount = 0;
+      let disconnectCount = 0;
+      let notReceivedCount = 0;
+      let notReachableCount = 0;
+      let totalCallsDone = 0;
+      let totalRevenue = 0;
+      let totalAdmissions = 0;
+
+
+      // Process each student
+      students.forEach((student) => {
+        let hasPreBookingAmount = false;
+        const remarks = student.remarks || {};
+
+        if (
+          remarks.FollowUp1 && remarks.FollowUp1.length > 0 ||
+          remarks.FollowUp2 && remarks.FollowUp2.length > 0 ||
+          remarks.FollowUp3 && remarks.FollowUp3.length > 0
+        ) {
+          totalCallsDone++;
+        }
+
+        // Check for FollowUp3 entries
+        if (remarks.FollowUp3 && remarks.FollowUp3.length > 0) {
+          totalFollowUp3Leads++;
+
+          remarks.FollowUp3.forEach((followUp) => {
+            if (followUp.preBookingAmount) {
+              totalRevenue += parseFloat(followUp.preBookingAmount) || 0;
+            }
+
+            if (followUp.preBookingAmount > 0) {
+              hasPreBookingAmount = true
+            }
+          });
+
+          if (hasPreBookingAmount) {
+            totalAdmissions++;
+          }
+
+          const latestRemark = remarks.FollowUp3[remarks.FollowUp3.length - 1];
+          if (latestRemark.subject.includes("Paid Counselling")) {
+            paidCounselingCount++;
+          } else if (latestRemark.subject.includes("Associate College")) {
+            associateCollegeCount++;
+          }
+        } else if (remarks.FollowUp2 && remarks.FollowUp2.length > 0) {
+          totalFollowUp2Leads++;
+          const latestRemark = remarks.FollowUp2[remarks.FollowUp2.length - 1];
+          if (latestRemark.subject.includes("Hot Lead")) {
+            hotLeadCount++;
+          } else if (latestRemark.subject.includes("Cold")) {
+            coldLeadCount++;
+          } else if (latestRemark.subject.includes("Warm")) {
+            warmLeadCount++;
+          }
+        } else if (remarks.FollowUp1 && remarks.FollowUp1.length > 0) {
+          totalFollowUp1Leads++;
+          remarks.FollowUp1.forEach((remark) => {
+            if (remark.subject.includes("First Call Done")) {
+              firstCallDoneCount++;
+            } else if (remark.subject.includes("Disconnect")) {
+              disconnectCount++;
+            } else if (remark.subject.includes("Not Received")) {
+              notReceivedCount++;
+            } else if (remark.subject.includes("Not Reachable")) {
+              notReachableCount++;
+            }
+          });
+        }
+      });
+
+      counsellorWithStudents.push({
+        counsellor,
+        students,
+        totalLeads,
+        totalFollowUp3Leads,
+        paidCounselingCount,
+        associateCollegeCount,
+        totalFollowUp2Leads,
+        hotLeadCount,
+        coldLeadCount,
+        warmLeadCount,
+        totalFollowUp1Leads,
+        firstCallDoneCount,
+        disconnectCount,
+        notReceivedCount,
+        notReachableCount,
+        totalCallsDone,
+        totalRevenue,
+        totalAdmissions,
+      });
+    }
+
+    // Response
+    return res.status(200).json({
+      message: "Success",
+      data: counsellorWithStudents
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something Went Wrong",
+      error: err.message
+    })
+  }
+}
+
+export const showCounsCollegeLeads = async (req, res) => {
+  const id = req.params.id;
+  console.log(id, "in show counsellor Specific leads");
+  try {
+    const agentName = await counsellorModal.find({ _id: id });
+    console.log(agentName, "agent");
+    const collegeWebsite = agentName[0].college_website;
+    console.log(collegeWebsite, "website");
+
+    const studentList = await studentModal.find(
+
+      {
+        $and: [
+          { sourceId: { $regex: collegeWebsite, $options: "i" } },
+          { assignedCouns: id }],
+      });
+    // $regex is used for case-insensitive substring matching
+
+    if (studentList.length === 0) {
+      return res.status(404).json({ msg: "Students data not found" });
+    }
+
+    res.status(200).json(studentList);
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};

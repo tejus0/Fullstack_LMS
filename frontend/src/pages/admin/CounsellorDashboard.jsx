@@ -3,7 +3,7 @@ import MaterialTable, { createData } from "../../component/MaterialTable";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { ArrowUpward } from "@mui/icons-material";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import MaterialPieChart from "../../component/NivoPieChart";
 import NivoPieChart from "../../component/NivoPieChart";
@@ -45,6 +45,8 @@ const CounsellorDashboard = () => {
   const [totalFollowUp3, setTotalFollowUp3] = useState(0);
 
   const [assignedStudents, setAssignedStudents] = useState([]);
+  const {state} = useLocation();
+  // const state = {admissionHeadId : '66aa1bfb3cbc36b246e236b3'}
 
   const rows = [
     createData("First Call Done", counsellorLeadDetails.firstCallDone),
@@ -125,7 +127,7 @@ const CounsellorDashboard = () => {
   const fetchRevenueDetails = async () => {
     try {
       let revenueDetails = await axios.get(
-        `${baseUrl}/getCounsellorRevenueDetails/${counsellorId}`
+        `${baseUrl}/getCounsellorRevenueDetails/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
       );
       revenueDetails = revenueDetails.data;
       setRevenue({
@@ -141,7 +143,7 @@ const CounsellorDashboard = () => {
   const fetchCoursesCounselled = async () => {
     try {
       let res = await axios.get(
-        `${baseUrl}/getCoursesCounselled/${counsellorId}`
+        `${baseUrl}/getCoursesCounselled/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
       );
       res = res.data;
       setCoursesCounselled(res.data);
@@ -153,7 +155,7 @@ const CounsellorDashboard = () => {
   const fetchCounsellorLeadDetails = async () => {
     try {
       let res = await axios.get(
-        `${baseUrl}/getCounsellorLeadDetails/${counsellorId}`
+        `${baseUrl}/getCounsellorLeadDetails/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
       );
       res = res.data;
       const stage1Total = Object.values(res.stage1Obj).reduce(
@@ -198,7 +200,7 @@ const CounsellorDashboard = () => {
   const fetchPendingAmountDetails = async () => {
     try {
       let res = await axios.get(
-        `${baseUrl}/getCounsellorPendingAmount/${counsellorId}`
+        `${baseUrl}/getCounsellorPendingAmount/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
       );
       let data = res.data.data;
       data = data.map((elem, i) => ({
@@ -347,7 +349,7 @@ const CounsellorDashboard = () => {
     // }
     try {
       const res = await axios.get(
-        `${baseUrl}/getAssignedCounsellorStudents/${counsellorId}`
+        `${baseUrl}/getAssignedCounsellorStudents/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
       );
 
       setAssignedStudents(res.data.data);
