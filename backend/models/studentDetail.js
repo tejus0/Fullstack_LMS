@@ -9,7 +9,7 @@ const otherResponse = new mongoose.Schema({
 
     contactNumber: {
         type: String,
-        // required: [true, 'Phone number is required'],
+        required: [true, 'Phone number is required'],
         match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
     },
 

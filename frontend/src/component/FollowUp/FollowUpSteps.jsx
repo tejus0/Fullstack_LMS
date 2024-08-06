@@ -11,6 +11,7 @@ import {
 import NotesList from "./NotesList";
 import SlotBooking from "../TimeSlot/SlotBooking";
 import { useParams } from "react-router-dom";
+import { CollegeNames } from "../../pages/Registration/CollegeNames";
 
 const baseUrl = import.meta.env.VITE_API;
 
@@ -125,7 +126,7 @@ const FollowUpSteps = ({ studentId }) => {
         break;
       case 'Associate College':
         // Assuming options are fetched from an external JavaScript file
-        setAdditionalDropdown(associateCollegeOptions); // Replace with your actual options from an external file
+        setAdditionalDropdown(CollegeNames); // Replace with your actual options from an external file
         setShowAdditionalDropdown(true);
         break;
       default:
@@ -344,8 +345,8 @@ const FollowUpSteps = ({ studentId }) => {
             >
               <option value="">Select additional option</option>
               {additionalDropdown.map((item, index) => (
-                <option key={index} value={item.option}>
-                  {item.option}
+                <option key={index} value={item.clg}>
+                  {item.option || item.name}
                 </option>
               ))}
             </select>
@@ -372,7 +373,7 @@ const FollowUpSteps = ({ studentId }) => {
 
               {UploadImage && <img className="w-20 h-20 my-5 " src={UploadImage} alt="" />}
               {/* <button disabled={!UploadImage} type="submit" className="bg-white disabled:bg-gray-500 p-3 rounded-xl">Upload</button> */}
-              
+
             </div>
 
             {(FolloupStage === "FollowUp3") && <button

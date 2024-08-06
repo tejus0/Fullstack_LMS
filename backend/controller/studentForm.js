@@ -135,7 +135,7 @@ export const insertFromSheet = async (req, res) => {
       return entry;
     });
 
-    // Assuming studentModal is your Mongoose model
+
     const insertedStudents = await studentModal.create(dataToInsert);
 
     return res.status(201).json({
@@ -375,44 +375,44 @@ export const sendVerifyMail = async (name, email, user_id) => {
 export const insertUser = async (req, res) => {
   console.log("Reached");
   try {
-    let counsellorId,counsellorLength,officeLocation;
+    let counsellorId, counsellorLength, officeLocation;
     const mobileNo = req.body.mobile;
     const olduser = await counsellorModal.findOne({ mobile: mobileNo });
     if (olduser) {
       return res.send({ error: "User Exists !" });
     }
     let isAdmissionHead = false;
-    if(req.body.pageFor == "admissionHead"){
+    if (req.body.pageFor == "admissionHead") {
       isAdmissionHead = true;
-    }else{
+    } else {
       officeLocation = req.body.office_location
-      if(!officeLocation){
+      if (!officeLocation) {
         return res.status(400).json({
-          message:"Office Location needed"
+          message: "Office Location needed"
         })
       }
-  
-      if(officeLocation == "Noida"){
-        officeLocation = "CKN"+(new Date()).getFullYear();
-      }else if(officeLocation == "Kanpur"){
-        officeLocation = "CKK"+(new Date()).getFullYear();
+
+      if (officeLocation == "Noida") {
+        officeLocation = "CKN" + (new Date()).getFullYear();
+      } else if (officeLocation == "Kanpur") {
+        officeLocation = "CKK" + (new Date()).getFullYear();
       }
 
     }
     counsellorId = officeLocation;
     counsellorLength = await assignmentConfigModal.findOne({});
-    if(!counsellorLength.lastCounsellorLength){
+    if (!counsellorLength.lastCounsellorLength) {
       counsellorLength.lastCounsellorLength = await counsellorModal.countDocuments({});
       await counsellorLength.save()
     }
     counsellorLength = counsellorLength.lastCounsellorLength + 1;
-    counsellorId += `${counsellorLength}`.padStart(3 , "0");
-    
+    counsellorId += `${counsellorLength}`.padStart(3, "0");
+
     const spassword = await securePassword(req.body.password);
     console.log(spassword);
 
     const user = new counsellorModal({
-      counsellor_id: isAdmissionHead ? "": counsellorId,
+      counsellor_id: isAdmissionHead ? "" : counsellorId,
       name: req.body.username,
       email: req.body.email,
       mobile: req.body.mobile,
@@ -425,17 +425,17 @@ export const insertUser = async (req, res) => {
 
     const userData = await user.save();
 
-    if(req.body.pageFor == "counsellor"){
-      const admissionHead = await counsellorModal.findOne({college_website: req.body.college_website , who_am_i: "admissionHead"});
-      if(admissionHead){
+    if (req.body.pageFor == "counsellor") {
+      const admissionHead = await counsellorModal.findOne({ college_website: req.body.college_website, who_am_i: "admissionHead" });
+      if (admissionHead) {
         // add counsellor under admissionHead
         admissionHead.assignedCounsellors.push(userData._id);
         await admissionHead.save();
       }
     }
     // update counsellor length count
-    await assignmentConfigModal.updateOne({} , {
-      $set: {lastCounsellorLength: counsellorLength}
+    await assignmentConfigModal.updateOne({}, {
+      $set: { lastCounsellorLength: counsellorLength }
     });
     console.log(userData);
     res.send(userData);
@@ -596,11 +596,11 @@ export const assignAuto = async (req, res) => {
   const counsellors = await counsellorModal.find({ allLeads: 0 });
   const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
-  const students= await studentModal.countDocuments({
+  const students = await studentModal.countDocuments({
     $and: [
       { sourceId: { $not: { $regex: /office_rec/ } } }, // Exclude records with 'office_rec' in sourceId
       { assignedCouns: "" }, // Filter records with empty 'assignedCouns'
-      {neetScore: { $regex: /^\d+$/, $lt: "350" }}
+      { neetScore: { $regex: /^\d+$/, $lt: "350" } }
       // {
       //   $expr: {
       //     $lt: [
@@ -623,9 +623,9 @@ export const assignAuto = async (req, res) => {
       // }
     ]
   });
-  
-  
-  
+
+
+
 
   console.log(students, "stude");
 
@@ -1027,11 +1027,11 @@ export const getCounsellorsWithStudents = async (req, res) => {
   try {
     // Fetch all counsellors with allLeads equal to 0
     const counsellors = await counsellorModal.find({ allLeads: 0 });
-    console.log(counsellors , "Kfjdsljfl")
-    
+    console.log(counsellors, "Kfjdsljfl")
+
     // Fetch all students where assignedCouns is not empty
     const students = await studentModal.find({});
-    
+
     // Initialize a map with all counsellors
     const counsellorMap = counsellors.reduce((acc, counsellor) => {
       acc[counsellor._id.toString()] = {
@@ -1058,7 +1058,7 @@ export const getCounsellorsWithStudents = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-  
+
 
 export const getVisitLeads = async (req, res) => {
   const visitedStud = await studentModal.find({
@@ -1304,7 +1304,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
     stage2Obj.hotLeads = 0;
     stage2Obj.warmLeads = 0;
     stage2Obj.coldLeads = 0;
-    
+
     const stage3Obj = {};
     stage3Obj.paidCounselling = 0;
     stage3Obj.associateCollege = 0;
@@ -1556,7 +1556,7 @@ export const getOfficeReport = async (req, res) => {
             }
           }
         });
-        
+
         if (hasPreBookingAmount) {
           totalAdmissions++;
         }
@@ -1609,7 +1609,7 @@ export const getOfficeReport = async (req, res) => {
     });
 
     const totalCounsellors = counsellors.length;
-    const conversionExpected = (hotLead/totalFollowUp2)*100.
+    const conversionExpected = (hotLead / totalFollowUp2) * 100.
 
     return res.json({
       totalRevenue,
@@ -1794,40 +1794,40 @@ export const updatePassword = async (req, res) => {
 }
 
 
-export const getCounsellorByNumber = async(req , res)=>{
+export const getCounsellorByNumber = async (req, res) => {
   try {
     const bodyData = req.body;
-    if(!bodyData.mobileNo){
+    if (!bodyData.mobileNo) {
       return res.status(400).json({
-        message:"Please Provide Mobile No"
+        message: "Please Provide Mobile No"
       })
     }
-    const counsellor = await counsellorModal.findOne({mobile: bodyData.mobileNo});
+    const counsellor = await counsellorModal.findOne({ mobile: bodyData.mobileNo });
 
     return res.status(200).json({
-      message:"Success",
+      message: "Success",
       data: counsellor
     })
   } catch (err) {
     return res.status(500).json({
-      message:"Something Went Wrong"
+      message: "Something Went Wrong"
     })
   }
 }
 
-export const getAdmissionHeadCounsellors = async (req , res)=>{
+export const getAdmissionHeadCounsellors = async (req, res) => {
   try {
-      const admId = req.params.admissionHeadId;
-      const counsellorData = await counsellorModal.findOne({_id: admId , who_am_i: "admissionHead"}).populate("assignedCounsellors");
+    const admId = req.params.admissionHeadId;
+    const counsellorData = await counsellorModal.findOne({ _id: admId, who_am_i: "admissionHead" }).populate("assignedCounsellors");
 
-      return res.status(200).json({
-        message:"Success",
-        data: counsellorData
-      })
+    return res.status(200).json({
+      message: "Success",
+      data: counsellorData
+    })
 
   } catch (err) {
     return res.status(500).json({
-      message:"Something Went Wrong",
+      message: "Something Went Wrong",
       error: err.message
     })
   }
