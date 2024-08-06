@@ -38,9 +38,18 @@ const ReportCards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${baseUrl}/getCounsellorsWithStudents`
-        );
+        const response = await toast.promise(
+          axios.get(
+           `${baseUrl}/getCounsellorsWithStudents`
+         ),
+
+         {
+          loading: "Fetching Data ...",
+          success: "Data fetched Successfully",
+          error: "Failed to fetch Data"
+        }
+
+        )
         setAllCounsData(response.data);
       } catch (err) {
         console.log(err, "error");

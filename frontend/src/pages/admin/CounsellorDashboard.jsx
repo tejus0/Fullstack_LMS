@@ -13,6 +13,7 @@ import { FaMoneyBill1 } from "react-icons/fa6";
 import { FaMoneyCheck } from "react-icons/fa6";
 import StyledCard from "../../component/StyledCard";
 import SideBar from "../../component/SideBar";
+import toast from "react-hot-toast";
 
 export const baseUrl = import.meta.env.VITE_API;
 
@@ -201,9 +202,18 @@ const CounsellorDashboard = () => {
 
   const fetchPendingAmountDetails = async () => {
     try {
-      let res = await axios.get(
-        `${baseUrl}/getCounsellorPendingAmount/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
-      );
+      let res = await toast.promise(
+        axios.get(
+          `${baseUrl}/getCounsellorPendingAmount/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
+        ),
+
+        {
+          loading: "Fetching Data ...",
+          success: "Data fetched Successfully",
+          error: "Failed to fetch Data"
+        }
+
+      )
       let data = res.data.data;
       data = data.map((elem, i) => ({
         name: elem.name,
