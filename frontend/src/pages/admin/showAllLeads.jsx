@@ -15,9 +15,9 @@ import { useReactToPrint } from "react-to-print";
 import OrganicTableLeads from "./OrganicTableLeads";
 import { MdCloudUpload } from "react-icons/md";
 
-import { FaSort, FaChevronDown, FaChevronUp,FaPowerOff } from "react-icons/fa";
+import { FaSort, FaChevronDown, FaChevronUp, FaPowerOff } from "react-icons/fa";
 import { RiLogoutBoxLine } from "react-icons/ri";
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
 import toast from "react-hot-toast";
 import ShowUnassignedLeads from "./ShowUnassignedLeads";
 import { requiredFields } from "../../data/requiredFieldBulk";
@@ -50,7 +50,7 @@ const ShowAllleads = () => {
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
   const [users, setUsers] = useState([]);
-  const [allUsers , setAllUsers] = useState([])
+  const [allUsers, setAllUsers] = useState([])
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
     direction: "asc",
@@ -104,35 +104,35 @@ const ShowAllleads = () => {
     return `${formattedDate}, ${formattedTime}`;
   };
 
+  const fetchData = async () => {
+    //  this is wrong
+
+    //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
+    //     console.log(err, "error");
+    //   });
+    const response = await toast.promise(
+      axios.get(`${baseUrl}/dashboard`).catch((err) => {
+        console.log(err, "error");
+      }),
+
+      {
+        loading: "Fetching Data ...",
+        success: "Data fetched Successfully",
+        error: "Failed to fetch Data"
+      }
+
+    )
+    setUsers(response.data.data);
+    setAllUsers(response.data.data);
+    setfilter(response.data.data);
+  };
+
+
   useEffect(() => {
-
-    const fetchData = async () => {
-      //  this is wrong
-
-      //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
-      //     console.log(err, "error");
-      //   });
-      const response = await toast.promise(
-        axios.get(`${baseUrl}/dashboard`).catch((err) => {
-          console.log(err, "error");
-        }),
-
-        {
-          loading: "Fetching Data ...",
-          success: "Data fetched Successfully",
-          error: "Failed to fetch Data"
-        }
-
-      )
-      setUsers(response.data.data);
-      setAllUsers(response.data.data);
-      setfilter(response.data.data);
-    };
-
     const fetchCounsellors = async () => {
       try {
         const response = await axios.get(`${baseUrl}/getCounsellorNames`);
-        console.log(response.data, "all counsellors")
+        // console.log(response.data, "all counsellors")
         setAllCouncellors(response.data);
         setLoading(false);
       } catch (error) {
@@ -149,7 +149,6 @@ const ShowAllleads = () => {
     try {
       const res = await axios.get(`${baseUrl}/getCounsellorInfo`);
       setCounsellors(res.data.data);
-      console.log(res.data.data, "all couselloes")
     } catch (error) {
       console.log(error);
       setCounsellors([]);
@@ -175,7 +174,7 @@ const ShowAllleads = () => {
     }
 
     return sortableUsers;
-  }, [users, sortConfig]);
+  }, [users, sortConfig, allUsers]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -200,7 +199,6 @@ const ShowAllleads = () => {
   };
 
   const handelChange = (e) => {
-    console.log(e.target.value);
     setsearch(e.target.value);
 
 
@@ -247,18 +245,31 @@ const ShowAllleads = () => {
 
   const DateSorting = async () => {
     try {
-      const data = await axios.post(`${baseUrl}/sortondate`, { start: date.startDate, end: date.endDate })
+      const data = await toast.promise(
+        axios.post(`${baseUrl}/sortondate`, { start: date.startDate, end: date.endDate }),
+        {
+          loading: "Fetching Data ...",
+          success: "Data fetched Successfully",
+          error: "Failed to fetch Data"
+        }
+
+      )
       if (data.data.students.length === 0) {
         toast.error("No data found");
         setUsers([])
+        setAllUsers([])
         return;
       }
       setUsers(data.data.students);
-      console.log(data.data.students);
+      setAllUsers(data.data.students)
+      setPage(0);
     } catch (error) {
       console.log(error);
     }
   }
+
+  // console.log(users);
+
 
   const filteredUsers = React.useMemo(() => {
     if (leadStatusFilter === "All") {
@@ -279,10 +290,11 @@ const ShowAllleads = () => {
       });
     }
   }, [sortedUsers, leadStatusFilter]);
+
   let paginatedUsers;
-  if(search != ''){
+  if (search != '') {
     paginatedUsers = filteredUsers;
-  }else{
+  } else {
     paginatedUsers = allUsers.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
@@ -315,115 +327,6 @@ const ShowAllleads = () => {
     // document.getElementById("file-input").click();
   };
 
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = async (e) => {
-
-        const ab = e.target.result;
-        const workbook = XLSX.read(ab, { type: 'array' });
-
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet);
-
-        if (jsonData.length === 0) {
-          toast.error("The Sheet you uploaded don't have values");
-        }
-        else {
-          const uploadedField = Object.keys(jsonData[0])
-
-          const allFieldPresent = requiredFields.every(field => uploadedField.includes(field))
-          const noExtraFields = uploadedField.every(field => requiredFields.includes(field))
-
-          if (!allFieldPresent || !noExtraFields) {
-            toast.error("Sheet you uploaded don't have required fields")
-          }
-          else {
-            let isIncorrect = false
-            const fieldsToCheckType = ['contactNumber', 'whatsappNumber', 'neetScore']
-            jsonData.forEach((elem) => (
-              fieldsToCheckType.forEach((item) => {
-                if (typeof elem[item] === 'string') {
-                  return isIncorrect = true
-                }
-              })
-            ))
-
-            if (isIncorrect) {
-              toast.error("Some data is not in correct format")
-            }
-            else {
-              let arr = []
-              jsonData.forEach(row => {
-                fieldsToCheckType.forEach(field => {
-                  row[field] = String(row[field]);
-                });
-                arr.push(row)
-              });
-              try {
-                await toast.promise(
-                  axios.post(`${baseUrl}/insertFromSheet`, jsonData, {
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  }),
-
-                  {
-                    loading: "File is Uploading ...",
-                    success: "File Uploaded Successfully",
-                    error: "Failed to upload file",
-                  }
-
-                )
-              } catch (error) {
-                console.error("Error uploading file and inserting data", error);
-              }
-            }
-
-
-
-          }
-        }
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.onload = async (e) => {
-    //     const data = new Uint8Array(e.target.result);
-    //     const workbook = XLSX.read(data, { type: "array" });
-    //     const sheetName = workbook.SheetNames[0];
-    //     const worksheet = workbook.Sheets[sheetName];
-    //     const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-    //     try {
-    //       const response = await toast.promise(
-    //         axios.post(`${baseUrl}/insertFromSheet`, jsonData, {
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //         }),
-
-    //         {
-    //           loading: "File is Uploading ...",
-    //           success: "File Uploaded Successfully",
-    //           error: "Failed to upload file",
-    //         }
-
-    //       )
-    //     } catch (error) {
-    //       console.error("Error uploading file and inserting data", error);
-    //     }
-    //   };
-    //   reader.readAsArrayBuffer(file);
-    // }
-  };
 
   const handleAssignLeads = async () => {
     console.log(rangeStart, "start", rangeEnd, "end")
@@ -469,16 +372,16 @@ const ShowAllleads = () => {
 
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg sm:ml-20 ">
           <div className="flex justify-end gap-12 items-center">
-           <div>
-        <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setModalOpen(true)}
-        className="mb-4"
-      >
-        Assign Leads to Counsellors
-      </Button>
-        </div>
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setModalOpen(true)}
+                className="mb-4"
+              >
+                Assign Leads to Counsellors
+              </Button>
+            </div>
             {/* <div>
               <Button
                 variant="contained"
@@ -545,7 +448,8 @@ const ShowAllleads = () => {
                   showNewTable={showNewTable}
                   setShowNewTable={setShowNewTable}
                   setShowUnassignedTable={setShowUnassignedTable}
-isAdmin= {true}                
+                  isAdmin={true}
+                  resetUser={fetchData}
                 />
               </div>
             </div>
@@ -554,8 +458,8 @@ isAdmin= {true}
           {showUnassignedTable ? <ShowUnassignedLeads /> : (!showNewTable ? <div>
             {/* Modal */}
             {modalOpen && (
-              <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-[#0d131fad]" onClick={()=>setModalOpen(false)}>
-                <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e)=>e.stopPropagation()}>
+              <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-[#0d131fad]" onClick={() => setModalOpen(false)}>
+                <div className="bg-white p-6 rounded shadow-lg w-96" onClick={(e) => e.stopPropagation()}>
                   <h2 className="text-lg font-semibold mb-4">Assign Leads to Counsellors</h2>
                   <div className="mb-4">
                     <label htmlFor="rangeStart" className="block text-sm font-medium text-gray-700">Start Index:</label>
