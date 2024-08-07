@@ -377,8 +377,8 @@ const CounsellorDashboard = () => {
   }, []);
 
   return (
-    <div className="flex">
-      <SideBar/>
+    <div className="">
+      {/* <SideBar/> */}
       <div className="flex flex-col gap-2 justify-between p-0">
         <div className="p-4 md:p-9 text-2xl font-semibold flex flex-col gap-9">
           {/* Name Container */}

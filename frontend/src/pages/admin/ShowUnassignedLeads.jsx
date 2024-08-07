@@ -133,9 +133,18 @@ const ShowUnassignedLeads = () => {
       //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
         //     console.log(err, "error");
         //   });
-        const response = await axios.get(`${baseUrl}/getUnassignedLeads`).catch((err) => {
-          console.log(err, "error");
-        });
+        const response = await toast.promise(
+          axios.get(`${baseUrl}/getUnassignedLeads`).catch((err) => {
+            console.log(err, "error");
+          }),
+
+          {
+            loading: "Fetching Data ...",
+            success: "Data fetched Successfully",
+            error: "Failed to fetch Data"
+          }
+
+        )
         console.log(response.data, "unassigned leads");
         setUsers(response.data.data);
         setfilter(response.data.data);

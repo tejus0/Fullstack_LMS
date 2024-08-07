@@ -17,10 +17,7 @@ import TablePaginationActions from "@mui/material/TablePagination/TablePaginatio
 import FilterDrawer from "../../../component/FilterDrawer";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
-
-
 const Table = () => {
-
   const [columns, setColumns] = useState([
     { visible: true, label: "name" },
     { visible: true, label: "registeredOn" },
@@ -57,42 +54,45 @@ const Table = () => {
   const [filter, setfilter] = useState([]);
   const [date, setDate] = useState({
     startDate: "",
-    endDate: ""
-  })
+    endDate: "",
+  });
 
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const [leadStatusFilter, setLeadStatusFilter] = useState("All");
   const [isLeadStatusDropdownOpen, setIsLeadStatusDropdownOpen] =
     useState(false);
-    
-    const [showNewTable, setShowNewTable] = useState(false);
+
+  const [showNewTable, setShowNewTable] = useState(false);
   const navigate = useNavigate();
 
-  const [activeButton, setActiveButton] = useState('assigned'); // 'assigned' or 'college'
+  const [activeButton, setActiveButton] = useState("assigned"); // 'assigned' or 'college'
 
   // Function to fetch College Leads data
   const fetchCollegeLeads = async () => {
     try {
-      const response = await axios
-        .get(`${baseUrl}/showCounsCollegeLeads/${id}`)
-        console.log(response,"response in pecific college leads")
+      const response = await toast.promise(
+        axios.get(`${baseUrl}/showCounsCollegeLeads/${id}`),
+        {
+          loading: "Fetching Data ...",
+          success: "Data fetched Successfully",
+          error: "Failed to fetch Data",
+        }
+      );
+      console.log(response, "response in pecific college leads");
       setUsers(response.data);
       setfilter(response.data);
       setFilteredUsers(response.data);
-      setActiveButton("college")
-      setPage(0)
+      setActiveButton("college");
+      setPage(0);
     } catch (error) {
-      console.error('Error fetching college leads:', error);
+      console.error("Error fetching college leads:", error);
     }
   };
-
-  
 
   const handleToggleTable = () => {
     setShowNewTable(!showNewTable);
   };
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -109,7 +109,6 @@ const Table = () => {
   };
 
   useEffect(() => {
-    
     fetchData();
   }, [id]);
 
@@ -117,18 +116,16 @@ const Table = () => {
     //  this is wrong
 
     const response = await toast.promise(
-      axios.get(`${baseUrl}/getCounsellorDataList/${id}`)
-        .catch((err) => {
-          console.log(err, "error");
-        }),
+      axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch((err) => {
+        console.log(err, "error");
+      }),
 
-        {
-          loading: "Fetching Data ...",
-          success: "Data fetched Successfully",
-          error: "Failed to fetch Data"
-        }
-
-    )
+      {
+        loading: "Fetching Data ...",
+        success: "Data fetched Successfully",
+        error: "Failed to fetch Data",
+      }
+    );
 
     // const response = await axios.get(`${baseUrl}/dashboard`).catch(err => {
     //   console.log(err, "error");
@@ -136,9 +133,9 @@ const Table = () => {
     setUsers(response.data);
     setfilter(response.data);
     setFilteredUsers(response.data);
-    setActiveButton('assigned')
+    setActiveButton("assigned");
   };
-  
+
   const sortedUsers = React.useMemo(() => {
     let sortableUsers = [...users];
     if (sortConfig !== null) {
@@ -187,10 +184,13 @@ const Table = () => {
 
   const DateSorting = async () => {
     try {
-      const data = await axios.post(`${baseUrl}/sortondate`, { start: date.startDate, end: date.endDate })
+      const data = await axios.post(`${baseUrl}/sortondate`, {
+        start: date.startDate,
+        end: date.endDate,
+      });
       if (data.data.students.length === 0) {
         toast.error("No data found");
-        setUsers([])
+        setUsers([]);
         return;
       }
       setUsers(data.data.students);
@@ -198,7 +198,7 @@ const Table = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -317,64 +317,62 @@ const Table = () => {
               </Button>
             </Link>
             <div className="flex">
-            <select
-              value={SearchBy}
-              onChange={(e) => setSearchBy(e.target.value)}
-              className="border-2 border-black border-r-0 w-[100px]"
-            >
-              {/* <option value="email">Email</option> */}
-              <option value="name">Name</option>
-              <option value="neetScore">neetScore</option>
-              <option value="state">state</option>
-              <option value="courseSelected">courseSelected</option>
-              <option value="contactNumber">contactNumber</option>
-            </select>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={search}
-              onChange={handelChange}
-            />
+              <select
+                value={SearchBy}
+                onChange={(e) => setSearchBy(e.target.value)}
+                className="border-2 border-black border-r-0 w-[100px]"
+              >
+                {/* <option value="email">Email</option> */}
+                <option value="name">Name</option>
+                <option value="neetScore">neetScore</option>
+                <option value="state">state</option>
+                <option value="courseSelected">courseSelected</option>
+                <option value="contactNumber">contactNumber</option>
+              </select>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={handelChange}
+              />
             </div>
             <div>
-                <IconButton onClick={toggleDrawer(true)}>
-                  <FilterAltIcon />
-                </IconButton>
-                <FilterDrawer
-                  open={drawerOpen}
-                  onClose={toggleDrawer(false)}
-                  searchBy={SearchBy}
-                  setSearchBy={setSearchBy}
-                  onChange={handelChange}
-                  search={search}
-                  columns={columns}
-                  handleSelectRow={handleSelectRow}
-                  filterDate={DateSorting}
-                  setdate={setDate}
-                  date={date}
-                  isAdmin= {false}
-                  // handleToggleTable={handleToggleTable}
-                  // showNewTable={showNewTable}
-                  // setShowNewTable={setShowNewTable}
-                  // setShowUnassignedTable={setShowUnassignedTable}
-                  
-                />
-              </div>
+              <IconButton onClick={toggleDrawer(true)}>
+                <FilterAltIcon />
+              </IconButton>
+              <FilterDrawer
+                open={drawerOpen}
+                onClose={toggleDrawer(false)}
+                searchBy={SearchBy}
+                setSearchBy={setSearchBy}
+                onChange={handelChange}
+                search={search}
+                columns={columns}
+                handleSelectRow={handleSelectRow}
+                filterDate={DateSorting}
+                setdate={setDate}
+                date={date}
+                isAdmin={false}
+                // handleToggleTable={handleToggleTable}
+                // showNewTable={showNewTable}
+                // setShowNewTable={setShowNewTable}
+                // setShowUnassignedTable={setShowUnassignedTable}
+              />
+            </div>
           </div>
           <div className=" flex align-middle gap-2">
-          <Button
-        onClick={fetchData}
-        disabled={activeButton === 'assigned'}
-      >
-        Assigned Leads
-      </Button>
-      <Button
-        onClick={fetchCollegeLeads}
-        disabled={activeButton === 'college'}
-      >
-        College Leads
-      </Button>
-          <h2 className="bg-gray-400 flex items-center text-white p-2 rounded-md">{activeButton === 'assigned' ? 'Assigned Leads' : 'College Leads'}</h2>
+            <Button onClick={fetchData} disabled={activeButton === "assigned"}>
+              Assigned Leads
+            </Button>
+            <Button
+              onClick={fetchCollegeLeads}
+              disabled={activeButton === "college"}
+            >
+              College Leads
+            </Button>
+            <h2 className="bg-gray-400 flex items-center text-white p-2 rounded-md">
+              {activeButton === "assigned" ? "Assigned Leads" : "College Leads"}
+            </h2>
           </div>
 
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 mt-4">
@@ -384,159 +382,157 @@ const Table = () => {
                   S. No.
                 </th>
                 {columns.find((col) => col.visible && col.label === "name") && (
-                    <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center">
-                        Name
-                        {/* <FaSort
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center">
+                      Name
+                      {/* <FaSort
                           onClick={() => handleSort("name")}
                           style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                         /> */}
-                      </div>
-                    </th>
-                  )}
+                    </div>
+                  </th>
+                )}
                 {columns.find(
-                    (col) => col.visible && col.label === "registeredOn"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Registered ON
-                          {/* <FaSort
+                  (col) => col.visible && col.label === "registeredOn"
+                ) && (
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex gap-2 items-center">
+                      Registered ON
+                      {/* <FaSort
                             onClick={() => handleSort("createdAt")}
                             style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                           /> */}
-                        </div>
-                      </th>
-                    )}
-                 {columns.find(
-                    (col) => col.visible && col.label === "neetScore"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Neet Score
-                          {/* <FaSort
+                    </div>
+                  </th>
+                )}
+                {columns.find(
+                  (col) => col.visible && col.label === "neetScore"
+                ) && (
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex gap-2 items-center">
+                      Neet Score
+                      {/* <FaSort
                             onClick={() => handleSort("neetScore")}
                             style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                           /> */}
-                        </div>
-                      </th>
-                    )}
+                    </div>
+                  </th>
+                )}
                 {columns.find(
-                    (col) => col.visible && col.label === "DateToVisit"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Slot Date
-                          {/* <FaSort
+                  (col) => col.visible && col.label === "DateToVisit"
+                ) && (
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex gap-2 items-center">
+                      Slot Date
+                      {/* <FaSort
                             onClick={() => handleSort("DateToVisit")}
                             style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                           /> */}
-                        </div>
-                      </th>
-                    )}
+                    </div>
+                  </th>
+                )}
                 {columns.find(
-                    (col) => col.visible && col.label === "state"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          State
-                          {/* <FaSort
+                  (col) => col.visible && col.label === "state"
+                ) && (
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex gap-2 items-center">
+                      State
+                      {/* <FaSort
                             onClick={() => handleSort("state")}
                             style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                           /> */}
-                        </div>
-                      </th>
-                    )}
+                    </div>
+                  </th>
+                )}
                 {columns.find(
-                    (col) => col.visible && col.label === "course"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Course
-                          {/* <FaSort
+                  (col) => col.visible && col.label === "course"
+                ) && (
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex gap-2 items-center">
+                      Course
+                      {/* <FaSort
                             onClick={() => handleSort("courseSelected")}
                             style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                           /> */}
-                        </div>
-                      </th>
-                    )}
+                    </div>
+                  </th>
+                )}
                 {columns.find(
-                    (col) => col.visible && col.label === "contactNo"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Contact No
-                          {/* <FaSort
+                  (col) => col.visible && col.label === "contactNo"
+                ) && (
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex gap-2 items-center">
+                      Contact No
+                      {/* <FaSort
                             onClick={() => handleSort("contactNumber")}
                             style={{ cursor: "pointer", marginLeft: "0.5rem" }}
                           /> */}
-                        </div>
-                      </th>
-                    )}
-                    {columns.find(
+                    </div>
+                  </th>
+                )}
+                {columns.find(
                   (col) => col.visible && col.label === "leadStatus"
                 ) && (
-                <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center relative">
-                    Lead Status
-                    {isLeadStatusDropdownOpen ? (
-                      <FaChevronUp
-                        onClick={toggleLeadStatusDropdown}
-                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                      />
-                    ) : (
-                      <FaChevronDown
-                        onClick={toggleLeadStatusDropdown}
-                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                      />
-                    )}
-                    {isLeadStatusDropdownOpen && (
-                      
-
-                      <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
-                        <li
-                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() => handleLeadStatusFilter("All")}
-                        >
-                          All
-                        </li>
-                        <li
-                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() => handleLeadStatusFilter("Cold")}
-                        >
-                          Cold
-                        </li>
-                        <li
-                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() => handleLeadStatusFilter("Hot")}
-                        >
-                          Hot
-                        </li>
-                        <li
-                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() => handleLeadStatusFilter("Warm")}
-                        >
-                          Warm
-                        </li>
-                        <li
-                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() =>
-                            handleLeadStatusFilter("Paid Counselling")
-                          }
-                        >
-                          Paid Counselling
-                        </li>
-                        <li
-                          className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                          onClick={() =>
-                            handleLeadStatusFilter("Associate College")
-                          }
-                        >
-                          Associate College
-                        </li>
-                      </ul>
-                    )}
-                  </div>
-                </th>
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center relative">
+                      Lead Status
+                      {isLeadStatusDropdownOpen ? (
+                        <FaChevronUp
+                          onClick={toggleLeadStatusDropdown}
+                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                        />
+                      ) : (
+                        <FaChevronDown
+                          onClick={toggleLeadStatusDropdown}
+                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                        />
+                      )}
+                      {isLeadStatusDropdownOpen && (
+                        <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() => handleLeadStatusFilter("All")}
+                          >
+                            All
+                          </li>
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() => handleLeadStatusFilter("Cold")}
+                          >
+                            Cold
+                          </li>
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() => handleLeadStatusFilter("Hot")}
+                          >
+                            Hot
+                          </li>
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() => handleLeadStatusFilter("Warm")}
+                          >
+                            Warm
+                          </li>
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() =>
+                              handleLeadStatusFilter("Paid Counselling")
+                            }
+                          >
+                            Paid Counselling
+                          </li>
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() =>
+                              handleLeadStatusFilter("Associate College")
+                            }
+                          >
+                            Associate College
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                  </th>
                 )}
                 <th scope="col" className="px-6 py-3">
                   Update Status
@@ -596,41 +592,43 @@ const Table = () => {
                 </tr>
               ))} */}
 
-{paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
-                <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <td className="w-4 p-4">
-                    <div className="flex items-center">
-                      {index + 1}
-                    </div>
-                  </td>
+              {paginatedUsers.length > 0 ? (
+                paginatedUsers.map((user, index) => (
+                  <tr
+                    key={user._id}
+                    className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="w-4 p-4">
+                      <div className="flex items-center">{index + 1}</div>
+                    </td>
 
                     {columns.find(
                       (col) => col.visible && col.label === "name"
                     ) && (
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          {user.name}
-                        </th>
-                      )}
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {user.name}
+                      </th>
+                    )}
                     {columns.find(
                       (col) => col.visible && col.label === "registeredOn"
                     ) && (
-                        <td className="px-6 py-4">
-                          {formatDate(user.createdAt)}
-                        </td>
-                      )}
+                      <td className="px-6 py-4">
+                        {formatDate(user.createdAt)}
+                      </td>
+                    )}
                     {columns.find(
                       (col) => col.visible && col.label === "neetScore"
                     ) && <td className="px-6 py-4">{user.neetScore}</td>}
                     {columns.find(
                       (col) => col.visible && col.label === "DateToVisit"
                     ) && (
-                        <td className="px-6 py-4">
-                          {formatDate(user.DateToVisit)}
-                        </td>
-                      )}
+                      <td className="px-6 py-4">
+                        {formatDate(user.DateToVisit)}
+                      </td>
+                    )}
                     {columns.find(
                       (col) => col.visible && col.label === "state"
                     ) && <td className="px-6 py-4">{user.state}</td>}
@@ -641,32 +639,44 @@ const Table = () => {
                       (col) => col.visible && col.label === "contactNo"
                     ) && <td className="px-6 py-4">{user.contactNumber}</td>}
 
-                    
-                  {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
-                    ? user.remarks.FollowUp3[
-                      user.remarks.FollowUp3.length - 1
-                    ].subject
-                    : user.remarks.FollowUp2.length > 0
-                      ? user.remarks.FollowUp2[
-                        user.remarks.FollowUp2.length - 1
-                      ].subject
-                      : user.remarks.FollowUp1.length > 0
-                        ? user.remarks.FollowUp1[
-                          user.remarks.FollowUp1.length - 1
-                        ].subject
-                      : "No Remarks "}</td>}
-                                    <td className="px-6 py-4">
-                                    <Link 
-                      to={`/student/${user._id}`}
-                      state={{ id: `${user._id}`, counsellorID: id, page, origin: 'counsellorProfile'}}
-                    >
-                                        <Button variant="contained">
-                                        Edit
-                                        </Button>
-                                           </Link>
-                                    </td>
-                                </tr>
-                            )): <h1>No Data to Show</h1> }
+                    {columns.find(
+                      (col) => col.visible && col.label === "leadStatus"
+                    ) && (
+                      <td className="px-6 py-4">
+                        {" "}
+                        {user.remarks.FollowUp3.length > 0
+                          ? user.remarks.FollowUp3[
+                              user.remarks.FollowUp3.length - 1
+                            ].subject
+                          : user.remarks.FollowUp2.length > 0
+                          ? user.remarks.FollowUp2[
+                              user.remarks.FollowUp2.length - 1
+                            ].subject
+                          : user.remarks.FollowUp1.length > 0
+                          ? user.remarks.FollowUp1[
+                              user.remarks.FollowUp1.length - 1
+                            ].subject
+                          : "No Remarks "}
+                      </td>
+                    )}
+                    <td className="px-6 py-4">
+                      <Link
+                        to={`/student/${user._id}`}
+                        state={{
+                          id: `${user._id}`,
+                          counsellorID: id,
+                          page,
+                          origin: "counsellorProfile",
+                        }}
+                      >
+                        <Button variant="contained">Edit</Button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <h1>No Data to Show</h1>
+              )}
             </tbody>
           </table>
           <TablePagination
