@@ -46,6 +46,7 @@ const FollowUpSteps = ({ studentId }) => {
   const [UploadImage, setUploadImage] = useState()
   const [file, setfile] = useState()
   const [Url, setUrl] = useState()
+  const [isSubmitting, setIsSubmitting] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,6 +89,10 @@ const FollowUpSteps = ({ studentId }) => {
     }
   }, [FolloupStage, notesByStage]); // Include FolloupStage and notesByStage in the dependency array
 
+  useEffect(() =>{
+    console.log(backendOptions)
+  }, [backendOptions])
+
 
   const handleSecondDropDown = (option) => {
     setSecondDropdown(option)
@@ -129,13 +134,13 @@ const FollowUpSteps = ({ studentId }) => {
         setShowAdditionalDropdown(true);
         break;
       case 'Associate College':
-        let filteredAssociateCollege = associateCollegeOptions;
+        let filteredAssociateCollege = CollegeNames;
         console.log("Paid conselling", paidCounselling)
         if (notesByStage?.FollowUp3.length) {
-          filteredAssociateCollege = associateCollegeOptions.filter((item) => item.option == notesByStage?.FollowUp3[0].additionalOption);
+          filteredAssociateCollege = CollegeNames.filter((item) => item.clg == notesByStage?.FollowUp3[0].additionalOption);
         }
         // Assuming options are fetched from an external JavaScript file
-        setAdditionalDropdown(CollegeNames); // Replace with your actual options from an external file
+        setAdditionalDropdown(filteredAssociateCollege); // Replace with your actual options from an external file
         setShowAdditionalDropdown(true);
         break;
       default:
@@ -156,6 +161,7 @@ const FollowUpSteps = ({ studentId }) => {
     e.preventDefault();
     // Your existing addFollowUp function remains unchanged
     if (SelectedOption !== "") {
+      setIsSubmitting(true);
       const newItem = {
         option: SelectedOption,
         additionalOption: "",
@@ -190,7 +196,7 @@ const FollowUpSteps = ({ studentId }) => {
           if (!preBookingAmount) {
             toast.error("Please Enter Prebooking Amount")
             throw new Error("Please Enter Prebooking Amount")
-          } else if (preBookingAmount > pendingAmount) {
+          } else if (subject == "Paid Counselling" && preBookingAmount > pendingAmount ) {
             toast.error("Prebooking Amount Should Be Less Than Pending Amount");
             throw new Error("Prebooking Amount Should Be Less Than Pending Amount")
           }
@@ -198,18 +204,27 @@ const FollowUpSteps = ({ studentId }) => {
             toast.error("Please Upload Fee Receipt")
           }
           // console.log(SelectedOption,secondDropdown,preBookingAmount,"follow3 hai")
-          await axios.post(`${baseUrl}/createFollowUp3`, {
-            _id: studentId,
-            name: subject,
-            followUpStage: FolloupStage,
-            additionalOption: secondDropdown, // Include additionalOption in API call
-            preBookingAmount: newItem.preBookingAmount, // Include preBookingAmount in API call
-            file: file
-          }, {
-            headers: {
-              "Content-Type": "multipart/form-data",
+          await toast.promise(
+            axios.post(`${baseUrl}/createFollowUp3`, {
+              _id: studentId,
+              name: subject,
+              followUpStage: FolloupStage,
+              additionalOption: secondDropdown, // Include additionalOption in API call
+              preBookingAmount: newItem.preBookingAmount, // Include preBookingAmount in API call
+              file: file
+            }, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            }),
+
+            {
+              loading: "Saving FollowUp ...",
+              success: "Followup added successfully",
+              error: "Failed to add followup. Please try again",
             }
-          });
+
+          )
         }
         else {
 
@@ -226,7 +241,7 @@ const FollowUpSteps = ({ studentId }) => {
         }));
 
         setCountaa(prev => prev + 1)
-        toast.success("Follow Up Added Successfully !");
+        // toast.success("Follow Up Added Successfully !");
         setSelectedOption("");
         setSecondDropdown("")
         setPreBookingAmount("")
@@ -236,7 +251,9 @@ const FollowUpSteps = ({ studentId }) => {
         closeModal();
       } catch (error) {
         console.error("Error adding follow-up:", error);
-        toast.error("Failed to add follow-up. Please try again.");
+        // toast.error("Failed to add follow-up. Please try again.");
+      } finally {
+        setIsSubmitting(false);
       }
     } else {
       toast.error("Select an option first!");
@@ -402,9 +419,11 @@ const FollowUpSteps = ({ studentId }) => {
               placeholder="Enter pre-booking amount..."
             />
 
-            <div className="flex gap-6  items-center">
-
-              <input className="w-[250px] h-[50px] bg-white border-0 rounded-lg" type="file" name="file" onChange={handleImage} />
+            <div className="flex flex-col gap-2 justify-center">
+            < label className="block text-sm font-medium text-gray-700">
+              Fee Receipt
+            </label>
+              <input className="w-[250px] h-[50px] bg-white border-0 rounded-lg" type="file" name="file" accept=".jpeg, .png, .jpg, .avif" onChange={handleImage} />
 
               {UploadImage && <img className="w-20 h-20 my-5 " src={UploadImage} alt="" />}
               {/* <button disabled={!UploadImage} type="submit" className="bg-white disabled:bg-gray-500 p-3 rounded-xl">Upload</button> */}
@@ -416,11 +435,16 @@ const FollowUpSteps = ({ studentId }) => {
               className="bg-white p-3 rounded-xl disabled:bg-slate-300 text-blue-800 "
               // onClick={addFollowUp}
               type="submit"
+              disabled={isSubmitting}
             >
-              Submit
+              {isSubmitting ? "Submitting..." : "Submit"}
             </button>}
-            <div>Pending Amount: {pendingAmount}</div>
-            <div>Total Amount: {totalAmount}</div>
+            {SelectedOption == "Paid Counselling" && 
+            <div>
+              <div>Pending Amount: {pendingAmount}</div>
+              <div>Total Amount: {totalAmount}</div>
+            </div>
+            }
           </form>
         )
         }
