@@ -299,15 +299,7 @@ const Table = () => {
               {/* <a href={ `http://localhost:5173/?counsId=${id}`}><PersonAddAltIcon /></a> */}
             </IconButton>
           </Tooltip>
-          <Tooltip title="Bulk Upload">
-            <IconButton>
-              <Link to={`/?counsId=${id}`} target="_blank">
-                <GroupAddIcon />
-              </Link>
-              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
-              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
-            </IconButton>
-          </Tooltip>
+          
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
           <div className="flex justify-end items-center gap-12">
