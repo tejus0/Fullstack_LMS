@@ -345,7 +345,7 @@ const OfficeDashboard = () => {
             </p>
             {students.length ? (
               Object.values(item.data2).every((val) => val == 0) ? (
-                <p className="w-full h-full flex justify-center items-center text-lg font-medium text-gray-700">
+                <p className="w-full h-full flex justify-center items-center text-lg font-medium text-gray-700 border-[1px] border-gray-200 shadow-purple-400 shadow-2xl" style={{ height: "300px" }}>
                   No Data Available
                 </p>
               ) : (
@@ -382,9 +382,7 @@ const OfficeDashboard = () => {
           {
             pendingAmountData.length ? 
             <MaterialTable rows={pendingAmountData} bgColor="purple" />:
-            <div>
-              <p>No Data Available</p>
-            </div>
+            <p className="w-full h-full flex justify-center items-center text-gray-700 text-xl">No Data Available</p>
           }
         </div>
         {/* <div className="flex-1 bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4 flex flex-col gap-5">
@@ -410,7 +408,7 @@ const OfficeDashboard = () => {
 
         <div className="flex-1 bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4 flex flex-col gap-5">
           <p className="text-xl font-semibold">Top Performer</p>
-          <div className="flex flex-col gap-5 p-9 overflow-y-auto h-[250px] border-[10px] rounded-lg border-purple-400">
+          <div className="flex flex-col gap-5 p-9 overflow-y-auto h-[450px] border-[10px] rounded-lg border-purple-400">
             {/* Header Row */}
             <div className="flex gap-4 font-bold">
               <span className="flex-1">Name</span>

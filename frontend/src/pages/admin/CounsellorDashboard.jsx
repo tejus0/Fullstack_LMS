@@ -348,6 +348,27 @@ const CounsellorDashboard = () => {
     },
   ];
 
+  // const chartData = [
+  //   {
+  //     label: "FollowUp 3",
+  //     total: totalFollowUp3,
+  //     data: followUp_3,
+  //     data2: followUp_3,
+  //   },
+  //   {
+  //     label: "FollowUp 2",
+  //     total: followUp_2_data.totalFollowUp2,
+  //     data: followUp_2,
+  //     data2: followUp_2_data,
+  //   },
+  //   {
+  //     label: "FollowUp 1",
+  //     total: followUp_1_data.totalFollowUp1,
+  //     data: followUp_1,
+  //     data2: followUp_1_data,
+  //   },
+  // ];
+
   const getAssignedStudents = async () => {
     // try {
     //     const res = await toast.promise(
@@ -398,7 +419,12 @@ const CounsellorDashboard = () => {
             <div className="flex-1 flex flex-col gap-4">
               <p className="font-semibold text-xl md:text-start text-center">
                 FollowUp 3: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp3}</span>
-              </p>
+              </p>{console.log("followup3" , followUp_3)}
+              {
+                Object.values(followUp_3).every((item)=>item.value == "NaN") ? 
+                <p className="w-full h-full flex justify-center items-center text-lg font-medium text-gray-700 border-[1px] border-gray-200 shadow-purple-400 shadow-2xl">
+                  No Data Available
+                </p>:
               <div
                   className="bg-purple-50 rounded-lg shadow-purple-400 shadow-2xl w-full md:w-auto flex justify-center items-center"
                   style={{ height: "300px" }}
@@ -406,30 +432,43 @@ const CounsellorDashboard = () => {
                 <NivoPieChart data={followUp_3} students={assignedStudents} />
                 {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
+              }
             </div>
             <div className="flex-1 flex flex-col gap-4">
               <p className="font-semibold text-xl text-center md:text-start">
                 FollowUp 2: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp2}</span>
               </p>
+              {
+                Object.values(followUp_2).every((item)=>item.value == "NaN") ? 
+                <p className="w-full h-full flex justify-center items-center text-lg font-medium text-gray-700 border-[1px] border-gray-200 shadow-purple-400 shadow-2xl">
+                  No Data Available
+                </p>:
               <div
                   className="bg-purple-50 rounded-lg shadow-purple-400 shadow-2xl w-full md:w-auto flex justify-center items-center"
                   style={{ height: "300px" }}
                 >
                 <NivoPieChart data={followUp_2} students={assignedStudents} />
-                {/* <div className="text-center">Total FollowUp2 : {totalFollowUp2}</div> */}
+                {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
+              }
             </div>
             <div className="flex-1 flex flex-col gap-4">
               <p className="font-semibold text-xl text-center md:text-start">
                 FollowUp 1: <span className="p-1 rounded-lg px-3 bg-gray-400 text-white">{totalFollowUp1}</span>
               </p>
+              {
+                Object.values(followUp_1).every((item)=>item.value == "NaN") ? 
+                <p className="w-full h-full flex justify-center items-center text-lg font-medium text-gray-700 border-[1px] border-gray-200 shadow-purple-400 shadow-2xl">
+                  No Data Available
+                </p>:
               <div
                   className="bg-purple-50 rounded-lg shadow-purple-400 shadow-2xl w-full md:w-auto flex justify-center items-center"
                   style={{ height: "300px" }}
                 >
                 <NivoPieChart data={followUp_1} students={assignedStudents} />
-                {/* <div className="text-center">Total FollowUp1 : {totalFollowUp1}</div> */}
+                {/* <div className="text-center">Total FollowUp3 : {totalFollowUp3}</div> */}
               </div>
+              }
             </div>
           </div>
 
@@ -440,7 +479,13 @@ const CounsellorDashboard = () => {
             {/* Pending Amount Table Container */}
             <div className="flex-1 w-full p-5 bg-purple-50 rounded-lg flex shadow-purple-400 shadow-2xl border-[0.1px] flex-col gap-4">
               <p>Pending Amount</p>
-              <MaterialTable rows={pendingAmountTableData} bgColor="purple" />
+              {
+                pendingAmountTableData.length ? 
+                <MaterialTable rows={pendingAmountTableData} bgColor="purple" />:
+                <p className="w-full h-full flex justify-center items-center text-gray-700 text-xl">
+                  No Data Available
+                </p>
+              }
             </div>
             <div className="flex-1 bg-purple-50 rounded-lg shadow-purple-400 shadow-xl p-5 px-4">
               {/* Heading */}
