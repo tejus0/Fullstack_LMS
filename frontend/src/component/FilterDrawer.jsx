@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Drawer, List, ListItem, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
 const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable, showNewTable, setShowNewTable, setShowUnassignedTable, isAdmin, resetUser }) => {
-    // State for dropdown selection
+    // State for dropdown selection       
+
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleDateChange = (e) => {
