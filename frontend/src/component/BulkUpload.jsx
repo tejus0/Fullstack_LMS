@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, List, ListItem, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 import * as XLSX from 'xlsx';
-import { requiredFields, requiredFieldsFornoteOnly } from '../data/requiredFieldBulk';
+import { requiredFields, requiredFieldsFornoteOnly, totalFields } from '../data/requiredFieldBulk';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 const BulkUpload = ({ open, onClose }) => {
@@ -22,44 +22,59 @@ const BulkUpload = ({ open, onClose }) => {
 
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
-                const jsonData = XLSX.utils.sheet_to_json(sheet);
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+                console.log(jsonData);
 
-                if (jsonData.length === 0) {
+                const filteredJsonData = jsonData.map(row => {
+                    return Object.keys(row)
+                        .filter(key => !key.startsWith("__EMPTY"))
+                        .reduce((obj, key) => {
+                            obj[key] = row[key];
+                            return obj;
+                        }, {});
+                });
+
+                if (filteredJsonData.length === 0) {
                     toast.error("The Sheet you uploaded don't have values");
                 }
+
                 else {
-                    const uploadedField = Object.keys(jsonData[0])
-
+                    const uploadedField = Object.keys(filteredJsonData[0])
                     const allFieldPresent = requiredFields.every(field => uploadedField.includes(field))
-                    const noExtraFields = uploadedField.every(field => requiredFields.includes(field))
 
+                    const noExtraFields = uploadedField.every(field => totalFields.includes(field));
+
+                    let count = 0;
+                    let emptyAt;
                     if (!allFieldPresent || !noExtraFields) {
                         toast.error("Sheet you uploaded don't have required fields")
                     }
                     else {
                         let isIncorrect = false
-                        const fieldsToCheckType = ['contactNumber', 'whatsappNumber', 'neetScore', 'neetAIR']
-
-                        const hasEmptyFields = jsonData.some(row => {
+                        const fieldsToCheckType = ['contactNumber', 'neetAIR']
+                        const hasEmptyFields = filteredJsonData.some(row => {
+                            count = count + 1
                             return requiredFields.some(field => {
                                 const isEmpty = row[field] === "" || row[field] === null || row[field] === undefined;
+
                                 if (isEmpty) {
-                                    toast.error(`${field} is empty in your excel sheet`)
+                                    emptyAt = count
+                                    toast.error(`${field} is empty in your excel sheet at line number ${emptyAt} `)
                                 }
                                 return isEmpty;
                             });
                         });
 
 
-
                         if (hasEmptyFields) {
-                            toast.error("Some fields are empty")
+                            // toast.error(`Some fields are empty at line number ${count}`)
+                            setVal('')
                             return;
                         }
 
 
 
-                        jsonData.forEach((elem) => (
+                        filteredJsonData.forEach((elem) => (
                             fieldsToCheckType.forEach((item) => {
                                 if (typeof elem[item] === 'string') {
                                     return isIncorrect = true
@@ -73,7 +88,7 @@ const BulkUpload = ({ open, onClose }) => {
                         }
                         else {
                             let arr = []
-                            jsonData.forEach(row => {
+                            filteredJsonData.forEach(row => {
                                 fieldsToCheckType.forEach(field => {
                                     row[field] = String(row[field]);
                                 });
@@ -83,7 +98,7 @@ const BulkUpload = ({ open, onClose }) => {
 
                             try {
                                 await toast.promise(
-                                    axios.post(`${baseUrl}/insertFromSheet`, jsonData, {
+                                    axios.post(`${baseUrl}/insertFromSheet`, filteredJsonData, {
                                         headers: {
                                             "Content-Type": "application/json",
                                         },
@@ -104,8 +119,8 @@ const BulkUpload = ({ open, onClose }) => {
                 }
                 setVal('')
             };
-
             reader.readAsArrayBuffer(file);
+
         }
         // if (file) {
         //   const reader = new FileReader();
