@@ -596,7 +596,7 @@ const sendData = async (formData) => {
 
     if (!response.ok) {
       const err = await response.json();
-      const errorData = err.message;
+      const errorData = err.msg;
       throw new Error(errorData);
     }
 

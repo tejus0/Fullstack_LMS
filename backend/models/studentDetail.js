@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const otherResponse = new mongoose.Schema({
     name: {
         type: String,
-        // required: [true, "Please enter your name "]
+        required: [true, "Please enter your name "]
     },
 
     contactNumber: {
@@ -20,7 +20,7 @@ const otherResponse = new mongoose.Schema({
 
     email: {
         type: String,
-        // required: [true, "Please enter your email "]
+        required: [true, "Please enter your email "]
     },
 
     // isEmailVerified: {
@@ -41,23 +41,23 @@ const otherResponse = new mongoose.Schema({
 
     district: {
         type: String,
-        // required: [true, "Please enter your city "]
+        required: [true, "Please enter your city "]
     },
 
     state: {
         type: String,
-        // required: [true, "Please enter your state "]
+        required: [true, "Please enter your state "]
     },
 
     courseSelected: {
         type: String,
-        // required: [true, "Please Select Course "]
+        required: [true, "Please Select Course "]
     },
 
     preferredCollege: {
         type: String,
         default: "",
-        // required: [true, "Please Select Preferred College "]
+        required: [true, "Please Select Preferred College "]
     },
 
     source: {
@@ -94,15 +94,15 @@ const studentDetailSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            default: ""
-            // required: [true, "Please enter your name "]
+            // default: "",
+            required: [true, "Please enter your name "]
         },
 
         contactNumber: {
             type: String,
-            default: "",
-            // required: [true, 'Phone number is required'],
-            // match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+            // default: "",
+            required: [true, 'Phone number is required'],
+            match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
         isMobileVerified: {
@@ -112,8 +112,8 @@ const studentDetailSchema = new mongoose.Schema(
 
         email: {
             type: String,
-            default: "",
-            // required: [true, "Please enter your email "]
+            // default: "",
+            required: [true, "Please enter your email "]
         },
 
         // isEmailVerified: {
@@ -125,7 +125,7 @@ const studentDetailSchema = new mongoose.Schema(
             type: String,
             default: "",
             // required: [true, 'Phone number is required'],
-            // match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
+            match: [/^\d{10}$/, 'Phone number must be exactly 10 digits']
         },
 
         guardianName: {
@@ -136,20 +136,20 @@ const studentDetailSchema = new mongoose.Schema(
 
         district: {
             type: String,
-            default: "",
-            // required: [true, "Please enter your city "]
+            // default: "",
+            required: [true, "Please enter your city "]
         },
 
         state: {
             type: String,
-            default: "",
-            // required: [true, "Please enter your state "]
+            // default: "",
+            required: [true, "Please enter your state "]
         },
 
         courseSelected: {
             type: String,
-            default: "",
-            // required: [true, "Please Select Course "]
+            // default: "",
+            required: [true, "Please Select Course "]
         },
 
         preferredCollege: {
