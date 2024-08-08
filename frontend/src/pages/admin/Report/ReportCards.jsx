@@ -11,6 +11,7 @@ import {
   Box,
   Paper,
   Button,
+  Avatar,
 } from "@mui/material";
 import axios from "axios";
 import { useStateContext } from "../../../context/StateContext";
@@ -32,26 +33,28 @@ const ReportCards = () => {
   const [data, setData] = useState();
   console.log(searchBy);
   const [loading, setLoading] = useState();
-
+  const [searchTermNoida, setSearchTermNoida] = useState("");
+  const [searchTermKanpur, setSearchTermKanpur] = useState("");
   const navigate = useNavigate();
+
+  const getAvatarUrl = (name) => {
+    return `https://avatars.dicebear.com/api/avataaars/${name}.svg`;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await toast.promise(
-          axios.get(
-           `${baseUrl}/getCounsellorsWithStudents`
-         ),
+          axios.get(`${baseUrl}/getCounsellorsWithStudents`),
 
-         {
-          loading: "Fetching Data ...",
-          success: "Data fetched Successfully",
-          error: "Failed to fetch Data"
-        }
-
-        )
+          {
+            loading: "Fetching Data ...",
+            success: "Data fetched Successfully",
+            error: "Failed to fetch Data",
+          }
+        );
         setAllCounsData(response.data);
-        console.log(response.data,"all couns data in admin report table")
+        console.log(response.data, "all couns data in admin report table");
       } catch (err) {
         console.log(err, "error");
       }
@@ -60,22 +63,49 @@ const ReportCards = () => {
     fetchData();
   }, [baseUrl]);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+  // const handleSearchChangeNoida = (event) => {
+  //   setSearchTermNoida(event.target.value);
+  // };
+
+  // const handleSearchChangeKanpur = (event) => {
+  //   setSearchTermKanpur(event.target.value);
+  // };
+
+  //  const filteredNoidaData = allCounsData.filter((item) => {
+  //    item.counsellor.counsellor_id.charAt(2).toLowerCase() == "n" &&
+  //    item.counsellor.name.toLowerCase().includes(searchTermNoida)},[searchTermNoida]
+  //  );
+
+  //  const filteredKanpurData = allCounsData.filter((item) =>
+  //    item.counsellor.counsellor_id.charAt(2).toLowerCase() === "k" &&
+  //    item.counsellor.name.toLowerCase().includes(searchTermKanpur.toLowerCase())
+  //  );
 
   const filteredData = allCounsData.filter((item) =>
     item.counsellor.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  console.log(filteredData);
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+
+    // filteredData = allCounsData.filter(
+    //   (item) => item.counsellor.name == event.target.value
+    // );
+  };
+
+  // console.log(filteredNoidaData);
+  // console.log(filteredKanpurData);
 
   const countColdCallsByCounsellor = (students) => {
     let totalColdCalls = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2.length>0) {
-        if(student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Cold")){
-          totalColdCalls+=1;
+      if (student.remarks && student.remarks.FollowUp2.length > 0) {
+        if (
+          student.remarks.FollowUp2[
+            student.remarks.FollowUp2.length - 1
+          ].subject.includes("Cold")
+        ) {
+          totalColdCalls += 1;
         }
       }
       // if (student.remarks.FollowUp2 && student.remarks.FollowUp2.length>0) {
@@ -92,9 +122,13 @@ const ReportCards = () => {
   const countHotCallsByCounsellor = (students) => {
     let totalHotLeads = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2.length>0) {
-        if(student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Hot")){
-          totalHotLeads+=1;
+      if (student.remarks && student.remarks.FollowUp2.length > 0) {
+        if (
+          student.remarks.FollowUp2[
+            student.remarks.FollowUp2.length - 1
+          ].subject.includes("Hot")
+        ) {
+          totalHotLeads += 1;
         }
         // const hotCallCount = student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Hot")
         // const hotCallCount = student.remarks.FollowUp2.reduce(
@@ -115,9 +149,13 @@ const ReportCards = () => {
   const countWarmCallsByCounsellor = (students) => {
     let totalWarmCalls = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2.length>0) {
-        if(student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1].subject.includes("Warm")){
-          totalWarmCalls+=1;
+      if (student.remarks && student.remarks.FollowUp2.length > 0) {
+        if (
+          student.remarks.FollowUp2[
+            student.remarks.FollowUp2.length - 1
+          ].subject.includes("Warm")
+        ) {
+          totalWarmCalls += 1;
         }
         // const warmCallCount = student.remarks.FollowUp2.reduce(
         //   (count, followup) => {
@@ -152,8 +190,12 @@ const ReportCards = () => {
         student.remarks.FollowUp1 &&
         student.remarks.FollowUp1.length > 0
       ) {
-        if(student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1].subject.includes("First")){
-          totalCallsDone+=1;
+        if (
+          student.remarks.FollowUp1[
+            student.remarks.FollowUp1.length - 1
+          ].subject.includes("First")
+        ) {
+          totalCallsDone += 1;
         }
         // const totalCallsCount = student.remarks.FollowUp1.reduce(
         //   (count, followup) => {
@@ -171,21 +213,34 @@ const ReportCards = () => {
   };
 
   const noidaCounsData = filteredData.filter((item) => {
-    return item.counsellor.counsellor_id.charAt(2).toLowerCase() === "n"
-  }
-  );
-  const kanpurCounsData = filteredData.filter((item) =>{
-    
-    return item.counsellor.counsellor_id.charAt(2).toLowerCase() == 'k'
-  }
-);
+    return item.counsellor.counsellor_id.toLowerCase().includes("ckn");
+  });
+  const kanpurCounsData = filteredData.filter((item) => {
+    return item.counsellor.counsellor_id.toLowerCase().includes("ckk");
+  });
 
-useEffect(() => {
-  topPerformer();
-}, []);
+  console.log(kanpurCounsData, "kan");
+  console.log(noidaCounsData, "noid");
 
-const topPerformer = async () => {
-  try {
+  const getTopPerformers = (data) => {
+    return (
+      data
+        .map((item) => ({
+          name: item.counsellor.name,
+          leads: leadsUnlocked(item.students) + totalCallsDone(item.students), // Example metric
+          avatar: getAvatarUrl(item.counsellor.name), // Get cartoon avatar URL
+        }))
+        // .sort((a, b) => b.leads - a.leads)  // Sort by leads in descending order
+        .slice(0, 10)
+    ); // Get top 10
+  };
+
+  useEffect(() => {
+    topPerformer();
+  }, []);
+
+  const topPerformer = async () => {
+    try {
       setLoading(true);
       const { data } = await axios.get(`${baseUrl}/getTopPerformer`);
       const totalPerformance = data.totalPerformance;
@@ -256,6 +311,7 @@ const topPerformer = async () => {
   //       <Table>
   //         <TableHead>
   //           <TableRow>
+  // <TableCell><Typography variant="h6">Picture</Typography></TableCell>
   //             <TableCell>
   //               <Typography variant="h6">Name</Typography>
   //             </TableCell>
@@ -285,6 +341,9 @@ const topPerformer = async () => {
   //         <TableBody>
   //           {data.map((item) => (
   //             <TableRow key={item.counsellor.counsellor_id}>
+  // <TableCell>
+  //   <Avatar src={getAvatarUrl(item.counsellor.name)} alt={item.counsellor.name} />
+  // </TableCell>
   //               <TableCell align="left">{item.counsellor.name}</TableCell>
   //               <TableCell align="left">{item.counsellor.mobile}</TableCell>
   //               <TableCell align="left">{item.counsellor.email}</TableCell>
@@ -381,6 +440,7 @@ const topPerformer = async () => {
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
+                  {/* <TableCell>Picture</TableCell> */}
                   <TableCell>Name</TableCell>
                   <TableCell
                     display="flex"
@@ -399,12 +459,17 @@ const topPerformer = async () => {
                   ? "Loading...."
                   : CounstopPerformer?.map((performer, index) => (
                       // <Link to={`/counsellorDashboard/${performer.id}`}>
-                        <TableRow key={index} onClick={() => navigate(`/counsellorDashboard/${performer.objectId}`)}>
-                          <TableCell>{performer.name}</TableCell>
-                          <TableCell align="left">
-                            {performer.admission}
-                          </TableCell>
-                        </TableRow>
+                      <TableRow
+                        key={index}
+                        onClick={() =>
+                          navigate(`/counsellorDashboard/${performer.objectId}`)
+                        }
+                      >
+                        <TableCell>{performer.name}</TableCell>
+                        <TableCell align="left">
+                          {performer.admission}
+                        </TableCell>
+                      </TableRow>
                       // </Link>
                     ))}
               </TableBody>
@@ -438,24 +503,29 @@ const topPerformer = async () => {
         <Box sx={{ overflowY: "auto", maxHeight: "calc(100% - 128px)" }}>
           {/* {renderTable(noidaCounsData, "Noida Office Leads")}
           {renderTable(kanpurCounsData, "Kanpur Office Leads")} */}
-          <TableComponent
-            data={noidaCounsData}
-            title="Noida Office Leads"
-            leadsUnlocked={leadsUnlocked}
-            totalCallsDone={totalCallsDone}
-            countHotCallsByCounsellor={countHotCallsByCounsellor}
-            countColdCallsByCounsellor={countColdCallsByCounsellor}
-            countWarmCallsByCounsellor={countWarmCallsByCounsellor}
-          />
-          <TableComponent
-            data={kanpurCounsData}
-            title="Kanpur Office Leads"
-            leadsUnlocked={leadsUnlocked}
-            totalCallsDone={totalCallsDone}
-            countHotCallsByCounsellor={countHotCallsByCounsellor}
-            countColdCallsByCounsellor={countColdCallsByCounsellor}
-            countWarmCallsByCounsellor={countWarmCallsByCounsellor}
-          />
+
+          {noidaCounsData.length > 0 && (
+            <TableComponent
+              data={noidaCounsData}
+              title="Noida Office Leads"
+              leadsUnlocked={leadsUnlocked}
+              totalCallsDone={totalCallsDone}
+              countHotCallsByCounsellor={countHotCallsByCounsellor}
+              countColdCallsByCounsellor={countColdCallsByCounsellor}
+              countWarmCallsByCounsellor={countWarmCallsByCounsellor}
+            />
+          )}
+          {kanpurCounsData.length > 0 && (
+            <TableComponent
+              data={kanpurCounsData}
+              title="Kanpur Office Leads"
+              leadsUnlocked={leadsUnlocked}
+              totalCallsDone={totalCallsDone}
+              countHotCallsByCounsellor={countHotCallsByCounsellor}
+              countColdCallsByCounsellor={countColdCallsByCounsellor}
+              countWarmCallsByCounsellor={countWarmCallsByCounsellor}
+            />
+          )}
         </Box>
       </Box>
     </Box>

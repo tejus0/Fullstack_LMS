@@ -519,280 +519,253 @@ const ShowAllleads = () => {
                 </div>
               </div>
             )}
-            <table className=" w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    S. No.
-                  </th>
-                  {columns.find((col) => col.visible && col.label === "name") && (
-                    <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center">
-                        Name
-                        <FaSort
-                          onClick={() => handleSort("name")}
-                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                        />
-                      </div>
-                    </th>
-                  )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "registeredOn"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Registered ON
-                          <FaSort
-                            onClick={() => handleSort("createdAt")}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "neetScore"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Neet Score
-                          <FaSort
-                            onClick={() => handleSort("neetScore")}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "DateToVisit"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Slot Date
-                          <FaSort
-                            onClick={() => handleSort("DateToVisit")}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "state"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          State
-                          <FaSort
-                            onClick={() => handleSort("state")}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "course"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Course
-                          <FaSort
-                            onClick={() => handleSort("courseSelected")}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "contactNo"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Contact No
-                          <FaSort
-                            onClick={() => handleSort("contactNumber")}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "counsillor"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex gap-2 items-center">
-                          Counsellor
-                          {/* <FaSort
-                      onClick={() => handleSort("DateToVisit")}
-                      style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                    /> */}
-                        </div>
-                      </th>
-                    )}
-                  {columns.find(
-                    (col) => col.visible && col.label === "leadStatus"
-                  ) && (
-                      <th scope="col" className="px-6 py-3">
-                        <div className="flex relative gap-2 items-center">
-                          Lead Status
-                          {isLeadStatusDropdownOpen ? (
-                            <FaChevronUp
-                              onClick={toggleLeadStatusDropdown}
-                              style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                            // </div>
-                            />
-                          ) : (
-                            <FaChevronDown
-                              onClick={toggleLeadStatusDropdown}
-                              style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                            />
-                          )}
-                          {isLeadStatusDropdownOpen && (
-                            <div className="absolute z-10 top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg">
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("All");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                All
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Hot Lead");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Hot Leads
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Warm");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Warm
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Cold Call Done");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Cold Call Done
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Paid Counselling");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Paid Counselling
-                              </button>
-                              <button
-                                onClick={() => {
-                                  setLeadStatusFilter("Associate College");
-                                  toggleLeadStatusDropdown();
-                                }}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Associate College
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </th>
-                    )}
-                  <th scope="col" className="px-6 py-3">
-                    <div className="flex gap-2 items-center">
-                      Update Status
-                      {/* <FaSort
-                        onClick={() => handleSort("DateToVisit")}
-                        style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                      /> */}
-                    </div></th>
-                </tr>
-              </thead>
-              <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
-                {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
-                  <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="w-4 p-4">
-                      <div className="flex items-center">
-                        {index + 1}
-                      </div>
-                    </td>
+            <table className=" w-full text-sm text-left rtl:text-right text-black-500 dark:text-black-400 border-gray-400 border-2">
+            <thead className="bg-gray-50 dark:bg-gray-800 text-xs uppercase text-gray-700 dark:text-gray-200 border-b-2">
+  <tr>
+    <th scope="col" className="px-6 py-3 text-black dark:text-white">
+      S. No.
+    </th>
+    {columns.find((col) => col.visible && col.label === "name") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Name
+          <FaSort
+            onClick={() => handleSort("name")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "registeredOn") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Registered ON
+          <FaSort
+            onClick={() => handleSort("createdAt")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "neetScore") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Neet Score
+          <FaSort
+            onClick={() => handleSort("neetScore")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "DateToVisit") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Slot Date
+          <FaSort
+            onClick={() => handleSort("DateToVisit")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "state") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          State
+          <FaSort
+            onClick={() => handleSort("state")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "course") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Course
+          <FaSort
+            onClick={() => handleSort("courseSelected")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "contactNo") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Contact No
+          <FaSort
+            onClick={() => handleSort("contactNumber")}
+            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+          />
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "counsillor") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white">
+        <div className="flex items-center">
+          Counsellor
+        </div>
+      </th>
+    )}
+    {columns.find((col) => col.visible && col.label === "leadStatus") && (
+      <th scope="col" className="px-6 py-3 text-black dark:text-white relative">
+        <div className="flex items-center">
+          Lead Status
+          {isLeadStatusDropdownOpen ? (
+            <FaChevronUp
+              onClick={toggleLeadStatusDropdown}
+              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+            />
+          ) : (
+            <FaChevronDown
+              onClick={toggleLeadStatusDropdown}
+              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+            />
+          )}
+        </div>
+        {isLeadStatusDropdownOpen && (
+          <div className="absolute z-10 top-full left-0 mt-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+            <button
+              onClick={() => {
+                setLeadStatusFilter("All");
+                toggleLeadStatusDropdown();
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              All
+            </button>
+            <button
+              onClick={() => {
+                setLeadStatusFilter("Hot Lead");
+                toggleLeadStatusDropdown();
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              Hot Leads
+            </button>
+            <button
+              onClick={() => {
+                setLeadStatusFilter("Warm");
+                toggleLeadStatusDropdown();
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              Warm
+            </button>
+            <button
+              onClick={() => {
+                setLeadStatusFilter("Cold Call Done");
+                toggleLeadStatusDropdown();
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              Cold Call Done
+            </button>
+            <button
+              onClick={() => {
+                setLeadStatusFilter("Paid Counselling");
+                toggleLeadStatusDropdown();
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              Paid Counselling
+            </button>
+            <button
+              onClick={() => {
+                setLeadStatusFilter("Associate College");
+                toggleLeadStatusDropdown();
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+            >
+              Associate College
+            </button>
+          </div>
+        )}
+      </th>
+    )}
+    <th scope="col" className="px-6 py-3 text-black dark:text-white">
+      <div className="flex items-center">
+        Update Status
+      </div>
+    </th>
+  </tr>
+</thead>
 
-                    {columns.find(
-                      (col) => col.visible && col.label === "name"
-                    ) && (
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          {user.name}
-                        </th>
-                      )}
-                    {columns.find(
-                      (col) => col.visible && col.label === "registeredOn"
-                    ) && (
-                        <td className="px-6 py-4">
-                          {formatDate(user.createdAt)}
-                        </td>
-                      )}
-                    {columns.find(
-                      (col) => col.visible && col.label === "neetScore"
-                    ) && <td className="px-6 py-4">{user.neetScore}</td>}
-                    {columns.find(
-                      (col) => col.visible && col.label === "DateToVisit"
-                    ) && (
-                        <td className="px-6 py-4">
-                          {formatDate(user.DateToVisit)}
-                        </td>
-                      )}
-                    {columns.find(
-                      (col) => col.visible && col.label === "state"
-                    ) && <td className="px-6 py-4">{user.state}</td>}
-                    {columns.find(
-                      (col) => col.visible && col.label === "course"
-                    ) && <td className="px-6 py-4">{user.courseSelected}</td>}
-                    {columns.find(
-                      (col) => col.visible && col.label === "contactNo"
-                    ) && <td className="px-6 py-4">{user.contactNumber}</td>}
+<tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
+  {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
+    <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+      <td className="w-4 p-4">
+        <div className="flex items-center text-black dark:text-white">
+          {index + 1}
+        </div>
+      </td>
 
-                    {/* <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{user.name}</th>
-                                    <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
-                                    <td className="px-6 py-4">{user.neetScore}</td>
-                                    <td className="px-6 py-4">{user.state}</td>
-                                    <td className="px-6 py-4">{user.courseSelected}</td>
-                                    <td className="px-6 py-4">{user.contactNumber}</td>
-                                     */}
-                    {columns.find(col => col.visible && col.label === 'counsillor') && <td className="px-6 py-4">{counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}</td>}
-                    {columns.find(col => col.visible && col.label === 'leadStatus') && <td className="px-6 py-4"> {user.remarks.FollowUp3.length > 0
-                      ? user.remarks.FollowUp3[
-                        user.remarks.FollowUp3.length - 1
-                      ].subject
-                      : user.remarks.FollowUp2.length > 0
-                        ? user.remarks.FollowUp2[
-                          user.remarks.FollowUp2.length - 1
-                        ].subject
-                        : user.remarks.FollowUp1.length > 0
-                          ? user.remarks.FollowUp1[
-                            user.remarks.FollowUp1.length - 1
-                          ].subject
-                          : "No Remarks "}</td>}
-                    <td className="px-6 py-4">
-                      <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page, origin: 'showAllLeads' }}>
-                        <Button variant="contained">
-                          Edit
-                        </Button>
-                      </Link>
-                    </td>
-                  </tr>
-                )) : <h1>No Data to Show</h1>}
-              </tbody>
+      {columns.find(col => col.visible && col.label === "name") && (
+        <td className="px-6 py-4 font-medium text-black dark:text-white whitespace-nowrap">
+          {user.name}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "registeredOn") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {formatDate(user.createdAt)}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "neetScore") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {user.neetScore}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "DateToVisit") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {formatDate(user.DateToVisit)}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "state") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {user.state}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "course") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {user.courseSelected}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "contactNo") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {user.contactNumber}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "counsillor") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {counsellors.find(counsellor => counsellor._id === user.assignedCouns)?.name || "N/A"}
+        </td>
+      )}
+      {columns.find(col => col.visible && col.label === "leadStatus") && (
+        <td className="px-6 py-4 text-black dark:text-white">
+          {user.remarks.FollowUp3.length > 0
+            ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject
+            : user.remarks.FollowUp2.length > 0
+              ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
+              : user.remarks.FollowUp1.length > 0
+                ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
+                : "No Remarks"}
+        </td>
+      )}
+      <td className="px-6 py-4 text-black dark:text-white">
+        <Link to={`/student/${user._id}`} state={{ id: `${user._id}`, page, origin: 'showAllLeads' }}>
+          <Button variant="contained" className="bg-blue-500 text-white hover:bg-blue-700">
+            Edit
+          </Button>
+        </Link>
+      </td>
+    </tr>
+  )) : (
+    <h1 className="text-black dark:text-white">No Data to Show</h1>
+  )}
+</tbody>
+
             </table>
             <TablePagination
               component="div"

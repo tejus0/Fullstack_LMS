@@ -31,43 +31,43 @@ const TableComponent = ({ data, title, leadsUnlocked, totalCallsDone, countHotCa
           </Button>
         </Link>
       </Box>
-      <TableContainer component={Paper} sx={{ mt: 2 }}>
+      <TableContainer  component={Paper} sx={{ mt: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
-            <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">S. No.</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Name</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Mobile</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Email</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Leads Unlocked</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Total Calls Done</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Hot Leads</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Cold Leads</Typography>
               </TableCell>
-              <TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Warm Leads</Typography>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item,index) => (
+            {data.map((item, index) => (
               <TableRow key={item.counsellor.counsellor_id}>
-                <TableCell align="left">{index+1}</TableCell>
+                <TableCell align="left">{index + 1}</TableCell>
                 <TableCell align="left">{item.counsellor.name}</TableCell>
                 <TableCell align="left">{item.counsellor.mobile}</TableCell>
                 <TableCell align="left">{item.counsellor.email}</TableCell>
