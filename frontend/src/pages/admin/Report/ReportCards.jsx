@@ -99,7 +99,7 @@ const ReportCards = () => {
   const countColdCallsByCounsellor = (students) => {
     let totalColdCalls = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2.length > 0) {
+      if (student.remarks && student.remarks.FollowUp2.length > 0 && student.remarks.FollowUp3.length ==0) {
         if (
           student.remarks.FollowUp2[
             student.remarks.FollowUp2.length - 1
@@ -122,7 +122,7 @@ const ReportCards = () => {
   const countHotCallsByCounsellor = (students) => {
     let totalHotLeads = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2.length > 0) {
+      if (student.remarks && student.remarks.FollowUp2.length > 0 && student.remarks.FollowUp3.length ==0) {
         if (
           student.remarks.FollowUp2[
             student.remarks.FollowUp2.length - 1
@@ -149,7 +149,7 @@ const ReportCards = () => {
   const countWarmCallsByCounsellor = (students) => {
     let totalWarmCalls = 0;
     students.forEach((student) => {
-      if (student.remarks && student.remarks.FollowUp2.length > 0) {
+      if (student.remarks && student.remarks.FollowUp2.length > 0 && student.remarks.FollowUp3.length ==0) {
         if (
           student.remarks.FollowUp2[
             student.remarks.FollowUp2.length - 1
