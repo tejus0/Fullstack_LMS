@@ -595,14 +595,14 @@ const OrganicTableLeads = () => {
         disabled={paginationDisabled}
       />
 
-      <Button
+      {/* <Button
         variant="contained"
         color="primary"
         onClick={() => setModalOpen(true)}
         className="mb-4"
       >
         Assign Leads to Counsellors
-      </Button>
+      </Button> */}
     </div>
   )
 }
