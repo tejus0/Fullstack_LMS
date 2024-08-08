@@ -55,6 +55,8 @@ export default function SlotBooking({ studentId}) {
               if (!isNaN(fetchedStartDate) && !isNaN(fetchedEndDate)) {
                   setStartDate(fetchedStartDate);
                   setEndDate(fetchedEndDate);
+                  setSelectedDate(fetchedStartDate)
+                  setDateError(false)
               } else {
                   console.error("Invalid date format received:", response.data);
               }
@@ -74,16 +76,20 @@ export default function SlotBooking({ studentId}) {
     //       console.log("Selected date is out of range.");
     //   }
     // setSelectedDate(newValue);
-    if (isDateInRange(newValue)) {
-      setDateError(false); // Clear error if date is valid
-    } else {
-      setDateError(true); // Set error if date is out of range
+    if(newValue.isValid()){
+      if (isDateInRange(newValue)) {
+        setDateError(false); // Clear error if date is valid
+      } else {
+        console.log("true kar diya")
+        setDateError(true); // Set error if date is out of range
+      }
+      setSelectedDate(newValue);
     }
-    setSelectedDate(newValue);
   };
 
   const isDateInRange = (date) => {
     // return date >= startDate && date <= endDate;
+    console.log("startDAte , " , startDate , "endDate" , endDate , "date" , date)
     return date && startDate && endDate && date.isBetween(startDate, endDate, null, "[]");
 };
 
@@ -102,7 +108,7 @@ const disableDates = (date) => {
     //   studentId,
     //   date: selectedDate.format(),
     // };
-
+    console.log('error hai ya ni' , dateError , selectedDate)
     if (dateError) {
       toast.error("Please select a valid date.");
       return; // Prevent submission if date is invalid

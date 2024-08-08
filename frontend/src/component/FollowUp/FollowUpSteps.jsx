@@ -51,7 +51,15 @@ const FollowUpSteps = ({ studentId }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${baseUrl}/getTodos/${studentId}`);
-        setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
+        let data = response.data[0].remarks
+        setNotesByStage(data); // Update notesByStage with the fetched data
+        if(data.FollowUp3.length || (data.FollowUp2.at(-1))?.subject == "Hot Lead+INTERESTED"){
+          setFolloupStage("FollowUp3")
+        }else if(data.FollowUp2.length || data.FollowUp1.at(-1)?.subject == "First Call Done"){
+          setFolloupStage("FollowUp2")
+        }else{
+          setFolloupStage("FollowUp1")
+        }
         console.log(response.data[0].remarks, "remarks"); // Log the fetched data for debugging
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -320,7 +328,7 @@ const FollowUpSteps = ({ studentId }) => {
         <ul className="flex md:flex-col md:gap-3 m-auto">
           {/* Your list items for different FollowUp stages */}
           <li
-            onClick={() => setFolloupStage("FollowUp1")}
+            onClick={() => (!notesByStage.FollowUp2.length && notesByStage.FollowUp1.at(-1)?.subject !== "First Call Done") ? setFolloupStage("FollowUp1") : null}
             className={`${FolloupStage === "FollowUp1"
               ? "bg-blue-500 text-white"
               : "bg-gray-300 text-purple-900"
@@ -328,7 +336,7 @@ const FollowUpSteps = ({ studentId }) => {
           >
             Follow one
           </li>
-          {notesByStage.FollowUp1?.some((person) => person.subject === "First Call Done") ? <li
+          {notesByStage.FollowUp1?.some((person) => person.subject === "First Call Done") && !notesByStage.FollowUp3.length && notesByStage.FollowUp2.at(-1)?.subject !== "Hot Lead+INTERESTED" ? <li
             onClick={() => setFolloupStage("FollowUp2")}
             className={`${FolloupStage === "FollowUp2"
               ? "bg-blue-500 text-white"
@@ -338,11 +346,10 @@ const FollowUpSteps = ({ studentId }) => {
             Follow Two
           </li> : <li
             // onClick={() => setFolloupStage("FollowUp2")}
-            className={`${
-              // FolloupStage === "FollowUp2"
-              //  "bg-blue-500 text-white"
-              // :
-              "bg-gray-300 text-purple-900"
+            className={`${FolloupStage === "FollowUp2"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-300 text-purple-900"
+              }
               } font-medium rounded-lg py-3 px-2 cursor-pointer`}
           >
             Follow Two
@@ -356,7 +363,9 @@ const FollowUpSteps = ({ studentId }) => {
           >
             Follow three
           </li> : <li
-            className={`${"bg-gray-300 text-purple-900"
+            className={`${FolloupStage === "FollowUp3"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-300 text-purple-900"
               } font-medium rounded-lg py-3 px-2 cursor-pointer`}
           >
             Follow Three
