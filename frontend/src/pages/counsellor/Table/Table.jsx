@@ -71,15 +71,8 @@ const Table = () => {
   // Function to fetch College Leads data
   const fetchCollegeLeads = async () => {
     try {
-      const response = await toast.promise(
-        axios.get(`${baseUrl}/showCounsCollegeLeads/${id}`),
-        {
-          loading: "Fetching Data ...",
-          success: "Data fetched Successfully",
-          error: "Failed to fetch Data",
-        }
-      );
-      console.log(response, "response in pecific college leads");
+      const response = await axios.get(`${baseUrl}/showCounsCollegeLeads/${id}`);
+      // toast.success("Data Fetched Successfully");
       setUsers(response.data);
       setfilter(response.data);
       setFilteredUsers(response.data);
@@ -87,6 +80,14 @@ const Table = () => {
       setPage(0);
     } catch (error) {
       console.error("Error fetching college leads:", error);
+      toast.error(
+          (error.response?.data?.msg || error.message)
+      );
+      // setUsers([])
+      // setfilter([]);
+      // setFilteredUsers([]);
+      // setActiveButton("");
+      // setPage(0);
     }
   };
 
@@ -299,7 +300,6 @@ const Table = () => {
               {/* <a href={ `http://localhost:5173/?counsId=${id}`}><PersonAddAltIcon /></a> */}
             </IconButton>
           </Tooltip>
-          
         </div>
         <div className="w-full p-4 relative overflow-x-auto shadow-md sm:rounded-lg">
           <div className="flex justify-end items-center gap-12">

@@ -2015,24 +2015,34 @@ export const showCounsCollegeLeads = async (req, res) => {
   console.log(id, "in show counsellor Specific leads");
   try {
     const agentName = await counsellorModal.find({ _id: id });
+
+    if (agentName.length === 0) {
+      return res.status(404).json({ msg: "Counsellor not found" });
+    }
+
     console.log(agentName, "agent");
     const collegeWebsite = agentName[0].college_website;
     console.log(collegeWebsite, "website");
 
-    const studentList = await studentModal.find(
+    if(collegeWebsite){
+      const studentList = await studentModal.find(
+  
+        {
+          $and: [
+            { sourceId: { $regex: collegeWebsite, $options: "i" } },
+            { assignedCouns: id }],
+        });
+      // $regex is used for case-insensitive substring matching
+  
+      // if (studentList.length === 0) {
+      //   return res.status(404).json({ msg: "Students data not found" });
+      // }
+  
+      res.status(200).json(studentList);
 
-      {
-        $and: [
-          { sourceId: { $regex: collegeWebsite, $options: "i" } },
-          { assignedCouns: id }],
-      });
-    // $regex is used for case-insensitive substring matching
-
-    if (studentList.length === 0) {
-      return res.status(404).json({ msg: "Students data not found" });
+    } else{
+      return res.status(403).json({msg: "You are not authorized to access these leads"})
     }
-
-    res.status(200).json(studentList);
   } catch (error) {
     res.status(500).json({ error: error });
   }
