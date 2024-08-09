@@ -355,9 +355,18 @@ const Table = () => {
               {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
             </IconButton>
           </Tooltip>
-          <Tooltip title="Counsellors Report">
+          <Tooltip title="Counsellors College Specific Leads Report">
             <IconButton>
-              <Link to={`/showCounsellorReport`} state={{id}}>
+              <Link to={`/showCounsellorReport?collegeSpecific=${true}`} state={{id}}>
+              <FaPeopleGroup />
+              </Link>
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
+              {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Counsellors All Leads Report">
+            <IconButton>
+              <Link to={`/showCounsellorReport?collegeSpecific=${false}`} state={{id}}>
               <FaPeopleGroup />
               </Link>
               {/* <a href={`http://localhost:5173/?counsId=${id}`}><GroupAddIcon /></a> */}

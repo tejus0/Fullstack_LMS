@@ -65,6 +65,7 @@ const OfficeDashboard = () => {
       label: "Total Conversion",
       value: officeReportDetails.conversionExpected,
       icon: <SiConvertio fontSize={30} color="purple" />,
+      isPercentage: true
     },
   ];
 
@@ -301,6 +302,8 @@ const OfficeDashboard = () => {
     }
   };
 
+  const sortedTopPerfomers = [...topPerformer].sort((a, b) => b.admission > a.admission)
+
   useEffect(() => {
     console.log(topPerformer);
   }, [topPerformer]);
@@ -324,10 +327,11 @@ const OfficeDashboard = () => {
       <div className="flex flex-col md:flex-row justify-center items-center gap-12 p-9">
         {cards.map((item, i) => (
           <StyledCard
+            key={i}
             label={item.label}
             value={item.value}
             icon={item.icon}
-            key={i}
+            isPercentage={item.isPercentage}
           />
         ))}
       </div>
@@ -415,7 +419,7 @@ const OfficeDashboard = () => {
               <span>Admissions</span>
             </div>
             {/* Data Rows */}
-            {topPerformer.map((item, i) => (
+            {sortedTopPerfomers?.map((item, i) => (
               <p
                 key={i}
                 className="cursor-pointer rounded-md hover:bg-purple-300 p-2 flex gap-4 items-center"

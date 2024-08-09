@@ -1878,6 +1878,8 @@ export const getAdmissionHeadCounsellors = async (req, res) => {
 export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
   try {
     const admId = req.params.admissionHeadId;
+    const isCollegeSpecific = req.query.collegeSpecific === 'true';
+    console.log(isCollegeSpecific);
     console.log(admId, "id in  head")
     const counsellorData = await counsellorModal.findOne({ _id: admId, who_am_i: "admissionHead" }).populate("assignedCounsellors");
 
@@ -1888,10 +1890,21 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
       const collegeWebsite = counsellor.college_website;
 
       // Fetch students assigned to this counsellor whose sourceId matches the college website
-      const students = await studentModal.find({
-        assignedCouns: counsellorId,
-        sourceId: collegeWebsite,
-      });
+      // const students = await studentModal.find({
+      //   assignedCouns: counsellorId,
+      //   sourceId: collegeWebsite,
+      // });
+
+      const studentQuery = { assignedCouns: counsellorId };
+      
+      // Apply college website filter only if it's a college-specific report
+      if (isCollegeSpecific) {
+        console.log(isCollegeSpecific)
+        studentQuery.sourceId = collegeWebsite;
+      }
+
+
+      const students = await studentModal.find(studentQuery);
 
       let totalLeads = students.length;
       let totalFollowUp3Leads = 0;

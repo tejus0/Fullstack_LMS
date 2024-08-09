@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import TableComponent from "../../component/TableComponent";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import useQuery from "../../hooks/useQuery";
 
 export const AdmissionHeadCounsellor = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -13,13 +14,15 @@ export const AdmissionHeadCounsellor = () => {
   console.log(location)
   const id = location.state?.id;
 
-
+  const query = useQuery();
+  const isCollegeSpecific = query.get("collegeSpecific") === "true";
+  // console.log(isCollegeSpecific);
   
   const getAdmissionHeadCounsellorsWithStudents = async () => {
     try {
       const res = await toast.promise(
         axios.get(
-          `${baseUrl}/getAdmissionHeadCounsellorsWithStudents/${id}`
+          `${baseUrl}/getAdmissionHeadCounsellorsWithStudents/${id}?collegeSpecific=${isCollegeSpecific}`
         ), 
         {
           loading: "Fetching Data ...",
@@ -113,24 +116,24 @@ export const AdmissionHeadCounsellor = () => {
 
       {/* Main Report Section */}
       <div className="w-3/4">
-        <h1 className="text-2xl font-bold mb-4">Admission Head Counsellors Report</h1>
+        <h1 className="text-2xl font-bold mb-4"> {isCollegeSpecific ? "Counsellors College Specific Leads Report" : "Counsellors All Leads Report"}</h1>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200">
             <thead className="bg-gray-100 border-b">
               <tr>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Name</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Email</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Mobile No</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Total Leads</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Total Calls Done</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Total Revenue</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Total Admissions</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Paid Counselling</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Associate College</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Hot Leads</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Warm Leads</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">Cold Leads</th>
-                <th className="px-4 py-2 text-left text-sm font-medium text-gray-600"></th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Name</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Email</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Mobile No</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Total Leads</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Total Calls Done</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Total Revenue</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Total Admissions</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Paid Counselling</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Associate College</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Hot Leads</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Warm Leads</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600">Cold Leads</th>
+                <th className="px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-600"></th>
               </tr>
             </thead>
             <tbody>
@@ -149,7 +152,7 @@ export const AdmissionHeadCounsellor = () => {
                   <td className="px-4 py-2 text-sm text-center">{counsellorData.warmLeadCount}</td>
                   <td className="px-4 py-2 text-sm text-center">{counsellorData.coldLeadCount}</td>
                   <td className="px-4 py-2 text-sm text-center">
-                    <Link to={`/counsellorDashboard/${counsellorData.counsellor._id}`} state={{admissionHeadId: id}}>
+                    <Link to={`/counsellorDashboard/${counsellorData.counsellor._id}`} state={isCollegeSpecific && {admissionHeadId: id}}>
                       <HiOutlineDocumentReport fontSize={30} color="blue" title="Overall Summary" />
                     </Link>
                   </td>
