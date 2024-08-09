@@ -283,17 +283,25 @@ const ShowAllleads = () => {
           .includes(leadStatusFilter.toLowerCase());
       });
     }
+
   }, [sortedUsers, leadStatusFilter]);
 
   let paginatedUsers;
   if (search != "") {
     paginatedUsers = filteredUsers;
   } else {
-    paginatedUsers = allUsers.slice(
+    paginatedUsers = filteredUsers.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
     );
   }
+
+  // const paginatedUsers = filteredUsers.slice(
+  //   page * rowsPerPage,
+  //   page * rowsPerPage + rowsPerPage
+  // );
+
+  
 
   const paginationDisabled = paginatedUsers.some(
     (item) => item.remarks.length === 20
