@@ -23,7 +23,6 @@ const BulkUpload = ({ open, onClose }) => {
                 const sheetName = workbook.SheetNames[0];
                 const sheet = workbook.Sheets[sheetName];
                 const jsonData = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-                console.log(jsonData);
 
                 const filteredJsonData = jsonData.map(row => {
                     return Object.keys(row)
@@ -71,8 +70,6 @@ const BulkUpload = ({ open, onClose }) => {
                             setVal('')
                             return;
                         }
-
-
 
                         filteredJsonData.forEach((elem) => (
                             fieldsToCheckType.forEach((item) => {

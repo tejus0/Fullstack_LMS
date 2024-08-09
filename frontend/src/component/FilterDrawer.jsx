@@ -5,7 +5,7 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
     // State for dropdown selection       
 
     const [selectedOption, setSelectedOption] = useState('');
-
+    const [showFilter, setShowFilter] = useState(true)
     const handleDateChange = (e) => {
         const { name, value } = e.target;
         setdate({ ...date, [name]: value });
@@ -17,13 +17,16 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
             if (selectedOption === "allLeads") {
                 setShowNewTable(false)
                 setShowUnassignedTable(false)
+                setShowFilter(true)
             }
             else if (selectedOption === "offlineVisits") {
                 setShowUnassignedTable(false)
                 setShowNewTable(true)
+                setShowFilter(false)
             }
             else if (selectedOption === "unassignedLeads") {
                 setShowUnassignedTable(true)
+                setShowFilter(false)
             }
         };
 
@@ -38,7 +41,7 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                 <ListItem className='flex flex-col gap-5 justify-start items-start'>
 
                     {
-                        !showNewTable &&
+                        showFilter &&
                         <>
                             <h1 className='bg-gray-200 p-2 rounded-sm font-semibold'>Select Fields</h1>
                             <div className='grid grid-cols-4 gap-4'>
@@ -61,7 +64,7 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                     {isAdmin ?
                         <div className='flex flex-col gap-2 mt-4'>
                             {
-                                !showNewTable &&
+                                showFilter &&
                                 <>
                                     <div className='flex gap-2'>
                                         <div className='flex flex-col'>

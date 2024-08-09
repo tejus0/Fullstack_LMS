@@ -273,10 +273,10 @@ const ShowAllleads = () => {
         const latestRemark = user.remarks.FollowUp3.length
           ? user.remarks.FollowUp3[user.remarks.FollowUp3.length - 1].subject
           : user.remarks.FollowUp2.length
-          ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
-          : user.remarks.FollowUp1.length
-          ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
-          : "No Remarks";
+            ? user.remarks.FollowUp2[user.remarks.FollowUp2.length - 1].subject
+            : user.remarks.FollowUp1.length
+              ? user.remarks.FollowUp1[user.remarks.FollowUp1.length - 1].subject
+              : "No Remarks";
         const leadStatus = `${latestRemark}`;
         return leadStatus
           .toLowerCase()
@@ -368,7 +368,6 @@ const ShowAllleads = () => {
     }
 
     console.log(`Assign leads from index ${rangeStart} to ${rangeEnd}`);
-    // Implement assignment logic here
     setModalOpen(false);
   };
 
@@ -571,206 +570,206 @@ const ShowAllleads = () => {
                     {columns.find(
                       (col) => col.visible && col.label === "name"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          Name
-                          <FaSort
-                            onClick={() => handleSort("name")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            Name
+                            <FaSort
+                              onClick={() => handleSort("name")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "registeredOn"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          Registered ON
-                          <FaSort
-                            onClick={() => handleSort("createdAt")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            Registered ON
+                            <FaSort
+                              onClick={() => handleSort("createdAt")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "neetScore"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          Neet Score
-                          <FaSort
-                            onClick={() => handleSort("neetScore")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            Neet Score
+                            <FaSort
+                              onClick={() => handleSort("neetScore")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "DateToVisit"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          Slot Date
-                          <FaSort
-                            onClick={() => handleSort("DateToVisit")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            Slot Date
+                            <FaSort
+                              onClick={() => handleSort("DateToVisit")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "state"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          State
-                          <FaSort
-                            onClick={() => handleSort("state")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            State
+                            <FaSort
+                              onClick={() => handleSort("state")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "course"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          Course
-                          <FaSort
-                            onClick={() => handleSort("courseSelected")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            Course
+                            <FaSort
+                              onClick={() => handleSort("courseSelected")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "contactNo"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">
-                          Contact No
-                          <FaSort
-                            onClick={() => handleSort("contactNumber")}
-                            className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                          />
-                        </div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">
+                            Contact No
+                            <FaSort
+                              onClick={() => handleSort("contactNumber")}
+                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                            />
+                          </div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "counsillor"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white"
-                      >
-                        <div className="flex items-center">Counsellor</div>
-                      </th>
-                    )}
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white"
+                        >
+                          <div className="flex items-center">Counsellor</div>
+                        </th>
+                      )}
                     {columns.find(
                       (col) => col.visible && col.label === "leadStatus"
                     ) && (
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-black dark:text-white relative"
-                      >
-                        <div className="flex items-center">
-                          Lead Status
-                          {isLeadStatusDropdownOpen ? (
-                            <FaChevronUp
-                              onClick={toggleLeadStatusDropdown}
-                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                            />
-                          ) : (
-                            <FaChevronDown
-                              onClick={toggleLeadStatusDropdown}
-                              className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
-                            />
-                          )}
-                        </div>
-                        {isLeadStatusDropdownOpen && (
-                          <div className="absolute z-10 top-full left-0 mt-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
-                            <button
-                              onClick={() => {
-                                setLeadStatusFilter("All");
-                                toggleLeadStatusDropdown();
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            >
-                              All
-                            </button>
-                            <button
-                              onClick={() => {
-                                setLeadStatusFilter("Hot Lead");
-                                toggleLeadStatusDropdown();
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            >
-                              Hot Leads
-                            </button>
-                            <button
-                              onClick={() => {
-                                setLeadStatusFilter("Warm");
-                                toggleLeadStatusDropdown();
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            >
-                              Warm
-                            </button>
-                            <button
-                              onClick={() => {
-                                setLeadStatusFilter("Cold Call Done");
-                                toggleLeadStatusDropdown();
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            >
-                              Cold Call Done
-                            </button>
-                            <button
-                              onClick={() => {
-                                setLeadStatusFilter("Paid Counselling");
-                                toggleLeadStatusDropdown();
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            >
-                              Paid Counselling
-                            </button>
-                            <button
-                              onClick={() => {
-                                setLeadStatusFilter("Associate College");
-                                toggleLeadStatusDropdown();
-                              }}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                            >
-                              Associate College
-                            </button>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-black dark:text-white relative"
+                        >
+                          <div className="flex items-center">
+                            Lead Status
+                            {isLeadStatusDropdownOpen ? (
+                              <FaChevronUp
+                                onClick={toggleLeadStatusDropdown}
+                                className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                              />
+                            ) : (
+                              <FaChevronDown
+                                onClick={toggleLeadStatusDropdown}
+                                className="ml-2 cursor-pointer text-gray-500 dark:text-gray-300"
+                              />
+                            )}
                           </div>
-                        )}
-                      </th>
-                    )}
+                          {isLeadStatusDropdownOpen && (
+                            <div className="absolute z-10 top-full left-0 mt-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded shadow-lg">
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("All");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                All
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("Hot Lead");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                Hot Leads
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("Warm");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                Warm
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("Cold Call Done");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                Cold Call Done
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("Paid Counselling");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                Paid Counselling
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("Associate College");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                Associate College
+                              </button>
+                            </div>
+                          )}
+                        </th>
+                      )}
                     <th
                       scope="col"
                       className="px-6 py-3 text-black dark:text-white"
@@ -781,11 +780,10 @@ const ShowAllleads = () => {
                 </thead>
 
                 <tbody
-                  className={`${
-                    !paginatedUsers.length
-                      ? "h-screen w-screen flex justify-center items-center"
-                      : ""
-                  }`}
+                  className={`${!paginatedUsers.length
+                    ? "h-screen w-screen flex justify-center items-center"
+                    : ""
+                    }`}
                 >
                   {paginatedUsers.length > 0 ? (
                     paginatedUsers.map((user, index) => (
@@ -802,81 +800,81 @@ const ShowAllleads = () => {
                         {columns.find(
                           (col) => col.visible && col.label === "name"
                         ) && (
-                          <td className="px-6 py-4 font-medium text-black dark:text-white whitespace-nowrap">
-                            {user.name}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 font-medium text-black dark:text-white whitespace-nowrap">
+                              {user.name}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "registeredOn"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {formatDate(user.createdAt)}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {formatDate(user.createdAt)}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "neetScore"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {user.neetScore}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {user.neetScore}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "DateToVisit"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {formatDate(user.DateToVisit)}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {formatDate(user.DateToVisit)}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "state"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {user.state}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {user.state}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "course"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {user.courseSelected}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {user.courseSelected}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "contactNo"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {user.contactNumber}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {user.contactNumber}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "counsillor"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {counsellors.find(
-                              (counsellor) =>
-                                counsellor._id === user.assignedCouns
-                            )?.name || "N/A"}
-                          </td>
-                        )}
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {counsellors.find(
+                                (counsellor) =>
+                                  counsellor._id === user.assignedCouns
+                              )?.name || "N/A"}
+                            </td>
+                          )}
                         {columns.find(
                           (col) => col.visible && col.label === "leadStatus"
                         ) && (
-                          <td className="px-6 py-4 text-black dark:text-white">
-                            {user.remarks.FollowUp3.length > 0
-                              ? user.remarks.FollowUp3[
+                            <td className="px-6 py-4 text-black dark:text-white">
+                              {user.remarks.FollowUp3.length > 0
+                                ? user.remarks.FollowUp3[
                                   user.remarks.FollowUp3.length - 1
                                 ].subject
-                              : user.remarks.FollowUp2.length > 0
-                              ? user.remarks.FollowUp2[
-                                  user.remarks.FollowUp2.length - 1
-                                ].subject
-                              : user.remarks.FollowUp1.length > 0
-                              ? user.remarks.FollowUp1[
-                                  user.remarks.FollowUp1.length - 1
-                                ].subject
-                              : "No Remarks"}
-                          </td>
-                        )}
+                                : user.remarks.FollowUp2.length > 0
+                                  ? user.remarks.FollowUp2[
+                                    user.remarks.FollowUp2.length - 1
+                                  ].subject
+                                  : user.remarks.FollowUp1.length > 0
+                                    ? user.remarks.FollowUp1[
+                                      user.remarks.FollowUp1.length - 1
+                                    ].subject
+                                    : "No Remarks"}
+                            </td>
+                          )}
                         <td className="px-6 py-4 text-black dark:text-white">
                           <Link
                             to={`/student/${user._id}`}
@@ -911,7 +909,7 @@ const ShowAllleads = () => {
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 disabled={paginationDisabled}
-                rowsPerPageOptions={[10, 25, 50,100, { label: "All", value: -1 }]} // Adding the 'All' option
+                rowsPerPageOptions={[10, 25, 50, 100, { label: "All", value: -1 }]} // Adding the 'All' option
                 labelDisplayedRows={({ from, to, count }) =>
                   rowsPerPage === -1
                     ? `Showing ${count} of ${count}`
