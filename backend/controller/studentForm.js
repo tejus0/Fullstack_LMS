@@ -125,7 +125,7 @@ export const insertAgent = async (req, res) => {
 export const insertFromSheet = async (req, res) => {
   try {
     const agent_data = req.body;
-    console.log(agent_data, "API call of multiple students");
+    // console.log(agent_data, "API call of multiple students");
 
     // Modify agent_data to add "wrongEntry" field for entries with incorrect whatsappnumber
     const dataToInsert = agent_data.map((entry) => {
@@ -135,13 +135,40 @@ export const insertFromSheet = async (req, res) => {
       return entry;
     });
 
-    // Assuming studentModal is your Mongoose model
+    const userPhone = dataToInsert.map(user => user.contactNumber);
+    const userEmail = dataToInsert.map(user => user.email);
+    const preferredCollege = dataToInsert.map(user => user.preferredCollege);
+
+    const isExist = await studentModal.findOne({
+      $and: [
+        { contactNumber: { $in: userPhone } },
+        { preferredCollege: { $in: preferredCollege } }
+      ]
+    })
+
+    const data = dataToInsert.filter((elem) => (
+      elem.contactNumber === isExist.contactNumber &&
+      String(elem.preferredCollege) === isExist.preferredCollege
+    ));
+
+
+
+    if (isExist) {
+      // isExist.otherResponse.push(...data)
+      // await isExist.save();
+      return res.status(400).json({
+        success: false,
+        msg: `${data[0].name}  Already Exist in database`
+      })
+    }
+
+
     const insertedStudents = await studentModal.create(dataToInsert);
 
     return res.status(201).json({
       success: true,
       msg: "Multiple Students Created Successfully",
-      data: insertedStudents, // Optionally, return inserted data
+      data: insertedStudents,
     });
   } catch (err) {
     console.error("Error inserting students:", err);
@@ -604,7 +631,7 @@ export const assignAuto = async (req, res) => {
             $in: [
               /off_rec/,
               /localhost/,
-              
+
             ]
           }
         }
@@ -619,9 +646,9 @@ export const assignAuto = async (req, res) => {
           $ne: null  // $ne (not equal) to an empty string
         }
       },
-       // Exclude records with 'office_rec' in sourceId
+      // Exclude records with 'office_rec' in sourceId
       { assignedCouns: "" }, // Filter records with empty 'assignedCouns'
-      {neetScore: { $regex: /^\d+$/, $lt: "350" }}
+      { neetScore: { $regex: /^\d+$/, $lt: "350" } }
     ]
   });
 
@@ -1260,7 +1287,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
     }
     college_website ? stuFilter.sourceId = college_website : null;
     const totalLeads = (await studentModal.find(stuFilter)).length;
-    
+
 
     console.log(totalLeads)
     // const completedLeads = (await studentModal.find({ assignedCouns: counsellerId,  $where: "this.remarks.FollowUp3.length > 1" }));
@@ -1896,7 +1923,7 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
       // });
 
       const studentQuery = { assignedCouns: counsellorId };
-      
+
       // Apply college website filter only if it's a college-specific report
       if (isCollegeSpecific) {
         console.log(isCollegeSpecific)
@@ -2037,24 +2064,24 @@ export const showCounsCollegeLeads = async (req, res) => {
     const collegeWebsite = agentName[0].college_website;
     console.log(collegeWebsite, "website");
 
-    if(collegeWebsite){
+    if (collegeWebsite) {
       const studentList = await studentModal.find(
-  
+
         {
           $and: [
             { sourceId: { $regex: collegeWebsite, $options: "i" } },
             { assignedCouns: id }],
         });
       // $regex is used for case-insensitive substring matching
-  
+
       // if (studentList.length === 0) {
       //   return res.status(404).json({ msg: "Students data not found" });
       // }
-  
+
       res.status(200).json(studentList);
 
-    } else{
-      return res.status(403).json({msg: "You are not authorized to access these leads"})
+    } else {
+      return res.status(403).json({ msg: "You are not authorized to access these leads" })
     }
   } catch (error) {
     res.status(500).json({ error: error });
