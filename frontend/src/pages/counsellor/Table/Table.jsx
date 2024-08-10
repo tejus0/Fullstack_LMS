@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TablePagination from "@mui/material/TablePagination";
 import Button from "@mui/material/Button";
@@ -38,9 +38,9 @@ const Table = () => {
     );
   };
   const baseUrl = import.meta.env.VITE_API;
-  const location = useLocation();
+  const location = useParams();
   console.log(location);
-  const id = location.state?.id;
+  const id = location?.id;
   const [users, setUsers] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: "createdAt",
