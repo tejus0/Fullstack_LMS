@@ -107,7 +107,7 @@ function Login() {
       } , {withCredentials:true});
         console.log(response.data,"arnav")
         if (response.data.status === "ok") {
-        dispatch(login(response.data.data))
+        dispatch(login({id: response.data.data , userType: response.data.type}))
         toast.success("Login Successful", { position: "top-right" });
         window.localStorage.setItem("token", true);
         window.localStorage.setItem("loggedIn", true);

@@ -39,20 +39,20 @@ const App = () => {
           />
           <Route path="/registration" element={<SignUp apiPath={"/register"} />} />
           <Route path="/student/:id" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />
-          <Route path="/assignAuto" element={<ProtectedRoute><AssignAuto /></ProtectedRoute>} />
+          <Route path="/assignAuto" element={<ProtectedRoute isAdminRoute={true}><AssignAuto /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgetPass />} />
-          <Route path="/showAllLeads" element={<ProtectedRoute><ShowAllleads /></ProtectedRoute>} />
+          <Route path="/showAllLeads" element={<ProtectedRoute isAdminRoute={true}><ShowAllleads /></ProtectedRoute>} />
           <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
           <Route path="/showSpecificLeads" element={<ProtectedRoute><TableShowSpecificLeads /> </ProtectedRoute>} />
           <Route path="/agentLeads" element={<ProtectedRoute><AgentLeads /></ProtectedRoute>} />
           <Route path="/hashed/codic/main/schedule" element={<SchedulePicker />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
-          <Route path="/adminDashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/adminAvailableDays" element={<ProtectedRoute><DaysAvaialble /></ProtectedRoute>} />
-          <Route path="/allCounsellorsReport" element={<ProtectedRoute><ReportCards /></ProtectedRoute>} />
+          <Route path="/adminDashboard" element={<ProtectedRoute isAdminRoute={true}><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/adminAvailableDays" element={<ProtectedRoute isAdminRoute={true}><DaysAvaialble /></ProtectedRoute>} />
+          <Route path="/allCounsellorsReport" element={<ProtectedRoute isAdminRoute={true}><ReportCards /></ProtectedRoute>} />
           <Route path="/counsellorDashboard/:counsellorId" element={<ProtectedRoute><CounsellorTrackerDashboard /></ProtectedRoute>} />
-          <Route path="/officeDashboard" element={<ProtectedRoute><OfficeDashboard /></ProtectedRoute>} />
+          <Route path="/officeDashboard" element={<ProtectedRoute isAdminRoute={true}><OfficeDashboard /></ProtectedRoute>} />
           <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead" />} />
           <Route path="/forgot-pass" element={<ForgetPass />} />
           <Route path="/showCounsellorReport" element={<ProtectedRoute><AdmissionHeadCounsellor /></ProtectedRoute>} />

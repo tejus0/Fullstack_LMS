@@ -3,7 +3,7 @@ import express from "express";
 import { createStudentProfile, getAllStudentProfile, getTodos, createTodos, deleteTodos, insertUser, getStudentProfile, verifyLogin, assignAuto, getCounsellorDataList, loginLoad, renameKey, cleatAllAssignedCouns, getArnavCounsellorDataList, createFollowUp3, insertAgent, slotBook, bookedSlot, formToSheet, insertFromSheet, getAgentLeads, showSpecificLeads, updateAdminAvailableDays, getAdminAvailableDays, getCounsellorInfo, getCounsellorsWithStudents, getVisitLeads, getCounsellorNames, assignOfflineLeadsToCouncellor, dateSorting, getTopPerformer , getCounsellorRevenueDetails, getCoursesCounselled, getCounsellorLeadDetails, getCounsellorPendingAmount, getAssignedCounsellorStudents, getOfficeReport,removeCounsellor,getUnassignedLeads, updatePassword, getCounsellorByNumber, getAdmissionHeadCounsellors,showCounsCollegeLeads, getAdmissionHeadCounsellorsWithStudents, logout} from "../controller/studentForm.js";
 import { createCounsellor } from "../controller/counsellorDetail.js";
 import { upload } from "../middleware/multer.js";
-import { isLoggedIn } from "../middleware/auth.js";
+import { isLoggedIn, isSuperAdmin } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.route("/").get(loginLoad);
 router.route("/form").post(createStudentProfile);
 router.route("/formToSheet").post(formToSheet);
 router.route("/insertAgent/:name/:password").get(insertAgent);
-router.route("/dashboard").get(isLoggedIn , getAllStudentProfile);
+router.route("/dashboard").get(isLoggedIn ,isSuperAdmin, getAllStudentProfile);
 router.route("/student/:id").get(isLoggedIn , getStudentProfile);
 router.route('/counsoller').post(createCounsellor)
 
@@ -23,7 +23,7 @@ router.route("/deleteTodos/:id").delete(isLoggedIn , deleteTodos)
 
 router.route("/register").post(insertUser);
 router.route("/login").post(verifyLogin);
-router.route("/autoassign").post(isLoggedIn , assignAuto);
+router.route("/autoassign").post(isLoggedIn ,isSuperAdmin, assignAuto);
 router.route("/renameKey").post(renameKey);
 
 // router.route("/upload-receipt/:id").post(upload, uploadPayReceipt);
@@ -33,10 +33,10 @@ router.route("/getCounsellorInfo").get(isLoggedIn , getCounsellorInfo);
 router.route("/getAgentLeads/:categoryName").get(isLoggedIn , getAgentLeads);
 router.route("/cleatAllAssignedCouns").get(isLoggedIn , cleatAllAssignedCouns);
 router.route("/slotBook").post(isLoggedIn , slotBook);
-router.route("/bookedSlot").get(isLoggedIn , bookedSlot);
+router.route("/bookedSlot").get(bookedSlot);
 router.route("/insertFromSheet").post(isLoggedIn , insertFromSheet);
-router.route("/updateAdminAvailableDays").post(isLoggedIn , updateAdminAvailableDays);
-router.route("/getAdminAvailableDays").get(isLoggedIn , getAdminAvailableDays);
+router.route("/updateAdminAvailableDays").post(isLoggedIn ,isSuperAdmin, updateAdminAvailableDays);
+router.route("/getAdminAvailableDays").get(isLoggedIn ,isSuperAdmin, getAdminAvailableDays);
 
 router.route("/showSpecificLeads/:id").get(isLoggedIn , showSpecificLeads);
 router.route("/getCounsellorsWithStudents").get(isLoggedIn , getCounsellorsWithStudents);
@@ -53,21 +53,21 @@ router.route("/getTopPerformer").get(isLoggedIn , getTopPerformer)
 
 
 
-router.route("/getCounsellorRevenueDetails/:id").get(getCounsellorRevenueDetails);
-router.route("/getCoursesCounselled/:counsellerId").get(getCoursesCounselled);
-router.route("/getCounsellorLeadDetails/:counsellerId").get(getCounsellorLeadDetails);
-router.route("/getCounsellorPendingAmount/:counsellerId").get(getCounsellorPendingAmount);
-router.route("/getAssignedCounsellorStudents/:counsellerId").get(getAssignedCounsellorStudents)
-router.route("/getOfficeReport").get(getOfficeReport)
-router.route("/getUnassignedLeads").get(getUnassignedLeads)
+router.route("/getCounsellorRevenueDetails/:id").get(isLoggedIn,getCounsellorRevenueDetails);
+router.route("/getCoursesCounselled/:counsellerId").get(isLoggedIn,getCoursesCounselled);
+router.route("/getCounsellorLeadDetails/:counsellerId").get(isLoggedIn,getCounsellorLeadDetails);
+router.route("/getCounsellorPendingAmount/:counsellerId").get(isLoggedIn,getCounsellorPendingAmount);
+router.route("/getAssignedCounsellorStudents/:counsellerId").get(isLoggedIn,getAssignedCounsellorStudents)
+router.route("/getOfficeReport").get(isLoggedIn,isSuperAdmin,getOfficeReport)
+router.route("/getUnassignedLeads").get(isLoggedIn,getUnassignedLeads)
 router.route("/updatePass").post(updatePassword)
 router.route("/getCounsellorByNumber").post(getCounsellorByNumber)
-router.route("/getAdmissionHeadCounsellors/:admissionHeadId").get(getAdmissionHeadCounsellors)
-router.route("/getAdmissionHeadCounsellorsWithStudents/:admissionHeadId").get(getAdmissionHeadCounsellorsWithStudents)
+router.route("/getAdmissionHeadCounsellors/:admissionHeadId").get(isLoggedIn,getAdmissionHeadCounsellors)
+router.route("/getAdmissionHeadCounsellorsWithStudents/:admissionHeadId").get(isLoggedIn,getAdmissionHeadCounsellorsWithStudents)
 
 
 
-router.route("/showCounsCollegeLeads/:id").get(showCounsCollegeLeads)
+router.route("/showCounsCollegeLeads/:id").get(isLoggedIn,showCounsCollegeLeads)
 // router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 
 
