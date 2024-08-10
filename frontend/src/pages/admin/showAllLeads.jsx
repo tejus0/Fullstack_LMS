@@ -287,6 +287,7 @@ const ShowAllleads = () => {
           .includes(leadStatusFilter.toLowerCase());
       });
     }
+
   }, [sortedUsers, leadStatusFilter]);
 
   let paginatedUsers;
@@ -297,7 +298,6 @@ const ShowAllleads = () => {
       page * Math.abs(rowsPerPage),
       page * Math.abs(rowsPerPage) + Math.abs(rowsPerPage)
     );
-    console.log("page hai ............." , page , "rowpwerpage......." , rowsPerPage , "paginatedUsers...." , paginatedUsers)
   }
 
   const paginationDisabled = paginatedUsers.some(

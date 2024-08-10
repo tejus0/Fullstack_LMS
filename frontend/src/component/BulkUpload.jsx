@@ -94,7 +94,7 @@ const BulkUpload = ({ open, onClose }) => {
 
 
                             try {
-                                await toast.promise(
+                                const res = await toast.promise(
                                     axios.post(`${baseUrl}/insertFromSheet`, filteredJsonData, {
                                         headers: {
                                             "Content-Type": "application/json",
@@ -109,8 +109,9 @@ const BulkUpload = ({ open, onClose }) => {
                                     }
 
                                 )
+
                             } catch (error) {
-                                console.error("Error uploading file and inserting data", error);
+                                toast.error(error.response.data.msg);
                             }
                         }
                     }
