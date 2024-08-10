@@ -64,7 +64,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
                 kanpurEndDate: kanpurEndDate.toISOString(),
                 noidaStartDate: noidaStartDate.toISOString(),
                 noidaEndDate: noidaEndDate.toISOString(),
-            });
+            },{withCredentials:true});
 
             toast.success("Dates updated successfully!");
             console.log(response.data);

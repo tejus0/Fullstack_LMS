@@ -117,7 +117,7 @@ const ForgetPass = () => {
     try {
       const res = await axios.post(`${baseUrl}/getCounsellorByNumber`, {
         mobileNo: ph
-      });
+      },{withCredentials:true});
       const data = res.data;
       setUserDetails(data.data);
       return data.data;
@@ -138,7 +138,7 @@ const ForgetPass = () => {
         else if (pass != confirmPass) {
           toast.error("Password and Confirm Password not matching");
         }
-        const res = await axios.post(`${baseUrl}/updatePass`, { newPassword: pass, userId: userDetails._id });
+        const res = await axios.post(`${baseUrl}/updatePass`, { newPassword: pass, userId: userDetails._id },{withCredentials:true});
         if (res.status == 200) {
           toast.success("Password Updated Successfully")
           navigate('/login')

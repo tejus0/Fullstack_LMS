@@ -16,6 +16,8 @@ import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 import FilterDrawer from "../../../component/FilterDrawer";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/authSlice";
 
 const Table = () => {
   const [columns, setColumns] = useState([
@@ -68,10 +70,12 @@ const Table = () => {
 
   const [activeButton, setActiveButton] = useState("assigned"); // 'assigned' or 'college'
 
+  const dispatch = useDispatch();
+
   // Function to fetch College Leads data
   const fetchCollegeLeads = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/showCounsCollegeLeads/${id}`);
+      const response = await axios.get(`${baseUrl}/showCounsCollegeLeads/${id}`,{withCredentials:true});
       // toast.success("Data Fetched Successfully");
       setUsers(response.data);
       setfilter(response.data);
@@ -117,7 +121,7 @@ const Table = () => {
     //  this is wrong
 
     const response = await toast.promise(
-      axios.get(`${baseUrl}/getCounsellorDataList/${id}`).catch((err) => {
+      axios.get(`${baseUrl}/getCounsellorDataList/${id}`,{withCredentials:true}).catch((err) => {
         console.log(err, "error");
       }),
 
@@ -161,9 +165,11 @@ const Table = () => {
     setPage(0); // Reset to first page when changing search term
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     window.localStorage.clear();
-    navigate(`/login`); // Adjust the path as needed
+    // navigate(`/login`); // Adjust the path as needed
+    await axios.get(`${baseUrl}/logout`,{withCredentials:true});
+    dispatch(logout())
   };
 
   // for search
@@ -188,7 +194,7 @@ const Table = () => {
       const data = await axios.post(`${baseUrl}/sortondate`, {
         start: date.startDate,
         end: date.endDate,
-      });
+      },{withCredentials:true});
       if (data.data.students.length === 0) {
         toast.error("No data found");
         setUsers([]);

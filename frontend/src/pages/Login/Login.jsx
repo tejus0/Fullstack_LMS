@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 
 import bg from "../../../src/assets/signin.svg";
 import bgimg from "../../../src/assets/backimg.jpg";
+import { login } from "../../redux/authSlice";
 
 // import LoginWithPhone from "./LoginWithPhone";
 
@@ -103,9 +104,10 @@ function Login() {
       const response = await axios.post(`${baseUrl}/login`, {
         mobile: mobileInput,
         password,
-      });
+      } , {withCredentials:true});
         console.log(response.data,"arnav")
-      if (response.data.status === "ok") {
+        if (response.data.status === "ok") {
+        dispatch(login(response.data.data))
         toast.success("Login Successful", { position: "top-right" });
         window.localStorage.setItem("token", true);
         window.localStorage.setItem("loggedIn", true);

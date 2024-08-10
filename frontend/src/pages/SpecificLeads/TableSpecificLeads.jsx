@@ -17,6 +17,8 @@ import TablePaginationActions from "@mui/material/TablePagination/TablePaginatio
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import FilterDrawer from "../../component/FilterDrawer";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
 
 const Table = () => {
@@ -77,12 +79,13 @@ const Table = () => {
   const navigate = useNavigate();
 
   const [activeButton, setActiveButton] = useState('assigned'); // 'assigned' or 'college'
+  const dispatch = useDispatch();
   
   // Function to fetch College Leads data
   const fetchCollegeLeads = async () => {
     try {
       const response = await axios
-        .get(`${baseUrl}/showSpecificLeads/${id}`)
+        .get(`${baseUrl}/showSpecificLeads/${id}`,{withCredentials:true})
         console.log(response,"response in pecific college leads")
       setUsers(response.data);
       setfilter(response.data);
@@ -114,7 +117,7 @@ const Table = () => {
 
     const fetchCounsellors = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getAdmissionHeadCounsellors/${id}`);
+        const response = await axios.get(`${baseUrl}/getAdmissionHeadCounsellors/${id}`,{withCredentials:true});
         console.log(response.data.data, "all counsellors of admissipn head")
         setAllCouncellors(response.data.data.assignedCounsellors);
         setLoading(false);
@@ -132,7 +135,7 @@ const Table = () => {
     //  this is wrong
 
     const response = await axios
-      .get(`${baseUrl}/getCounsellorDataList/${id}`)
+      .get(`${baseUrl}/getCounsellorDataList/${id}`,{withCredentials:true})
       .catch((err) => {
         console.log(err, "error");
       });
@@ -171,9 +174,11 @@ const Table = () => {
     setPage(0); // Reset to first page when changing search term
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     window.localStorage.clear();
-    navigate(`/login`); // Adjust the path as needed
+    // navigate(`/login`); // Adjust the path as needed
+    await axios.get(`${baseUrl}/logout`,{withCredentials:true});
+    dispatch(logout())
   };
 
   // for search
@@ -195,7 +200,7 @@ const Table = () => {
 
   const DateSorting = async () => {
     try {
-      const data = await axios.post(`${baseUrl}/sortondate`, { start: date.startDate, end: date.endDate })
+      const data = await axios.post(`${baseUrl}/sortondate`, { start: date.startDate, end: date.endDate },{withCredentials:true})
       if (data.data.students.length === 0) {
         toast.error("No data found");
         setUsers([])
@@ -309,7 +314,7 @@ const Table = () => {
 
     try {
       // Make the API request to update the users
-      const response = await axios.post(`${baseUrl}/assignOfflineLeadsToCouncellor`, { dataToSend, selectedCounsellor });
+      const response = await axios.post(`${baseUrl}/assignOfflineLeadsToCouncellor`, { dataToSend, selectedCounsellor },{withCredentials:true});
 
       if (response.status === 200) {
         toast.success(`Leads successfully assigned`);

@@ -9,6 +9,8 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
 
 
@@ -31,6 +33,7 @@ const ArnavLeads = () => {
     const [search, setsearch] = useState("")
     const [SearchBy, setSearchBy] = useState("name")
     const [filter, setfilter] = useState([])
+    const dispatch = useDispatch();
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -96,9 +99,11 @@ const ArnavLeads = () => {
         setPage(0);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async() => {
         window.localStorage.clear();
-        navigate(`/login`);
+        // navigate(`/login`);
+        await axios.get(`${baseUrl}/logout`);
+        dispatch(logout())
     };
 
     const handelChange = (e) => {

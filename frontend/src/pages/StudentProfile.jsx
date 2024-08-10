@@ -39,7 +39,7 @@ const StudentProfile = ({ counsellor_id }) => {
       try {
         // const response = await axios.get(`${baseUrl}/getTodos/${id}`);
         // setTodos(response.data[0].remarks);
-        const studData = await axios.get(`${baseUrl}/student/${id}`);
+        const studData = await axios.get(`${baseUrl}/student/${id}`,{withCredentials:true});
         setStudentData(studData.data.data[0]);
         // console.log(studentData.otherResponse,"data")
       } catch (e) {

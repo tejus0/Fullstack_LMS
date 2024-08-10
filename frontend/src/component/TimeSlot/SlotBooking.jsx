@@ -26,7 +26,7 @@ export default function SlotBooking({ studentId}) {
   useEffect(() => {
     const fetchDates = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/getAdminAvailableDays`);
+            const response = await axios.get(`${baseUrl}/getAdminAvailableDays`,{withCredentials:true});
             console.log(response.data,"in slot book karna hai")
             // if (response.data) {
                 // setStartDate(new Date(response.data.startDate));
@@ -121,7 +121,7 @@ const disableDates = (date) => {
         visitDate: selectedDate,
         office: office,
         // followUpStage: FolloupStage,
-      });
+      },{withCredentials:true});
 
       toast.success("Booking successful!");
       return response.data;

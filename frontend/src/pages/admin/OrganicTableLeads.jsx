@@ -24,6 +24,8 @@ import Modal from '@mui/material/Modal';
 
 
 import { FaSort, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
 
 
@@ -82,7 +84,7 @@ const OrganicTableLeads = () => {
 
   const [allCouncellors, setAllCouncellors] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const dispatch = useDispatch();
 
 
 
@@ -132,7 +134,7 @@ const OrganicTableLeads = () => {
       //     console.log(err, "error");
       //   });
       const response = await toast.promise(
-        axios.get(`${baseUrl}/getVisitLeads`).catch((err) => {
+        axios.get(`${baseUrl}/getVisitLeads`,{withCredentials:true}).catch((err) => {
           console.log(err, "error");
         }),
 
@@ -152,7 +154,7 @@ const OrganicTableLeads = () => {
 
     const fetchCounsellors = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getCounsellorNames`);
+        const response = await axios.get(`${baseUrl}/getCounsellorNames`,{withCredentials:true});
         console.log(response.data, "all counsellors")
         setAllCouncellors(response.data);
         setLoading(false);
@@ -168,7 +170,7 @@ const OrganicTableLeads = () => {
 
   const getCounsellorData = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/getCounsellorInfo`);
+      const res = await axios.get(`${baseUrl}/getCounsellorInfo`,{withCredentials:true});
       setCounsellors(res.data.data);
     } catch (error) {
       console.log(error);
@@ -216,9 +218,12 @@ const OrganicTableLeads = () => {
     setPage(0);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     window.localStorage.clear();
-    navigate(`/login`);
+    // navigate(`/login`);
+    await axios.get(`${baseUrl}/logout`,{withCredentials:true});
+    dispatch(logout())
+
   };
 
   const handleSort = (key) => {
@@ -305,7 +310,7 @@ const OrganicTableLeads = () => {
 
     try {
       // Make the API request to update the users
-      const response = await axios.post(`${baseUrl}/assignOfflineLeadsToCouncellor`, { dataToSend, selectedCounsellor });
+      const response = await axios.post(`${baseUrl}/assignOfflineLeadsToCouncellor`, { dataToSend, selectedCounsellor },{withCredentials:true});
 
       if (response.status === 200) {
         toast.success(`Leads successfully assigned`);

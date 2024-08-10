@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Form from "./pages/Form";
 
 import Login from "./pages/Login/Login";
@@ -12,7 +12,7 @@ import ForgetPass from "./pages/Forgot-password/ForgetPass";
 import ShowAllleads from "./pages/admin/showAllLeads";
 import ArnavLeads from "./pages/arnav/arnavLeads";
 import AgentLeads from "./pages/agent/AgentLeads";
-import ProtectedRoutes from "../ProtectedRoutes";
+import ProtectedRoute from "./component/ProtectedRoute";
 import SchedulePicker from "./pages/admin-date-picker/SchedulePicker";
 import TableShowSpecificLeads from "./pages/SpecificLeads/TableSpecificLeads";
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -26,6 +26,7 @@ import { AdmissionHeadCounsellor } from "./pages/admissionHead/AdmissionHeadCoun
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
 const App = () => {
+
   return (
     <div>
       <BrowserRouter>
@@ -34,27 +35,27 @@ const App = () => {
           <Route path="/" element={<Form />} exact />
           <Route
             path="/counsellor-profile/:id"
-            element={<CounsellorDashboard />}
+            element={<ProtectedRoute><CounsellorDashboard /></ProtectedRoute>}
           />
-          <Route path="/registration" element={<SignUp apiPath={"/register"}/>} />
-          <Route path="/student/:id" element={<StudentProfile />} />
-          <Route path="/assignAuto" element={<AssignAuto />} />
+          <Route path="/registration" element={<SignUp apiPath={"/register"} />} />
+          <Route path="/student/:id" element={<ProtectedRoute><StudentProfile /></ProtectedRoute>} />
+          <Route path="/assignAuto" element={<ProtectedRoute><AssignAuto /></ProtectedRoute>} />
           <Route path="/forgot-password" element={<ForgetPass />} />
-          <Route path="/showAllLeads" element={ <ShowAllleads/>} />
+          <Route path="/showAllLeads" element={<ProtectedRoute><ShowAllleads /></ProtectedRoute>} />
           <Route path="/showArnavAllLeads" element={<ArnavLeads />} />
-          <Route path="/showSpecificLeads" element={<TableShowSpecificLeads />} />
-          <Route path="/agentLeads" element={<AgentLeads />} />
+          <Route path="/showSpecificLeads" element={<ProtectedRoute><TableShowSpecificLeads /> </ProtectedRoute>} />
+          <Route path="/agentLeads" element={<ProtectedRoute><AgentLeads /></ProtectedRoute>} />
           <Route path="/hashed/codic/main/schedule" element={<SchedulePicker />} />
           {/* </Route> */}
           <Route path="/login" element={<Login />} />
-          <Route path="/adminDashboard" element={<AdminDashboard />} />
-          <Route path="/adminAvailableDays" element={<DaysAvaialble />} />
-          <Route path="/allCounsellorsReport" element={<ReportCards />} />
-          <Route path="/counsellorDashboard/:counsellorId" element={<CounsellorTrackerDashboard/>}/>
-          <Route path="/officeDashboard" element={<OfficeDashboard/>}/>
-          <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead"/>}/>
-          <Route path="/forgot-pass" element={<ForgetPass/>}/>
-          <Route path="/showCounsellorReport" element={<AdmissionHeadCounsellor />} />
+          <Route path="/adminDashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/adminAvailableDays" element={<ProtectedRoute><DaysAvaialble /></ProtectedRoute>} />
+          <Route path="/allCounsellorsReport" element={<ProtectedRoute><ReportCards /></ProtectedRoute>} />
+          <Route path="/counsellorDashboard/:counsellorId" element={<ProtectedRoute><CounsellorTrackerDashboard /></ProtectedRoute>} />
+          <Route path="/officeDashboard" element={<ProtectedRoute><OfficeDashboard /></ProtectedRoute>} />
+          <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead" />} />
+          <Route path="/forgot-pass" element={<ForgetPass />} />
+          <Route path="/showCounsellorReport" element={<ProtectedRoute><AdmissionHeadCounsellor /></ProtectedRoute>} />
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
       </BrowserRouter>

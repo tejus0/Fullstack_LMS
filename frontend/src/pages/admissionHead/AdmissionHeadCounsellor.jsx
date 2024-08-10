@@ -23,7 +23,7 @@ export const AdmissionHeadCounsellor = () => {
       const res = await toast.promise(
         axios.get(
           `${baseUrl}/getAdmissionHeadCounsellorsWithStudents/${id}?collegeSpecific=${isCollegeSpecific}`
-        ), 
+        ,{withCredentials:true}), 
         {
           loading: "Fetching Data ...",
           success: "Data Fetched Successfully",

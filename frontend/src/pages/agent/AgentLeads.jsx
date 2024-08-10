@@ -9,6 +9,8 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Typography from "@mui/material/Typography";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
 
 
@@ -25,7 +27,7 @@ const AgentLeads = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10); // change here for number of rows per page 
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
 
     // search 
     const [search, setsearch] = useState("")
@@ -47,7 +49,7 @@ const AgentLeads = () => {
             //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
             //     console.log(err, "error");
             //   });
-            const response = await axios.get(`${baseUrl}/getAgentLeads/${cat_name}`).catch(err => {
+            const response = await axios.get(`${baseUrl}/getAgentLeads/${cat_name}`,{withCredentials:true}).catch(err => {
                 console.log(err, "error");
             });
             setUsers(response.data);
@@ -96,9 +98,11 @@ const AgentLeads = () => {
         setPage(0);
     };
 
-    const handleLogout = () => {
+    const handleLogout = async() => {
         window.localStorage.clear();
-        navigate(`/login`);
+        // navigate(`/login`);
+        await axios.get(`${baseUrl}/logout`,{withCredentials:true});
+        dispatch(logout())
     };
 
     const handelChange = (e) => {

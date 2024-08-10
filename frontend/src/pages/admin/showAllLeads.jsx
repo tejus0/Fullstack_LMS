@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import ShowUnassignedLeads from "./ShowUnassignedLeads";
 import { requiredFields } from "../../data/requiredFieldBulk";
 import BulkUpload from "../../component/BulkUpload";
+import { logout } from "../../redux/authSlice";
 
 const ShowAllleads = () => {
   // const dispatch = useDispatch();
@@ -85,6 +86,7 @@ const ShowAllleads = () => {
 
   const [showUnassignedTable, setShowUnassignedTable] = useState(false);
   const [bulkOpen, setbulkOpen] = useState(false);
+  const dispatch = useDispatch();
   const handleToggleTable = () => {
     setShowNewTable(!showNewTable);
   };
@@ -110,7 +112,7 @@ const ShowAllleads = () => {
     //     console.log(err, "error");
     //   });
     const response = await toast.promise(
-      axios.get(`${baseUrl}/dashboard`).catch((err) => {
+      axios.get(`${baseUrl}/dashboard`,{withCredentials:true}).catch((err) => {
         console.log(err, "error");
       }),
 
@@ -128,7 +130,7 @@ const ShowAllleads = () => {
   useEffect(() => {
     const fetchCounsellors = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getCounsellorNames`);
+        const response = await axios.get(`${baseUrl}/getCounsellorNames`,{withCredentials:true});
         // console.log(response.data, "all counsellors")
         setAllCouncellors(response.data);
         setLoading(false);
@@ -144,7 +146,7 @@ const ShowAllleads = () => {
 
   const getCounsellorData = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/getCounsellorInfo`);
+      const res = await axios.get(`${baseUrl}/getCounsellorInfo`,{withCredentials:true});
       setCounsellors(res.data.data);
     } catch (error) {
       console.log(error);
@@ -182,9 +184,11 @@ const ShowAllleads = () => {
     setPage(0);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     window.localStorage.clear();
-    navigate(`/login`);
+    // navigate(`/login`);
+    await axios.get(`${baseUrl}/logout`,{withCredentials:true});
+    dispatch(logout())
   };
 
   const handleSort = (key) => {
@@ -242,7 +246,7 @@ const ShowAllleads = () => {
         axios.post(`${baseUrl}/sortondate`, {
           start: date.startDate,
           end: date.endDate,
-        }),
+        },{withCredentials:true}),
         {
           loading: "Fetching Data ...",
           success: "Data fetched Successfully",
@@ -290,9 +294,10 @@ const ShowAllleads = () => {
     paginatedUsers = filteredUsers;
   } else {
     paginatedUsers = allUsers.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage
+      page * Math.abs(rowsPerPage),
+      page * Math.abs(rowsPerPage) + Math.abs(rowsPerPage)
     );
+    console.log("page hai ............." , page , "rowpwerpage......." , rowsPerPage , "paginatedUsers...." , paginatedUsers)
   }
 
   const paginationDisabled = paginatedUsers.some(
@@ -347,7 +352,7 @@ const ShowAllleads = () => {
       const response = await axios.post(
         `${baseUrl}/assignOfflineLeadsToCouncellor`,
         { dataToSend, selectedCounsellor }
-      );
+      ,{withCredentials:true});
 
       if (response.status === 200) {
         toast.success(`Leads successfully assigned`);
@@ -901,7 +906,7 @@ const ShowAllleads = () => {
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 disabled={paginationDisabled}
-                rowsPerPageOptions={[10, 25, 50, 100, { label: "All", value: -1 }]} // Adding the 'All' option
+                rowsPerPageOptions={[10, 25, 50,100, { label: "All", value: sortedUsers.length }]} // Adding the 'All' option
                 labelDisplayedRows={({ from, to, count }) =>
                   rowsPerPage === -1
                     ? `Showing ${count} of ${count}`

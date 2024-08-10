@@ -45,7 +45,7 @@ const ReportCards = () => {
     const fetchData = async () => {
       try {
         const response = await toast.promise(
-          axios.get(`${baseUrl}/getCounsellorsWithStudents`),
+          axios.get(`${baseUrl}/getCounsellorsWithStudents`,{withCredentials:true}),
 
           {
             loading: "Fetching Data ...",
@@ -242,7 +242,7 @@ const ReportCards = () => {
   const topPerformer = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${baseUrl}/getTopPerformer`);
+      const { data } = await axios.get(`${baseUrl}/getTopPerformer`,{withCredentials:true});
       const totalPerformance = data.totalPerformance;
       const sortedPerformance = [...totalPerformance].sort(
         (a, b) => b.admission - a.admission

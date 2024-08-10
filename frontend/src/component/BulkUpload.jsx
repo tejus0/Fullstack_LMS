@@ -99,6 +99,7 @@ const BulkUpload = ({ open, onClose }) => {
                                         headers: {
                                             "Content-Type": "application/json",
                                         },
+                                        withCredentials:true
                                     }),
 
                                     {

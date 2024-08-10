@@ -50,7 +50,7 @@ const FollowUpSteps = ({ studentId }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/getTodos/${studentId}`);
+        const response = await axios.get(`${baseUrl}/getTodos/${studentId}`,{withCredentials:true});
         let data = response.data[0].remarks
         setNotesByStage(data); // Update notesByStage with the fetched data
         if(data.FollowUp3.length || (data.FollowUp2.at(-1))?.subject == "Hot Lead+INTERESTED"){
@@ -223,7 +223,8 @@ const FollowUpSteps = ({ studentId }) => {
             }, {
               headers: {
                 "Content-Type": "multipart/form-data",
-              }
+              },
+              withCredentials:true
             }),
 
             {
@@ -240,7 +241,7 @@ const FollowUpSteps = ({ studentId }) => {
             _id: studentId,
             name: subject,
             followUpStage: FolloupStage,
-          });
+          },{withCredentials:true});
         }
 
         setNotesByStage((prevState) => ({

@@ -152,7 +152,7 @@ const SignUp = ({apiPath  , pageFor="counsellor"}) => {
 
       // calling api to store data  
       await axios
-        .post(`${baseUrl}${apiPath}`, requestBody)
+        .post(`${baseUrl}${apiPath}`, requestBody,{withCredentials:true})
         .then((response) => {
           console.log(response);
           if (response.status === 200) {

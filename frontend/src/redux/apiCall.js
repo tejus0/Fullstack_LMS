@@ -8,7 +8,7 @@ const baseUrl = import.meta.env.VITE_API
 const fetchData = async (dispatch) => {
     dispatch(fetchDetailreq())
     try {
-        const res = await axios.get(`${baseUrl}/dashboard?page=1&limit=10`);
+        const res = await axios.get(`${baseUrl}/dashboard?page=1&limit=10`,{withCredentials:true});
         const fetchedData = res.data.data; 
         
         dispatch(fetchDetailsucess(fetchedData))

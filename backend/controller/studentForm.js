@@ -16,6 +16,7 @@ import { getUri } from "../middleware/dataUri.js";
 import cloudinary from "cloudinary";
 import { group, log } from "console";
 import { networkInterfaces } from "os";
+import generateToken from "../utils/generateToken.js";
 export const loginLoad = async (req, res) => {
   try {
     res.json("this is working");
@@ -465,7 +466,8 @@ export const verifyLogin = async (req, res) => {
     const userData = await agentModal
       .find({ name: { $regex: regexPattern } })
       .exec();
-    console.log(userData, "data in agent");
+      console.log(userData, "data in agent");
+    let token;
     if (Object.keys(userData).length) {
       console.log(userData, "data in AGENT");
       const nameField = userData[0].name;
@@ -490,6 +492,12 @@ export const verifyLogin = async (req, res) => {
           // if (userData.is_admin === 1) {
           //   return res.json({ status: "ok", data: userData._id, type: "admin" });
           // } else {
+          token = generateToken(userData , false);
+          res.cookie('token' , token , {
+            httpOnly:true,
+            sameSite:'none',
+            secure:true
+          })
           return res.json({ status: "ok", data: category_name, type: "agent" });
 
           // }
@@ -530,6 +538,24 @@ export const verifyLogin = async (req, res) => {
           //   }
           // );
           // console.log(token, "token in verify");
+
+          // Generate JWT token with user data
+          token = generateToken(userData);
+
+          // Set the JWT token in a cookie
+          // res.cookie('token', token, {
+          //   httpOnly: true,  
+          //   secure: false, 
+          //   maxAge: 3600000, 
+          //   sameSite: 'none',
+          //   priority: 'High'
+          // });
+         res.cookie('token' , token , {
+          httpOnly:true,
+          sameSite:'none',
+          secure:true
+        })
+
           if (res.status(201)) {
             if (userData.is_admin === 1) {
               return res.json({
@@ -2060,3 +2086,22 @@ export const showCounsCollegeLeads = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
+
+
+export const logout = (req , res)=>{
+  try {
+    return  res.clearCookie('token' , {
+      httpOnly:true,
+      sameSite:'none',
+      secure:true
+    }).json({
+      status:"Success",
+      message: "Logged Out Succesfully"
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status:"Error",
+      message:"Something Went Wrong"
+    })
+  }
+}

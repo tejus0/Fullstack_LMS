@@ -257,7 +257,7 @@ const OfficeDashboard = () => {
       const res = await toast.promise(
         axios.get(
           `${baseUrl}/getOfficeReport?office=${office}`
-        ),
+        ,{withCredentials:true}),
 
         {
           loading: "Fetching Data ...",
@@ -291,7 +291,7 @@ const OfficeDashboard = () => {
 
   const fetchTopPerformer = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/getTopPerformer`);
+      const res = await axios.get(`${baseUrl}/getTopPerformer`,{withCredentials:true});
       const filterTopPerformer = res.data.totalPerformance.filter(
         (element) => element.id.charAt(2) === office.toUpperCase()
       );

@@ -27,7 +27,7 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await axios.get(`${baseUrl}/getTodos/${studentId}`);
+            const response = await axios.get(`${baseUrl}/getTodos/${studentId}`,{withCredentials:true});
             console.log(response,"res")
             setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
             console.log(notesByStage,"remarks");

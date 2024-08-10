@@ -5,15 +5,22 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import { FaPeopleGroup } from "react-icons/fa6";
 import React from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/authSlice';
 
 
 const SideBar = () => {
     const location = useParams();
     const id = location.counsellorId;
     const navigate = useNavigate();
-    const handleLogout = () => {
+    const baseUrl = import.meta.env.VITE_API;
+    const dispatch = useDispatch();
+    const handleLogout = async() => {
         window.localStorage.clear();
-        navigate(`/login`); // Adjust the path as needed
+        // navigate(`/login`); // Adjust the path as needed
+        await axios.get(`${baseUrl}/logout`,{withCredentials:true});
+        dispatch(logout());
       };
   return (
     <div className="flex flex-col bg-gray-200 p-1">

@@ -7,10 +7,12 @@ import path from "path"
 
 // importing all routes here 
 import studentDetailRoute from "./routes/formRoute.js"; // Path to your router file
+import cookieParser from "cookie-parser"
 
 
 const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 // const corsOptions = {
 //     origin: "*",
@@ -22,11 +24,13 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(cors({
 
-    origin: '*', // Allow requests from all origins
+    origin: 'http://localhost:5173', // Allow requests from all origins
   
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
   
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    // allowedHeaders: ['Content-Type', 'Authorization'],
+
+    credentials:true
   
   }));
 

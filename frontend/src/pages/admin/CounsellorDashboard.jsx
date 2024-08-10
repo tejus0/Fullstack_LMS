@@ -147,7 +147,7 @@ const CounsellorDashboard = () => {
     try {
       let res = await axios.get(
         `${baseUrl}/getCoursesCounselled/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
-      );
+      ,{withCredentials:true});
       res = res.data;
       setCoursesCounselled(res.data);
     } catch (err) {
@@ -159,7 +159,7 @@ const CounsellorDashboard = () => {
     try {
       let res = await axios.get(
         `${baseUrl}/getCounsellorLeadDetails/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
-      );
+      ,{withCredentials:true});
       res = res.data;
       const stage1Total = Object.values(res.stage1Obj).reduce(
         (acc, val) => acc + val,
@@ -205,7 +205,7 @@ const CounsellorDashboard = () => {
       let res = await toast.promise(
         axios.get(
           `${baseUrl}/getCounsellorPendingAmount/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
-        ),
+        ,{withCredentials:true}),
 
         {
           loading: "Fetching Data ...",
@@ -383,7 +383,7 @@ const CounsellorDashboard = () => {
     try {
       const res = await axios.get(
         `${baseUrl}/getAssignedCounsellorStudents/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
-      );
+      ,{withCredentials:true});
 
       setAssignedStudents(res.data.data);
     } catch (error) { }
