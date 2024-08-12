@@ -2132,3 +2132,51 @@ export const logout = (req , res)=>{
     })
   }
 }
+
+
+export const assignCollegesSeniorAdmHead = async (req, res) =>{
+  const {counsellorID, colleges} = req.body
+  try {
+    const updatedCounsellor = await counsellorModal.findByIdAndUpdate(
+      counsellorID,
+      {
+        $set: {
+          who_am_i: "senior_adm_head",
+          multiple_colleges: colleges,
+        }
+      },
+
+      {new: true}
+    )
+
+    if(!updatedCounsellor){
+      return res.status(404).json({message: "Counsellor not found"})
+    }
+
+    res.status(200).json({
+      message: "Counsellor Updated Successfully",
+      counsellor: updatedCounsellor
+    })
+  } catch (error) {
+     res.status(500).json({message: "Error updating counsellor", error})
+  }
+}
+
+
+export const getAllSeniorAdmHeads = async (req, res) => {
+  try {
+    // Find all counsellors where who_am_i is 'senior_adm_head'
+    const seniorAdmHeads = await counsellorModal.find({ who_am_i: "senior_adm_head" });
+
+    if (seniorAdmHeads.length === 0) {
+      return res.status(404).json({ message: "No Senior Admission Heads found" });
+    }
+
+    res.status(200).json({
+      message: "Senior Admission Heads retrieved successfully",
+      seniorAdmHeads,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving Senior Admission Heads", error });
+  }
+};

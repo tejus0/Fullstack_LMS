@@ -60,7 +60,13 @@ const counsellorDetail = mongoose.Schema({
       },
     ],
     default: []
+  },
+
+  multiple_colleges : {
+    type: [String],
+    default: []
   }
+
 }, { timestamps: true }
 );
 
