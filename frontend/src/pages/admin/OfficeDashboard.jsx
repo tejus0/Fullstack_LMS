@@ -11,7 +11,9 @@ import MaterialTable from "../../component/MaterialTable";
 import toast, { ToastBar } from "react-hot-toast";
 
 const OfficeDashboard = () => {
-  let office = useQuery().get("office") ?? "k";
+  let office = useQuery().get("office");
+  let url = useQuery().get("url")
+  console.log(url);
   // console.log(office , office.search.split("=") , " query parameter")
   const [students, setStudents] = useState([]);
   const [officeReportDetails, setOfficeReportDetails] = useState({
@@ -256,7 +258,7 @@ const OfficeDashboard = () => {
     try {
       const res = await toast.promise(
         axios.get(
-          `${baseUrl}/getOfficeReport?office=${office}`
+          `${baseUrl}/getOfficeReport?${office ? `office=${office}` : `college=${encodeURIComponent(url)}`}`
         ,{withCredentials:true}),
 
         {
@@ -293,7 +295,7 @@ const OfficeDashboard = () => {
     try {
       const res = await axios.get(`${baseUrl}/getTopPerformer`,{withCredentials:true});
       const filterTopPerformer = res.data.totalPerformance.filter(
-        (element) => element.id.charAt(2) === office.toUpperCase()
+        (element) => element.id.charAt(2) === office?.toUpperCase()
       );
       setTopPerformer(filterTopPerformer);
       console.log(res.data);
@@ -320,7 +322,7 @@ const OfficeDashboard = () => {
       {/* Page Title  */}
       <div className="p-9 text-center md:text-start">
         <p className="text-4xl font-semibold text-purple-400">
-          {office.toLowerCase() == "k" ? "Kanpur" : "Noida"} Report
+          {office?.toLowerCase() == "k" ? "Kanpur" : "Noida"} Report
         </p>
       </div>
       {/* Card containers */}
