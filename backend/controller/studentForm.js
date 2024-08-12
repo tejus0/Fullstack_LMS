@@ -1187,7 +1187,7 @@ export const getCounsellorRevenueDetails = async (req, res) => {
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }
+    }  
     college_website ? stuFilter.sourceId = college_website : null;
     const counsellorStudents = await studentModal.aggregate([
       {
@@ -2084,7 +2084,7 @@ export const showCounsCollegeLeads = async (req, res) => {
 
     if (agentName.length === 0) {
       return res.status(404).json({ msg: "Counsellor not found" });
-    }
+    } 
 
     console.log(agentName, "agent");
     const collegeWebsite = agentName[0].college_website;
