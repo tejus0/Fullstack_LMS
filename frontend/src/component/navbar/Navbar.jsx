@@ -6,6 +6,7 @@ import { FaFileZipper } from "react-icons/fa6";
 import { ImUserTie } from "react-icons/im";
 import { BsBriefcaseFill } from "react-icons/bs";
 import { BiSolidMessageAltDetail } from "react-icons/bi";
+import { FaPeopleGroup } from "react-icons/fa6";
 
 const Navbar = () => {
     const navIcons = {
@@ -73,6 +74,14 @@ const Navbar = () => {
                                 <li>
                                     <BiSolidMessageAltDetail style={navIcons} />{" "}
                                     <p>Contact</p>
+                                </li>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="/seniorAdmHead" style={linkStyle}>
+                                <li>
+                                    <FaPeopleGroup style={navIcons} />{" "}
+                                    <p>Senior Admission Head</p>
                                 </li>
                             </a>
                         </div>

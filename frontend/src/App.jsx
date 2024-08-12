@@ -22,6 +22,7 @@ import ReportCards from "./pages/admin/Report/ReportCards";
 import CounsellorTrackerDashboard from './pages/admin/CounsellorDashboard'
 import OfficeDashboard from "./pages/admin/OfficeDashboard";
 import { AdmissionHeadCounsellor } from "./pages/admissionHead/AdmissionHeadCounsellor";
+import SeniorAdmHead from "./pages/admin/SeniorAdmHead";
 
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
@@ -56,8 +57,10 @@ const App = () => {
           <Route path="/registerAdm" element={<SignUp apiPath={"/register"} pageFor="admissionHead" />} />
           <Route path="/forgot-pass" element={<ForgetPass />} />
           <Route path="/showCounsellorReport" element={<ProtectedRoute><AdmissionHeadCounsellor /></ProtectedRoute>} />
+          <Route path="/seniorAdmHead" element={<ProtectedRoute><SeniorAdmHead /></ProtectedRoute>} />
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
+
       </BrowserRouter>
     </div>
   );
