@@ -1584,24 +1584,54 @@ export const getAssignedCounsellorStudents = async (req, res) => {
 
 export const getOfficeReport = async (req, res) => {
   try {
-    const office = req.query.office.toUpperCase();
-    if (!office || office.length !== 1) {
-      return res.status(400).send("Invalid Office Parameter");
-    }
+    const office = req.query.office?.toUpperCase();
+    const college = req.query.college
+    console.log(college)
 
-    const counsellors = await counsellorModal.find({
-      counsellor_id: new RegExp(`^..${office}`),
-    });
+    let counsellorFilter = {}
+    let studentFilter = {}
+
+    if(college){
+      counsellorFilter.college_website = decodeURIComponent(college)
+      studentFilter.sourceId = decodeURIComponent(college)
+    } else if (office) {
+      // Filter by office if office parameter is provided and no college parameter is present
+      if (office.length !== 1) {
+        return res.status(400).send("Invalid Office Parameter");
+      }
+      counsellorFilter.counsellor_id = new RegExp(`^..${office}`);
+    } else {
+      return res.status(400).send("Either Office or College Parameter is required");
+    }
+    // if (!office || office.length !== 1) {
+    //   return res.status(400).send("Invalid Office Parameter");
+    // }
+
+    // const counsellors = await counsellorModal.find({
+    //   counsellor_id: new RegExp(`^..${office}`),
+    // });
+
+    console.log(counsellorFilter)
+
+    const counsellors = await counsellorModal.find(counsellorFilter);
+
     if (counsellors.length === 0) {
       return res.status(404).send("No counsellors found");
     }
 
-    const counsellerId = counsellors.map((c) => c._id);
+    const counsellorIds = counsellors.map((c) => c._id);
 
-    console.log(counsellerId);
-    const students = await studentModal.find({
-      assignedCouns: { $in: counsellerId },
-    });
+    console.log(counsellorIds);
+    studentFilter.assignedCouns = { $in: counsellorIds };
+
+    const students = await studentModal.find(studentFilter);
+
+    if (students.length === 0) {
+      return res.status(404).send("No students found");
+    }
+    // const students = await studentModal.find({
+    //   assignedCouns: { $in: counsellerId },
+    // });
 
     let totalRevenue = 0;
     let totalAdmissions = 0;
