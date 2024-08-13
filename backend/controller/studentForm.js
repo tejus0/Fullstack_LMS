@@ -2271,7 +2271,6 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
     }
   
     const colleges = seniorAdmHead.multiple_colleges
-    console.log(colleges)
   
     let reportData = []
   
@@ -2282,18 +2281,18 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
   
       const counsellors = await counsellorModal.find(counsellorFilter)
   
-      if (counsellors.length === 0) {
-        continue; // Skip if no counselors found for this college
-      }
+      // if (counsellors.length === 0) {
+      //   continue; // Skip if no counselors found for this college
+      // }
   
       const counsellorIds = counsellors.map((c) => c._id)
   
       studentFilter.assignedCouns = {$in: counsellorIds}
       const students = await studentModal.find(studentFilter)
   
-      if (students.length === 0) {
-        continue; // Skip if no students found for this college
-      }
+      // if (students.length === 0) {
+      //   continue; // Skip if no students found for this college
+      // }
   
       let totalRevenue = 0;
       let totalAdmissions = 0;
@@ -2403,9 +2402,10 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
       });
   
       const totalCounsellors = counsellors.length;
-      const conversionExpected = Math.round((hotLead / totalFollowUp2) * 100);
+      // const conversionExpected = Math.round((hotLead / totalFollowUp2) * 100);
+      const conversionExpected = totalFollowUp2 > 0 ? Math.round((hotLead / totalFollowUp2) * 100) : 0;
 
-      console.log("second")
+      // console.log("second")
   
       reportData.push({
         college,
@@ -2438,7 +2438,7 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
         pendingAmounts
       });
 
-      console.log(reportData);
+      // console.log(reportData);
     }
   
     return res.json({
