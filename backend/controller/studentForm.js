@@ -147,14 +147,16 @@ export const insertFromSheet = async (req, res) => {
     });
 
     if (isExist) {
-      data.forEach((elem) => {
-        if (isExist.preferredCollege == String(elem.preferredCollege)) {
-          return res.status(400).json({
-            success: false,
-            msg: `${elem.name} Already Exists in the database`
-          });
+      for (const elem of data) {
+        for (const isExistElem of isExist) {
+          if (isExistElem.preferredCollege === String(elem.preferredCollege) || isExistElem.otherResponse.preferredCollege === String(elem.preferredCollege)) {
+            return res.status(400).json({
+              success: false,
+              msg: `${elem.name} Already Exists in the database`,
+            });
+          }
         }
-      });
+      }
 
 
       data.forEach(async (elem) => {
@@ -165,9 +167,7 @@ export const insertFromSheet = async (req, res) => {
           }
         })
       })
-      //   isExist.otherResponse.push(elem);
-      //   await isExist.save();
-      // })
+
 
       const insertedStudents = filteredDataToInsert.forEach(async (elem) => {
         await studentModal.create(elem);
@@ -184,15 +184,14 @@ export const insertFromSheet = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      msg: "Multiple Students Created Successfully",
-      // data: insertedStudents,
+      msg: "Multiple Students Created Successfully"
     });
   }
   catch (err) {
     return res.status(500).json({
       success: false,
       msg: "Failed to create multiple students",
-      error: err.message,
+      // error: err.message,
     });
   }
 };
