@@ -258,7 +258,7 @@ const OfficeDashboard = () => {
     try {
       const res = await toast.promise(
         axios.get(
-          `${baseUrl}/getOfficeReport?${office ? `office=${office}` : `college=${encodeURIComponent(url)}`}`
+          `${baseUrl}/getOfficeReport?${office ? `office=${office}` : `college=${url}`}`
         ,{withCredentials:true}),
 
         {

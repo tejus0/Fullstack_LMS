@@ -1593,15 +1593,16 @@ export const getAssignedCounsellorStudents = async (req, res) => {
 export const getOfficeReport = async (req, res) => {
   try {
     const office = req.query.office?.toUpperCase();
-    const college = req.query.college
-    console.log(college)
+    let college = req.query.college;
+    college = college.replaceAll("'","")
+    console.log(college , "string..")
 
     let counsellorFilter = {}
     let studentFilter = {}
 
-    if (college) {
-      counsellorFilter.college_website = decodeURIComponent(college)
-      studentFilter.sourceId = decodeURIComponent(college)
+    if(college){
+      counsellorFilter.college_website = college
+      studentFilter.sourceId = college
     } else if (office) {
       // Filter by office if office parameter is provided and no college parameter is present
       if (office.length !== 1) {
@@ -2183,12 +2184,24 @@ export const logout = (req, res) => {
 export const assignCollegesSeniorAdmHead = async (req, res) => {
   const { counsellorID, colleges } = req.body
   try {
+    const exisitingCounsellor = await counsellorModal.findById(counsellorID)
+
+    if(!exisitingCounsellor){
+      return res.status(404).json({message: "Senior Admission Head Not Found"});
+    }
+
+    const currentColleges = new Set(exisitingCounsellor.multiple_colleges)
+
+    colleges.forEach((college) => currentColleges.add(college))
+
+    const updatedColleges = Array.from(currentColleges);
+
     const updatedCounsellor = await counsellorModal.findByIdAndUpdate(
       counsellorID,
       {
         $set: {
           who_am_i: "senior_adm_head",
-          multiple_colleges: colleges,
+          multiple_colleges: updatedColleges,
         }
       },
 
@@ -2226,3 +2239,217 @@ export const getAllSeniorAdmHeads = async (req, res) => {
     res.status(500).json({ message: "Error retrieving Senior Admission Heads", error });
   }
 };
+
+
+export const getAssignedColleges = async (req, res) =>{
+  try {
+    const seniorAdmHeads = await counsellorModal.find(
+      {who_am_i: "senior_adm_head" },
+      {multiple_colleges: 1, _id: 0}
+    )
+
+    const assignedColleges = seniorAdmHeads.map((head) => head.multiple_colleges).flat()
+
+    return res.status(200).json({assignedColleges})
+
+  } catch (error) {
+    return res.status(500).json({message: "Error fetching already assigned colleges", error})
+  }
+}
+
+
+
+
+export const getSeniorAdmHeadReport = async (req, res) =>{
+  try {
+    const seniorAdmHeadID = req.query.seniorAdmHeadID
+    
+    const seniorAdmHead = await counsellorModal.findById(seniorAdmHeadID)
+  
+    if(!seniorAdmHead || !seniorAdmHead.multiple_colleges){
+      return res.status(404).json({message: "Senior Admission Head not found or no colleges assigned"})
+    }
+  
+    const colleges = seniorAdmHead.multiple_colleges
+    console.log(colleges)
+  
+    let reportData = []
+  
+    for(let college of colleges){
+      console.log(college)
+      let counsellorFilter = {college_website: college}
+      let studentFilter = {sourceId: college}
+  
+      const counsellors = await counsellorModal.find(counsellorFilter)
+  
+      if (counsellors.length === 0) {
+        continue; // Skip if no counselors found for this college
+      }
+  
+      const counsellorIds = counsellors.map((c) => c._id)
+  
+      studentFilter.assignedCouns = {$in: counsellorIds}
+      const students = await studentModal.find(studentFilter)
+  
+      if (students.length === 0) {
+        continue; // Skip if no students found for this college
+      }
+  
+      let totalRevenue = 0;
+      let totalAdmissions = 0;
+      let totalFollowUp1 = 0;
+      let totalFollowUp2 = 0;
+      let totalFollowUp3 = 0;
+      let paidCounselling = 0;
+      let associateCollege = 0;
+      let hotLead = 0;
+      let warmLead = 0;
+      let coldLead = 0;
+      let switchOff = 0;
+      let notReachable = 0;
+      let disconnect = 0;
+      let networkIssue = 0;
+      let firstCallDone = 0;
+      let incomingNotAvailable = 0;
+      let notReceived = 0;
+  
+  
+      let pendingAmounts = [];
+  
+      students.forEach((student) => {
+        let hasPreBookingAmount = false;
+        let hasFollowUp3 =
+          student.remarks.FollowUp3 && student.remarks.FollowUp3.length > 0;
+        let hasFollowUp2 =
+          student.remarks.FollowUp2 && student.remarks.FollowUp2.length > 0;
+        let hasFollowUp1 =
+          student.remarks.FollowUp1 && student.remarks.FollowUp1.length > 0;
+  
+        if (hasFollowUp3) {
+          totalFollowUp3++;
+          let totalPaid = 0;
+          let packageAmount = 0;
+  
+  
+          student.remarks.FollowUp3.forEach((followUp, index) => {
+            const preBookingAmount = parseFloat(followUp.preBookingAmount || 0);
+            totalPaid += preBookingAmount;
+            totalRevenue += preBookingAmount;
+  
+            if (preBookingAmount > 0) {
+              hasPreBookingAmount = true;
+            }
+            // Calculate paid counselling and associate college based on latest remark
+            if (index === student.remarks.FollowUp3.length - 1) {
+              const packageAmountMatch = followUp.additionalOption.match(/\d+/);
+              packageAmount = packageAmountMatch ? parseInt(packageAmountMatch[0]) * 1000 : 0;
+  
+              if (followUp.subject.includes("Paid Counselling")) {
+                paidCounselling++;
+              } else if (followUp.subject.includes("Associate College")) {
+                associateCollege++;
+              }
+            }
+          });
+  
+          if (hasPreBookingAmount) {
+            totalAdmissions++;
+          }
+  
+          const pendingAmount = packageAmount - totalPaid;
+          if (pendingAmount > 0) {
+            pendingAmounts.push({
+              studentId: student._id,
+              name: student.name,
+              packageAmount,
+              totalPaid,
+              pendingAmount
+            });
+          }
+  
+        } else if (hasFollowUp2) {
+          totalFollowUp2++;
+  
+          // Calculate hot, warm, and cold leads based on latest remark in FollowUp2
+          const latestFollowUp2 =
+            student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
+          if (latestFollowUp2.subject.includes("Hot")) {
+            hotLead++;
+          } else if (latestFollowUp2.subject.includes("Warm")) {
+            warmLead++;
+          } else if (latestFollowUp2.subject.includes("Cold")) {
+            coldLead++;
+          }
+        } else if (hasFollowUp1) {
+          totalFollowUp1++;
+  
+          const latestFollowUp1 = student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
+          if (latestFollowUp1.subject.includes("Switch Off")) {
+            switchOff++;
+          } else if (latestFollowUp1.subject.includes("Not Reachable")) {
+            notReachable++;
+          } else if (latestFollowUp1.subject.includes("Disconnect")) {
+            disconnect++;
+          } else if (latestFollowUp1.subject.includes("Network Issue")) {
+            networkIssue++;
+          } else if (latestFollowUp1.subject.includes("First Call Done")) {
+            firstCallDone++;
+          } else if (latestFollowUp1.subject.includes("Not Received")) {
+            notReceived++;
+          } else if (latestFollowUp1.subject.includes("Incoming Not Available")) {
+            incomingNotAvailable++;
+          }
+        }
+      });
+  
+      const totalCounsellors = counsellors.length;
+      const conversionExpected = Math.round((hotLead / totalFollowUp2) * 100);
+
+      console.log("second")
+  
+      reportData.push({
+        college,
+        totalRevenue,
+        totalAdmissions,
+        totalCounsellors,
+        conversionExpected,
+        followUp1: {
+          totalFollowUp1,
+          switchOff,
+          notReachable,
+          disconnect,
+          networkIssue,
+          firstCallDone,
+          notReceived,
+          incomingNotAvailable,
+        },
+        followUp2: {
+          totalFollowUp2,
+          hotLead,
+          warmLead,
+          coldLead,
+        },
+        followUp3: {
+          totalFollowUp3,
+          paidCounselling,
+          associateCollege,
+        },
+        students,
+        pendingAmounts
+      });
+
+      console.log(reportData);
+    }
+  
+    return res.json({
+      seniorAdmHeadID,
+      reportData
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+
+}

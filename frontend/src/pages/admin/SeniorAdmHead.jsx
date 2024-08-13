@@ -11,6 +11,7 @@ export default function SeniorAdmHead() {
   const [counsellors, setCounsellors] = useState([]);
   const [selectedCounsellor, setSelectedCounsellor] = useState(null);
   const [selectedColleges, setSelectedColleges] = useState([]);
+  const [assignedColleges, setAssignedColleges] = useState([]);
   const [counsellorData, setCounsellorData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -48,9 +49,9 @@ export default function SeniorAdmHead() {
     return {value: element._id , label: element.name}
   })
 
-  const collegeOptions = CollegeNames.map((element) => {
-    return {value: element.website, label: element.name}
-  })
+  // const collegeOptions = CollegeNames.map((element) => {
+  //   return {value: element.website, label: element.name}
+  // })
 
   const fetchSeniorAdmHeadData = async()=>{
     try {
@@ -82,47 +83,65 @@ export default function SeniorAdmHead() {
     }
   }
 
-  const sampleData = [
-    {
-      name: 'Shivam Driwedi',
-      type: 'folder',
-      children: [
-        { name: 'JKN Ayurvedic College', type: 'file', link: "#" },
-        { name: 'MSB College', type: 'file', link: "#" },
 
-      ]
-    },
-    {
-      name: 'Rakesh Kumar',
-      type: 'folder',
-      children: [
-        { name: 'Shri Babu Ram College', type: 'file', link: "#" },
-        { name: 'Shakuntala Devi Ayurvedic College', type: 'file', link: "#" }
-      ]
-    },
-    {
-      name: 'Shivam Driwedi',
-      type: 'folder',
-      children: [
-        { name: 'JKN Ayurvedic College', type: 'file', link: "#" },
-        { name: 'MSB College', type: 'file', link: "#" },
+  const fetchAssignedColleges = async () => {
+    try {
+      const res = await axios.get(`${baseUrl}/getAssignedColleges`, { withCredentials: true });
+      setAssignedColleges(res.data.assignedColleges);
+    } catch (error) {
+      console.log(error);
+      setAssignedColleges([])
+    }
+  };
 
-      ]
-    },
-    {
-      name: 'Rakesh Kumar',
-      type: 'folder',
-      children: [
-        { name: 'Shri Babu Ram College', type: 'file', link: "#" },
-        { name: 'Shakuntala Devi Ayurvedic College', type: 'file', link: "#" }
-      ]
-    },
-  ];
+
+  const filteredCollegeOptions = CollegeNames?.
+  filter((college) => !assignedColleges?.includes(college.website))
+  .map((element) => {
+    return {value: element.website, label: element.name}
+  })
+  // const sampleData = [
+  //   {
+  //     name: 'Shivam Driwedi',
+  //     type: 'folder',
+  //     children: [
+  //       { name: 'JKN Ayurvedic College', type: 'file', link: "#" },
+  //       { name: 'MSB College', type: 'file', link: "#" },
+
+  //     ]
+  //   },
+  //   {
+  //     name: 'Rakesh Kumar',
+  //     type: 'folder',
+  //     children: [
+  //       { name: 'Shri Babu Ram College', type: 'file', link: "#" },
+  //       { name: 'Shakuntala Devi Ayurvedic College', type: 'file', link: "#" }
+  //     ]
+  //   },
+  //   {
+  //     name: 'Shivam Driwedi',
+  //     type: 'folder',
+  //     children: [
+  //       { name: 'JKN Ayurvedic College', type: 'file', link: "#" },
+  //       { name: 'MSB College', type: 'file', link: "#" },
+
+  //     ]
+  //   },
+  //   {
+  //     name: 'Rakesh Kumar',
+  //     type: 'folder',
+  //     children: [
+  //       { name: 'Shri Babu Ram College', type: 'file', link: "#" },
+  //       { name: 'Shakuntala Devi Ayurvedic College', type: 'file', link: "#" }
+  //     ]
+  //   },
+  // ];
 
 
   useEffect(() => {
     getCounsellorData();
     fetchSeniorAdmHeadData();
+    fetchAssignedColleges();
     // setLoading(true);
     // setTimeout(() => {
     //   setCounsellorData(sampleData)
@@ -148,7 +167,7 @@ export default function SeniorAdmHead() {
             <label className="block text-gray-700 mb-2">Select Colleges</label>
             <Select
               isMulti
-              options={collegeOptions}
+              options={filteredCollegeOptions}
               onChange={(selectedOptions) => setSelectedColleges(selectedOptions.map(option => option.value))}
               className="w-full"
             />
