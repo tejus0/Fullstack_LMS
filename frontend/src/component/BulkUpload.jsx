@@ -88,30 +88,31 @@ const BulkUpload = ({ open, onClose }) => {
                                 fieldsToCheckType.forEach(field => {
                                     row[field] = String(row[field]);
                                 });
+                                row.source = "excel";
+                                row.sourceId = "excel";
                                 arr.push(row)
                             });
 
+                            // try {
+                            //     const res = await toast.promise(
+                            //         axios.post(`${baseUrl}/insertFromSheet`, filteredJsonData, {
+                            //             headers: {
+                            //                 "Content-Type": "application/json",
+                            //             },
+                            //             withCredentials: true
+                            //         }),
 
-                            try {
-                                const res = await toast.promise(
-                                    axios.post(`${baseUrl}/insertFromSheet`, filteredJsonData, {
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        withCredentials: true
-                                    }),
+                            //         {
+                            //             loading: "File is Uploading ...",
+                            //             success: "File Uploaded Successfully",
+                            //             error: "Failed to upload file",
+                            //         }
 
-                                    {
-                                        loading: "File is Uploading ...",
-                                        success: "File Uploaded Successfully",
-                                        error: "Failed to upload file",
-                                    }
+                            //     )
 
-                                )
-
-                            } catch (error) {
-                                toast.error(error.response.data.msg);
-                            }
+                            // } catch (error) {
+                            //     toast.error(error.response.data.msg);
+                            // }
                         }
                     }
                 }
