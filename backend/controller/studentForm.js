@@ -126,9 +126,7 @@ export const insertAgent = async (req, res) => {
 export const insertFromSheet = async (req, res) => {
   try {
     const agent_data = req.body;
-    // console.log(agent_data, "API call of multiple students");
 
-    // Modify agent_data to add "wrongEntry" field for entries with incorrect whatsappnumber
     const dataToInsert = agent_data.map((entry) => {
       if (entry.whatsappnumber && entry.whatsappnumber.length < 10) {
         return { ...entry, wrongEntry: true };
@@ -137,42 +135,52 @@ export const insertFromSheet = async (req, res) => {
     });
 
     const userPhone = dataToInsert.map(user => user.contactNumber);
-    const userEmail = dataToInsert.map(user => user.email);
-    const preferredCollege = dataToInsert.map(user => user.preferredCollege);
 
-    const isExist = await studentModal.findOne({
-      $and: [
-        { contactNumber: { $in: userPhone } },
-        { preferredCollege: { $in: preferredCollege } }
-      ]
-    })
+    const isExist = await studentModal.findOne({ contactNumber: { $in: userPhone } })
 
     const data = dataToInsert.filter((elem) => (
-      elem.contactNumber === isExist.contactNumber &&
-      String(elem.preferredCollege) === isExist.preferredCollege
+      elem.contactNumber === isExist.contactNumber
     ));
 
+    const filteredDataToInsert = dataToInsert.filter((elem) => {
+      return !data.some((dataElem) => dataElem.contactNumber === elem.contactNumber);
+    });
 
 
     if (isExist) {
-      // isExist.otherResponse.push(...data)
-      // await isExist.save();
-      return res.status(400).json({
-        success: false,
-        msg: `${data[0].name}  Already Exist in database`
+      for (const elem of data) {
+        if (isExist.preferredCollege == String(elem.preferredCollege)) {
+          return res.status(400).json({
+            success: false,
+            msg: `${elem.name} Already Exists in the database`
+          });
+        }
+      }
+      data.forEach(async (elem) => {
+        isExist.otherResponse.push(elem);
+        await isExist.save();
       })
-    }
 
+      const insertedStudents = filteredDataToInsert.forEach(async (elem) => {
+        await studentModal.create(elem);
+      })
+
+      return res.status(200).json({
+        success: true,
+        msg: "Multiple Students Created Successfully",
+      });
+
+    }
 
     const insertedStudents = await studentModal.create(dataToInsert);
 
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
       msg: "Multiple Students Created Successfully",
-      data: insertedStudents,
+      // data: insertedStudents,
     });
-  } catch (err) {
-    console.error("Error inserting students:", err);
+  }
+  catch (err) {
     return res.status(500).json({
       success: false,
       msg: "Failed to create multiple students",

@@ -88,6 +88,7 @@ const ShowAllleads = () => {
   const [showUnassignedTable, setShowUnassignedTable] = useState(false);
   const [bulkOpen, setbulkOpen] = useState(false);
   const dispatch = useDispatch();
+
   const handleToggleTable = () => {
     setShowNewTable(!showNewTable);
   };
@@ -300,6 +301,13 @@ const ShowAllleads = () => {
       page * Math.abs(rowsPerPage) + Math.abs(rowsPerPage)
     );
   }
+
+  // const paginatedUsers = filteredUsers.slice(
+  //   page * rowsPerPage,
+  //   page * rowsPerPage + rowsPerPage
+  // );
+
+  
 
   const paginationDisabled = paginatedUsers.some(
     (item) => item.remarks.length === 20

@@ -50,7 +50,7 @@ const BulkUpload = ({ open, onClose }) => {
                     }
                     else {
                         let isIncorrect = false
-                        const fieldsToCheckType = ['contactNumber', 'neetAIR']
+                        const fieldsToCheckType = ['contactNumber', 'neetAIR', 'whatsappNumber', 'neetScore']
                         const hasEmptyFields = filteredJsonData.some(row => {
                             count = count + 1
                             return requiredFields.some(field => {
@@ -99,7 +99,7 @@ const BulkUpload = ({ open, onClose }) => {
                                         headers: {
                                             "Content-Type": "application/json",
                                         },
-                                        withCredentials:true
+                                        withCredentials: true
                                     }),
 
                                     {

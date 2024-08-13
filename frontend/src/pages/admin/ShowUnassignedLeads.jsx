@@ -33,7 +33,7 @@ import { logout } from "../../redux/authSlice";
 
 
 const ShowUnassignedLeads = () => {
-    console.log("first in show unassigned Leads")
+  console.log("first in show unassigned Leads")
   const [columns, setColumns] = useState([
     { visible: true, label: 'name' },
     { visible: true, label: 'registeredOn' },
@@ -89,7 +89,7 @@ const ShowUnassignedLeads = () => {
   const [loading, setLoading] = useState(true);
 
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useDispatch();
+const dispatch = useDispatch();
 
 
   const handleRowSelect = (rowId) => {
@@ -129,28 +129,28 @@ const ShowUnassignedLeads = () => {
   };
 
   useEffect(() => {
-    
+
     const fetchData = async () => {
       //  this is wrong
       //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
-        //     console.log(err, "error");
-        //   });
-        const response = await toast.promise(
-          axios.get(`${baseUrl}/getUnassignedLeads`,{withCredentials:true}).catch((err) => {
-            console.log(err, "error");
-          }),
+      //     console.log(err, "error");
+      //   });
+      const response = await toast.promise(
+        axios.get(`${baseUrl}/getUnassignedLeads`,{withCredentials:true}).catch((err) => {
+          console.log(err, "error");
+        }),
 
-          {
-            loading: "Fetching Data ...",
-            success: "Data fetched Successfully",
-            error: "Failed to fetch Data"
-          }
+        {
+          loading: "Fetching Data ...",
+          success: "Data fetched Successfully",
+          error: "Failed to fetch Data"
+        }
 
-        )
-        console.log(response.data, "unassigned leads");
-        setUsers(response.data.data);
-        setfilter(response.data.data);
-        console.log(users.length, "unassigned page in all leads");
+      )
+      console.log(response.data, "unassigned leads");
+      setUsers(response.data.data);
+      setfilter(response.data.data);
+      console.log(users.length, "unassigned page in all leads");
     };
 
     console.log(users);
@@ -332,29 +332,29 @@ const ShowUnassignedLeads = () => {
   };
 
   const handleOpen = () => {
-    
+
     setIsOpen(true);
-    
+
   };
-  
-  
+
+
   const handleClose = () => {
-    
+
     setIsOpen(false);
-    
+
   };
-  
-  
-  const handleConfirm = async() => {
+
+
+  const handleConfirm = async () => {
 
     // Set loading to true when API call starts
     setLoading(true);
-    
+
     // Call API to distribute fresh leads
-    
+
     try {
       const response = await axios.post(`${baseUrl}/autoassign`,null,{withCredentials:true});
-      
+
       // Handle successful response
       if (response.status === 200) {
         toast.success('Leads successfully distributed.');
@@ -368,7 +368,7 @@ const ShowUnassignedLeads = () => {
       console.error('Error distributing leads:', error);
       toast.error('An error occurred while distributing leads.');
 
-    }finally {
+    } finally {
       // Always turn off loading animation after API call is complete
       setLoading(false);
       handleClose();
@@ -376,17 +376,17 @@ const ShowUnassignedLeads = () => {
   };
 
 
-  
+
 
   return (
     <div>
       {/* Modal */}
       {modalOpen && (
 
-        
+
         <div className="fixed inset-0 flex items-center justify-center z-50">
 
-          
+
           <div className="bg-white p-6 rounded shadow-lg w-96">
             <h2 className="text-lg font-semibold mb-4">Assign Leads to Counsellors</h2>
             <div className="mb-4">
@@ -449,41 +449,41 @@ const ShowUnassignedLeads = () => {
       )}
       <div>
 
-<Button variant="contained" color="error" onClick={handleOpen}>
+        <Button variant="contained" color="error" onClick={handleOpen}>
 
-  Assign Fresh Leads
+          Assign Fresh Leads
 
-</Button>
+        </Button>
 
-{/* Loading Spinner */}
-<Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+        {/* Loading Spinner */}
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
 
-<Dialog open={isOpen} onClose={handleClose}>
+        <Dialog open={isOpen} onClose={handleClose}>
 
-  <DialogTitle>Assign Fresh Leads</DialogTitle>
+          <DialogTitle>Assign Fresh Leads</DialogTitle>
 
-  <DialogContent>
+          <DialogContent>
 
-    This will distribute equally all the {users.length} fresh unassigned leads that are not assigned to {allCouncellors.length} counsellors. Are you sure?
+            This will distribute equally all the {users.length} fresh unassigned leads that are not assigned to {allCouncellors.length} counsellors. Are you sure?
 
-  </DialogContent>
+          </DialogContent>
 
-  <DialogActions>
+          <DialogActions>
 
-    <Button onClick={handleClose}>No</Button>
+            <Button onClick={handleClose}>No</Button>
 
-    <Button onClick={handleConfirm}>Yes</Button>
+            <Button onClick={handleConfirm}>Yes</Button>
 
-  </DialogActions>
+          </DialogActions>
 
-</Dialog>
+        </Dialog>
 
-</div>
+      </div>
 
 
       {/* new table */}
@@ -619,7 +619,7 @@ const ShowUnassignedLeads = () => {
         <tbody className={`${!paginatedUsers.length ? "h-screen w-screen flex justify-center items-center" : ""}`}>
           {paginatedUsers.length > 0 ? paginatedUsers.map((user, index) => (
             <tr key={user._id} className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              
+
               <td className="w-4 p-4">
                 <div className="flex items-center">
                   {index + 1}

@@ -20,7 +20,7 @@ const otherResponse = new mongoose.Schema({
 
     email: {
         type: String,
-        required: [true, "Please enter your email "]
+        // required: [true, "Please enter your email "]
     },
 
     // isEmailVerified: {
@@ -41,17 +41,17 @@ const otherResponse = new mongoose.Schema({
 
     district: {
         type: String,
-        required: [true, "Please enter your city "]
+        // required: [true, "Please enter your city "]
     },
 
     state: {
         type: String,
-        required: [true, "Please enter your state "]
+        // required: [true, "Please enter your state "]
     },
 
     courseSelected: {
         type: String,
-        required: [true, "Please Select Course "]
+        // required: [true, "Please Select Course "]
     },
 
     preferredCollege: {
