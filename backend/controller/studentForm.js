@@ -2452,3 +2452,35 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
   }
 
 }
+
+export const removeAssignedCollege = async (req, res) =>{
+  try {
+    const {seniorAdmHeadID, college} = req.body
+  
+    if(!seniorAdmHeadID || !college){
+      return res.status(404).json({message: "Senior Adm Head and College are required"})
+    }
+  
+      const seniorAdmHead = await counsellorModal.findById(seniorAdmHeadID)
+
+      if(!seniorAdmHead || !seniorAdmHead.multiple_colleges){
+        return res.status(404).json({message: "Senior Admission Head not found or no colleges assigned."})
+      }
+
+      const collegeIndex = seniorAdmHead.multiple_colleges.indexOf(college)
+
+      if(collegeIndex === -1){
+        return res.status(404).json({message: "No college found in the list"})
+      }
+
+      seniorAdmHead.multiple_colleges.splice(collegeIndex, 1);
+
+      await seniorAdmHead.save()
+
+      return res.json({ message: "College removed successfully", updatedColleges: seniorAdmHead.multiple_colleges });
+    
+  } catch (error) {
+    return res.status(500).json({message: error.message})
+  }
+  
+}
