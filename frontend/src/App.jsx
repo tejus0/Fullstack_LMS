@@ -23,6 +23,7 @@ import CounsellorTrackerDashboard from './pages/admin/CounsellorDashboard'
 import OfficeDashboard from "./pages/admin/OfficeDashboard";
 import { AdmissionHeadCounsellor } from "./pages/admissionHead/AdmissionHeadCounsellor";
 import SeniorAdmHead from "./pages/admin/SeniorAdmHead";
+import { useSelector } from "react-redux";
 
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 

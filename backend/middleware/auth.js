@@ -11,7 +11,7 @@ export const isLoggedIn = async(req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY); 
-    console.log("decoded value" , decoded)
+    // console.log("decoded value" , decoded)
     const userId = decoded.id;
     let user , res;
     if(decoded.isCounseller){
@@ -29,7 +29,7 @@ export const isLoggedIn = async(req, res, next) => {
         message:"User Does not Exists"
       })
     }
-    console.log("user is : " , user);
+    // console.log("user is : " , user);
     
     req.user = user; 
     next();

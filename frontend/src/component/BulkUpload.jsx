@@ -39,7 +39,7 @@ const BulkUpload = ({ open, onClose }) => {
 
                 else {
                     const uploadedField = Object.keys(filteredJsonData[0])
-                    const allFieldPresent = requiredFields.every(field => uploadedField.includes(field))
+                    const allFieldPresent = totalFields.every(field => uploadedField.includes(field))
 
                     const noExtraFields = uploadedField.every(field => totalFields.includes(field));
 
@@ -53,7 +53,7 @@ const BulkUpload = ({ open, onClose }) => {
                         const fieldsToCheckType = ['contactNumber', 'neetAIR', 'whatsappNumber', 'neetScore']
                         const hasEmptyFields = filteredJsonData.some(row => {
                             count = count + 1
-                            return requiredFields.some(field => {
+                            return totalFields.some(field => {
                                 const isEmpty = row[field] === "" || row[field] === null || row[field] === undefined;
 
                                 if (isEmpty) {
@@ -66,7 +66,6 @@ const BulkUpload = ({ open, onClose }) => {
 
 
                         if (hasEmptyFields) {
-                            // toast.error(`Some fields are empty at line number ${count}`)
                             setVal('')
                             return;
                         }

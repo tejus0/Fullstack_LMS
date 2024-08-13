@@ -135,31 +135,39 @@ export const insertFromSheet = async (req, res) => {
     });
 
     const userPhone = dataToInsert.map(user => user.contactNumber);
+    const isExist = await studentModal.find({ contactNumber: { $in: userPhone } })
+    // console.log(isExist);
 
-    const isExist = await studentModal.findOne({ contactNumber: { $in: userPhone } })
-
-    const data = dataToInsert.filter((elem) => (
-      elem.contactNumber === isExist.contactNumber
-    ));
+    const data = dataToInsert.filter((elem) =>
+      isExist.some((isElem) => elem.contactNumber === isElem.contactNumber)
+    );
 
     const filteredDataToInsert = dataToInsert.filter((elem) => {
       return !data.some((dataElem) => dataElem.contactNumber === elem.contactNumber);
     });
 
-
     if (isExist) {
-      for (const elem of data) {
+      data.forEach((elem) => {
         if (isExist.preferredCollege == String(elem.preferredCollege)) {
           return res.status(400).json({
             success: false,
             msg: `${elem.name} Already Exists in the database`
           });
         }
-      }
+      });
+
+
       data.forEach(async (elem) => {
-        isExist.otherResponse.push(elem);
-        await isExist.save();
+        isExist.forEach(async (isExist) => {
+          if (isExist.contactNumber == elem.contactNumber) {
+            isExist.otherResponse.push(elem);
+            await isExist.save();
+          }
+        })
       })
+      //   isExist.otherResponse.push(elem);
+      //   await isExist.save();
+      // })
 
       const insertedStudents = filteredDataToInsert.forEach(async (elem) => {
         await studentModal.create(elem);
@@ -501,7 +509,7 @@ export const verifyLogin = async (req, res) => {
     const userData = await agentModal
       .find({ name: { $regex: regexPattern } })
       .exec();
-      console.log(userData, "data in agent");
+    console.log(userData, "data in agent");
     let token;
     if (Object.keys(userData).length) {
       console.log(userData, "data in AGENT");
@@ -527,11 +535,11 @@ export const verifyLogin = async (req, res) => {
           // if (userData.is_admin === 1) {
           //   return res.json({ status: "ok", data: userData._id, type: "admin" });
           // } else {
-          token = generateToken(userData , false);
-          res.cookie('token' , token , {
-            httpOnly:true,
-            sameSite:'none',
-            secure:true
+          token = generateToken(userData, false);
+          res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
           })
           return res.json({ status: "ok", data: category_name, type: "agent" });
 
@@ -585,11 +593,11 @@ export const verifyLogin = async (req, res) => {
           //   sameSite: 'none',
           //   priority: 'High'
           // });
-         res.cookie('token' , token , {
-          httpOnly:true,
-          sameSite:'none',
-          secure:true
-        })
+          res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true
+          })
 
           if (res.status(201)) {
             if (userData.is_admin === 1) {
@@ -1195,7 +1203,7 @@ export const getCounsellorRevenueDetails = async (req, res) => {
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }  
+    }
     college_website ? stuFilter.sourceId = college_website : null;
     const counsellorStudents = await studentModal.aggregate([
       {
@@ -1591,7 +1599,7 @@ export const getOfficeReport = async (req, res) => {
     let counsellorFilter = {}
     let studentFilter = {}
 
-    if(college){
+    if (college) {
       counsellorFilter.college_website = decodeURIComponent(college)
       studentFilter.sourceId = decodeURIComponent(college)
     } else if (office) {
@@ -2122,7 +2130,7 @@ export const showCounsCollegeLeads = async (req, res) => {
 
     if (agentName.length === 0) {
       return res.status(404).json({ msg: "Counsellor not found" });
-    } 
+    }
 
     console.log(agentName, "agent");
     const collegeWebsite = agentName[0].college_website;
@@ -2153,27 +2161,27 @@ export const showCounsCollegeLeads = async (req, res) => {
 };
 
 
-export const logout = (req , res)=>{
+export const logout = (req, res) => {
   try {
-    return  res.clearCookie('token' , {
-      httpOnly:true,
-      sameSite:'none',
-      secure:true
+    return res.clearCookie('token', {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true
     }).json({
-      status:"Success",
+      status: "Success",
       message: "Logged Out Succesfully"
     });
   } catch (err) {
     return res.status(500).json({
-      status:"Error",
-      message:"Something Went Wrong"
+      status: "Error",
+      message: "Something Went Wrong"
     })
   }
 }
 
 
-export const assignCollegesSeniorAdmHead = async (req, res) =>{
-  const {counsellorID, colleges} = req.body
+export const assignCollegesSeniorAdmHead = async (req, res) => {
+  const { counsellorID, colleges } = req.body
   try {
     const updatedCounsellor = await counsellorModal.findByIdAndUpdate(
       counsellorID,
@@ -2184,11 +2192,11 @@ export const assignCollegesSeniorAdmHead = async (req, res) =>{
         }
       },
 
-      {new: true}
+      { new: true }
     )
 
-    if(!updatedCounsellor){
-      return res.status(404).json({message: "Counsellor not found"})
+    if (!updatedCounsellor) {
+      return res.status(404).json({ message: "Counsellor not found" })
     }
 
     res.status(200).json({
@@ -2196,7 +2204,7 @@ export const assignCollegesSeniorAdmHead = async (req, res) =>{
       counsellor: updatedCounsellor
     })
   } catch (error) {
-     res.status(500).json({message: "Error updating counsellor", error})
+    res.status(500).json({ message: "Error updating counsellor", error })
   }
 }
 
