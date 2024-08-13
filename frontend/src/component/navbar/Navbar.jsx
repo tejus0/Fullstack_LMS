@@ -37,7 +37,7 @@ const Navbar = () => {
     return (
         <nav>
             <div className="nav-desk">
-                <div className="wrapper-desk">
+                <div className="wrapper-desk group">
                     <ul>
                         <div>
                             <a href="#" style={linkStyle}>
@@ -49,7 +49,7 @@ const Navbar = () => {
                         <div>
                             <Link to="/showAllLeads" style={linkStyle}>
                                 <li>
-                                    <ImUserTie style={navIcons} /><p>Leads</p> 
+                                    <ImUserTie style={navIcons} /><p>Leads</p>
                                 </li>
                             </Link>
                         </div>
@@ -79,9 +79,9 @@ const Navbar = () => {
                         </div>
                         <div>
                             <a href="/seniorAdmHead" style={linkStyle}>
-                                <li>
+                                <li className="">
                                     <FaPeopleGroup style={navIcons} />{" "}
-                                    <p>Senior Admission Head</p>
+                                    <p className=" group-hover:flex hidden">Senior Admission Head</p>
                                 </li>
                             </a>
                         </div>
