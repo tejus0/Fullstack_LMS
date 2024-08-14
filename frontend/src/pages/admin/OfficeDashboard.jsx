@@ -9,11 +9,25 @@ import { FaMoneyBill1, FaPeopleGroup, FaTrophy } from "react-icons/fa6";
 import { SiConvertio } from "react-icons/si";
 import MaterialTable from "../../component/MaterialTable";
 import toast, { ToastBar } from "react-hot-toast";
+import { CollegeNames } from "../Registration/CollegeNames";
+
 
 const OfficeDashboard = () => {
   let office = useQuery().get("office");
   let url = useQuery().get("url")
-  console.log(url);
+  
+  const cleanedUrl = url?.replace(/['"]+/g, ''); 
+  // console.log(url, cleanedUrl);
+  
+  // const collegeName = CollegeNames.find((college) => {
+  //   console.log(college.website, cleanedUrl)
+  //   return college.website === cleanedUrl
+  // })
+
+  // console.log(collegeName)
+
+
+  // console.log(collegeName)
   // console.log(office , office.search.split("=") , " query parameter")
   const [students, setStudents] = useState([]);
   const [officeReportDetails, setOfficeReportDetails] = useState({
@@ -322,7 +336,7 @@ const OfficeDashboard = () => {
       {/* Page Title  */}
       <div className="p-9 text-center md:text-start">
         <p className="text-4xl font-semibold text-purple-400">
-          {office?.toLowerCase() == "k" ? "Kanpur" : "Noida"} Report
+          {office ? office?.toLowerCase() == "k" ? "Kanpur" : "Noida": CollegeNames.find((college) => college.website === cleanedUrl).name} Report
         </p>
       </div>
       {/* Card containers */}

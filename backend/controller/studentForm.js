@@ -1593,8 +1593,8 @@ export const getOfficeReport = async (req, res) => {
   try {
     const office = req.query.office?.toUpperCase();
     let college = req.query.college;
-    college = college.replaceAll("'","")
-    console.log(college , "string..")
+    college = college?.replaceAll("'","")
+    // console.log(college , "string..")
 
     let counsellorFilter = {}
     let studentFilter = {}
