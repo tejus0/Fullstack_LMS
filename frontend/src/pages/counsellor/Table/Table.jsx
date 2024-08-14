@@ -317,13 +317,16 @@ const Table = () => {
   useEffect(() => {
     if (!pageLoaded && users.length && paginatedUsers.length) {
       const filteredArr = users.filter(item => item.remarks.FollowUp1.length === 0);
-
-      let newPage = Math.floor((filteredArr.length ? filteredArr.length : users.length) / (rowsPerPage));
-      setPage(parseInt(newPage))
+      let newPage = users.length / rowsPerPage;
+      if (filteredArr.length > 0) {
+        const index = users.findIndex(item => item.remarks.FollowUp1.length === 0);
+        newPage = Math.floor((index + 1) / rowsPerPage);
+        
+      }
+      setPage(parseInt(newPage));
     }
-  }, [users])
-
-
+  }, [users]);
+  
   const handleInputChange = (event) => {
     const value = event.target.value;
     if (/^\d*$/.test(value)) {
@@ -345,6 +348,7 @@ const Table = () => {
     setInputPage(validPage + 1);
     handleChangePage(null, validPage);
   };
+
   return (
     <div>
       <Box className="flex">

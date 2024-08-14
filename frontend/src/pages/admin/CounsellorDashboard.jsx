@@ -134,7 +134,7 @@ const CounsellorDashboard = () => {
     try {
       let revenueDetails = await axios.get(
         `${baseUrl}/getCounsellorRevenueDetails/${counsellorId}${state && state.admissionHeadId ? `?admissionHeadId=${state.admissionHeadId}` : ''}`
-      );
+      ,{withCredentials:true});
       revenueDetails = revenueDetails.data;
       setRevenue({
         totalRevenue: revenueDetails.data.totalRevenue,
