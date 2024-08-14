@@ -47,7 +47,7 @@ const Table = () => {
   });
   const [page, setPage] = useState(location.state?.page || 0);
 
-  const [rowsPerPage] = useState(50);
+  const [rowsPerPage] = useState(15);
 
   const [search, setsearch] = useState("");
   const [SearchBy, setSearchBy] = useState("name");
@@ -70,6 +70,7 @@ const Table = () => {
   const [activeButton, setActiveButton] = useState("assigned"); // 'assigned' or 'college'
 
   const dispatch = useDispatch();
+  let pageLoaded = false;
 
   // Function to fetch College Leads data
   const fetchCollegeLeads = async () => {
@@ -275,7 +276,7 @@ const Table = () => {
 
 
   const paginationDisabled = {
-    next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0),
+    next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0) || paginatedUsers.length,
     previous: false, // Always enable Previous button
   };
   // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
@@ -297,6 +298,19 @@ const Table = () => {
     setIsLeadStatusDropdownOpen(false);
     setPage(0); // Reset to first page when lead status filter changes
   };
+
+  useEffect(()=>{
+    if(!pageLoaded && users.length && paginatedUsers.length){
+    console.log(paginatedUsers);
+    console.log(users);
+    const filteredArr = users.filter(item => item.remarks.FollowUp1.length === 0);
+
+    let newPage = Math.floor((filteredArr.length ? filteredArr.length : users.length)/(rowsPerPage));
+    console.log("done........." , newPage)
+    setPage(parseInt(newPage))
+  }
+  },[users])
+  
 
   return (
     <div>
