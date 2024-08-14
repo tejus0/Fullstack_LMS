@@ -18,6 +18,7 @@ import FilterDrawer from "../../../component/FilterDrawer";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/authSlice";
+import { TextField } from "@mui/material";
 
 const Table = () => {
   const [columns, setColumns] = useState([
@@ -47,11 +48,11 @@ const Table = () => {
   });
   const [page, setPage] = useState(location.state?.page || 0);
 
-  const [rowsPerPage] = useState(15);
+  const [rowsPerPage] = useState(50);
 
   const [search, setsearch] = useState("");
   const [SearchBy, setSearchBy] = useState("name");
-
+  const [inputPage, setInputPage] = useState(page + 1);
   const [filter, setfilter] = useState([]);
   const [date, setDate] = useState({
     startDate: "",
@@ -93,7 +94,9 @@ const Table = () => {
         dispatch(logout());
       } else {
         console.error("Error fetching college leads:", error);
-        toast.error(error.response?.data?.msg || error.message);
+        toast.error(
+          (error.response?.data?.msg || error.message)
+        );
       }
       // setUsers([])
       // setfilter([]);
@@ -130,16 +133,12 @@ const Table = () => {
     //  this is wrong
 
     const response = await toast.promise(
-      axios
-        .get(`${baseUrl}/getCounsellorDataList/${id}`, {
-          withCredentials: true,
-        })
-        .catch((err) => {
-          if (err?.response?.status == 401) {
-            dispatch(logout());
-          }
-          console.log(err, "error");
-        }),
+      axios.get(`${baseUrl}/getCounsellorDataList/${id}`, { withCredentials: true }).catch((err) => {
+        if (err?.response?.status == 401) {
+          dispatch(logout())
+        }
+        console.log(err, "error");
+      }),
 
       {
         loading: "Fetching Data ...",
@@ -290,7 +289,7 @@ const Table = () => {
 
 
   const paginationDisabled = {
-    next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0) || paginatedUsers.length,
+    next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0),
     previous: false, // Always enable Previous button
   };
   // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
@@ -315,19 +314,37 @@ const Table = () => {
     setPage(0); // Reset to first page when lead status filter changes
   };
 
-  useEffect(()=>{
-    if(!pageLoaded && users.length && paginatedUsers.length){
-    console.log(paginatedUsers);
-    console.log(users);
-    const filteredArr = users.filter(item => item.remarks.FollowUp1.length === 0);
+  useEffect(() => {
+    if (!pageLoaded && users.length && paginatedUsers.length) {
+      const filteredArr = users.filter(item => item.remarks.FollowUp1.length === 0);
 
-    let newPage = Math.floor((filteredArr.length ? filteredArr.length : users.length)/(rowsPerPage));
-    console.log("done........." , newPage)
-    setPage(parseInt(newPage))
-  }
-  },[users])
-  
+      let newPage = Math.floor((filteredArr.length ? filteredArr.length : users.length) / (rowsPerPage));
+      setPage(parseInt(newPage))
+    }
+  }, [users])
 
+
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    if (/^\d*$/.test(value)) {
+      setInputPage(value ? parseInt(value, 10) : '');
+    }
+  };
+
+  const handleInputBlur = () => {
+    if (inputPage < 1) {
+      setInputPage(1);
+    } else if (inputPage > Math.ceil(filteredAndSortedUsers.length / rowsPerPage)) {
+      setInputPage(Math.ceil(filteredAndSortedUsers.length / rowsPerPage));
+    }
+    handleChangePage(null, inputPage - 1);
+  };
+
+  const handleGoToPage = () => {
+    const validPage = Math.min(Math.max(inputPage - 1, 0), Math.ceil(filteredAndSortedUsers.length / rowsPerPage) - 1);
+    setInputPage(validPage + 1);
+    handleChangePage(null, validPage);
+  };
   return (
     <div>
       <Box className="flex">
@@ -511,170 +528,170 @@ const Table = () => {
                 {columns.find(
                   (col) => col.visible && col.label === "leadStatus"
                 ) && (
-                  <th scope="col" className="px-6 py-3">
-                    <div className="flex items-center relative">
-                      Lead Status
-                      {isLeadStatusDropdownOpen ? (
-                        <FaChevronUp
-                          onClick={toggleLeadStatusDropdown}
-                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                        />
-                      ) : (
-                        <FaChevronDown
-                          onClick={toggleLeadStatusDropdown}
-                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                        />
-                      )}
-                      {isLeadStatusDropdownOpen && (
-                        <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
-                          <li
-                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                            onClick={() => handleLeadStatusFilter("All")}
-                          >
-                            All
-                          </li>
-                          <li
-                            className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
-                            onClick={() => toggleSubmenu("FollowUp1")}
-                          >
-                            FollowUp1
-                            {activeSubmenu === "FollowUp1" ? (
-                              <FaChevronUp />
-                            ) : (
-                              <FaChevronDown />
+                    <th scope="col" className="px-6 py-3">
+                      <div className="flex items-center relative">
+                        Lead Status
+                        {isLeadStatusDropdownOpen ? (
+                          <FaChevronUp
+                            onClick={toggleLeadStatusDropdown}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          />
+                        ) : (
+                          <FaChevronDown
+                            onClick={toggleLeadStatusDropdown}
+                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                          />
+                        )}
+                        {isLeadStatusDropdownOpen && (
+                          <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
+                            <li
+                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                              onClick={() => handleLeadStatusFilter("All")}
+                            >
+                              All
+                            </li>
+                            <li
+                              className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
+                              onClick={() => toggleSubmenu("FollowUp1")}
+                            >
+                              FollowUp1
+                              {activeSubmenu === "FollowUp1" ? (
+                                <FaChevronUp />
+                              ) : (
+                                <FaChevronDown />
+                              )}
+                            </li>
+                            {activeSubmenu === "FollowUp1" && (
+                              <ul className="ml-4 mt-2">
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Switch Off")
+                                  }
+                                >
+                                  Switch Off
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Not Reachable")
+                                  }
+                                >
+                                  Not Reachable
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Disconnect")
+                                  }
+                                >
+                                  Disconnect
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Network Issue")
+                                  }
+                                >
+                                  Network Issue
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter(
+                                      "Incoming Not Available"
+                                    )
+                                  }
+                                >
+                                  Incoming Not Available
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Not Received")
+                                  }
+                                >
+                                  Not Received
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("First Call Done")
+                                  }
+                                >
+                                  First Call Done
+                                </li>
+                              </ul>
                             )}
-                          </li>
-                          {activeSubmenu === "FollowUp1" && (
-                            <ul className="ml-4 mt-2">
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Switch Off")
-                                }
-                              >
-                                Switch Off
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Not Reachable")
-                                }
-                              >
-                                Not Reachable
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Disconnect")
-                                }
-                              >
-                                Disconnect
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Network Issue")
-                                }
-                              >
-                                Network Issue
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter(
-                                    "Incoming Not Available"
-                                  )
-                                }
-                              >
-                                Incoming Not Available
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Not Received")
-                                }
-                              >
-                                Not Received
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("First Call Done")
-                                }
-                              >
-                                First Call Done
-                              </li>
-                            </ul>
-                          )}
-                          <li
-                            className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
-                            onClick={() => toggleSubmenu("FollowUp2")}
-                          >
-                            FollowUp2
-                            {activeSubmenu === "FollowUp2" ? (
-                              <FaChevronUp />
-                            ) : (
-                              <FaChevronDown />
+                            <li
+                              className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
+                              onClick={() => toggleSubmenu("FollowUp2")}
+                            >
+                              FollowUp2
+                              {activeSubmenu === "FollowUp2" ? (
+                                <FaChevronUp />
+                              ) : (
+                                <FaChevronDown />
+                              )}
+                            </li>
+                            {activeSubmenu === "FollowUp2" && (
+                              <ul className="ml-4 mt-2">
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() => handleLeadStatusFilter("Hot")}
+                                >
+                                  Hot
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() => handleLeadStatusFilter("Warm")}
+                                >
+                                  Warm
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() => handleLeadStatusFilter("Cold")}
+                                >
+                                  Cold
+                                </li>
+                              </ul>
                             )}
-                          </li>
-                          {activeSubmenu === "FollowUp2" && (
-                            <ul className="ml-4 mt-2">
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() => handleLeadStatusFilter("Hot")}
-                              >
-                                Hot
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() => handleLeadStatusFilter("Warm")}
-                              >
-                                Warm
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() => handleLeadStatusFilter("Cold")}
-                              >
-                                Cold
-                              </li>
-                            </ul>
-                          )}
-                          <li
-                            className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
-                            onClick={() => toggleSubmenu("FollowUp3")}
-                          >
-                            FollowUp3
-                            {activeSubmenu === "FollowUp3" ? (
-                              <FaChevronUp />
-                            ) : (
-                              <FaChevronDown />
+                            <li
+                              className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
+                              onClick={() => toggleSubmenu("FollowUp3")}
+                            >
+                              FollowUp3
+                              {activeSubmenu === "FollowUp3" ? (
+                                <FaChevronUp />
+                              ) : (
+                                <FaChevronDown />
+                              )}
+                            </li>
+                            {activeSubmenu === "FollowUp3" && (
+                              <ul className="ml-4 mt-2">
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Paid Counselling")
+                                  }
+                                >
+                                  Paid Counselling
+                                </li>
+                                <li
+                                  className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                  onClick={() =>
+                                    handleLeadStatusFilter("Associate College")
+                                  }
+                                >
+                                  Associate College
+                                </li>
+                              </ul>
                             )}
-                          </li>
-                          {activeSubmenu === "FollowUp3" && (
-                            <ul className="ml-4 mt-2">
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Paid Counselling")
-                                }
-                              >
-                                Paid Counselling
-                              </li>
-                              <li
-                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                                onClick={() =>
-                                  handleLeadStatusFilter("Associate College")
-                                }
-                              >
-                                Associate College
-                              </li>
-                            </ul>
-                          )}
-                        </ul>
-                      )}
-                    </div>
-                  </th>
-                )}
+                          </ul>
+                        )}
+                      </div>
+                    </th>
+                  )}
                 <th scope="col" className="px-6 py-3">
                   Update Status
                 </th>
@@ -769,18 +786,57 @@ const Table = () => {
               )}
             </tbody>
           </table>
-          <TablePagination
-            component="div"
-            count={filteredAndSortedUsers.length}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[]}
-            // onRowsPerPageChange={handleChangeRowsPerPage}
-            // disabled={paginationDisabled}
-            nextIconButtonProps={{ disabled: paginationDisabled.next }}
-            backButtonProps={{ disabled: paginationDisabled.previous }} // Ensure Previous button is always enabled
-          />
+          <div className="flex justify-center items-center">
+
+            <TablePagination
+              component="div"
+              count={filteredAndSortedUsers.length}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPage={rowsPerPage}
+              rowsPerPageOptions={[]}
+              // onRowsPerPageChange={handleChangeRowsPerPage}
+              // disabled={paginationDisabled}
+              nextIconButtonProps={{ disabled: paginationDisabled.next }}
+              backButtonProps={{ disabled: paginationDisabled.previous }} // Ensure Previous button is always enabled
+            />
+            <div style={{ display: 'flex', alignItems: 'center', marginLeft: 16 }}>
+              <TextField
+                type="number"
+                value={inputPage}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                inputProps={{ min: 1, max: Math.ceil(filteredAndSortedUsers.length / rowsPerPage) }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      border: 'none', // Remove border
+                    },
+                    '&:hover fieldset': {
+                      border: 'none', // Remove border on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderBottom: 'gray', // Remove border when focused
+                    },
+                  },
+                  borderBottom: 'gray'
+                }
+
+                }
+                style={{ width: 45, borderBottom: "1px solid gray " }}
+              />
+              <span> / {Math.ceil(filteredAndSortedUsers.length / rowsPerPage)}</span>
+              <Button
+                onClick={handleGoToPage}
+                variant="contained"
+                color="primary"
+                style={{ marginLeft: 8 }}
+              >
+                Go
+              </Button>
+            </div>
+          </div>
+
         </div>
       </Box>
     </div>
