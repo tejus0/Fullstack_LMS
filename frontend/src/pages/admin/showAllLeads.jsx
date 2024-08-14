@@ -312,7 +312,7 @@ const ShowAllleads = () => {
   if (search != "") {
     paginatedUsers = filteredUsers;
   } else {
-    paginatedUsers = allUsers.slice(
+    paginatedUsers = filteredUsers.slice(
       page * Math.abs(rowsPerPage),
       page * Math.abs(rowsPerPage) + Math.abs(rowsPerPage)
     );

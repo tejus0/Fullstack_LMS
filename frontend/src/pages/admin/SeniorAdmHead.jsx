@@ -29,7 +29,14 @@ export default function SeniorAdmHead() {
     }
     try {
         setLoadingSubmit(true)
-        const res = await axios.post(`${baseUrl}/assignCollegesSeniorAdmHead`, assignCollegeMapping, {withCredentials:true})
+        const res = await toast.promise(
+          axios.post(`${baseUrl}/assignCollegesSeniorAdmHead`, assignCollegeMapping, {withCredentials:true}),
+          {
+            loading: "Assigning College ...",
+            success: "College assigned successfully.",
+            error: "Failed to assign colleges"
+          }
+        )
     } catch (error) {
         if(error?.response?.status == 401){
           dispatch(logout())

@@ -69,13 +69,19 @@ const Table = () => {
 
   const [activeButton, setActiveButton] = useState("assigned"); // 'assigned' or 'college'
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeSubmenu, setActiveSubmenu] = useState(null);
+
   const dispatch = useDispatch();
   let pageLoaded = false;
 
   // Function to fetch College Leads data
   const fetchCollegeLeads = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/showCounsCollegeLeads/${id}`, { withCredentials: true });
+      const response = await axios.get(
+        `${baseUrl}/showCounsCollegeLeads/${id}`,
+        { withCredentials: true }
+      );
       // toast.success("Data Fetched Successfully");
       setUsers(response.data);
       setfilter(response.data);
@@ -83,13 +89,11 @@ const Table = () => {
       setActiveButton("college");
       setPage(0);
     } catch (error) {
-      if(error?.response?.status == 401){
-        dispatch(logout())
-      }else{
+      if (error?.response?.status == 401) {
+        dispatch(logout());
+      } else {
         console.error("Error fetching college leads:", error);
-        toast.error(
-            (error.response?.data?.msg || error.message)
-        );
+        toast.error(error.response?.data?.msg || error.message);
       }
       // setUsers([])
       // setfilter([]);
@@ -126,12 +130,16 @@ const Table = () => {
     //  this is wrong
 
     const response = await toast.promise(
-      axios.get(`${baseUrl}/getCounsellorDataList/${id}`,{withCredentials:true}).catch((err) => {
-        if(err?.response?.status == 401){
-          dispatch(logout())
-        }
-        console.log(err, "error");
-      }),
+      axios
+        .get(`${baseUrl}/getCounsellorDataList/${id}`, {
+          withCredentials: true,
+        })
+        .catch((err) => {
+          if (err?.response?.status == 401) {
+            dispatch(logout());
+          }
+          console.log(err, "error");
+        }),
 
       {
         loading: "Fetching Data ...",
@@ -174,10 +182,12 @@ const Table = () => {
   };
 
   const handleLogout = async () => {
+
     window.localStorage.clear();
+
     // navigate(`/login`); // Adjust the path as needed
     await axios.get(`${baseUrl}/logout`, { withCredentials: true });
-    dispatch(logout())
+    dispatch(logout());
   };
 
   // for search
@@ -199,10 +209,14 @@ const Table = () => {
 
   const DateSorting = async () => {
     try {
-      const data = await axios.post(`${baseUrl}/sortondate`, {
-        start: date.startDate,
-        end: date.endDate,
-      }, { withCredentials: true });
+      const data = await axios.post(
+        `${baseUrl}/sortondate`,
+        {
+          start: date.startDate,
+          end: date.endDate,
+        },
+        { withCredentials: true }
+      );
       if (data.data.students.length === 0) {
         toast.error("No data found");
         setUsers([]);
@@ -287,7 +301,9 @@ const Table = () => {
     setIsLeadStatusDropdownOpen((prev) => !prev);
   };
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const toggleSubmenu = (menu) => {
+    setActiveSubmenu((prev) => (prev === menu ? null : menu));
+  };
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
@@ -495,124 +511,176 @@ const Table = () => {
                 {columns.find(
                   (col) => col.visible && col.label === "leadStatus"
                 ) && (
-                    <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center relative">
-                        Lead Status
-                        {isLeadStatusDropdownOpen ? (
-                          <FaChevronUp
-                            onClick={toggleLeadStatusDropdown}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        ) : (
-                          <FaChevronDown
-                            onClick={toggleLeadStatusDropdown}
-                            style={{ cursor: "pointer", marginLeft: "0.5rem" }}
-                          />
-                        )}
-                        {isLeadStatusDropdownOpen && (
-                          <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
-                            <li
-                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                              onClick={() => handleLeadStatusFilter("All")}
-                            >
-                              All
-                            </li>
-                            <li
-                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                              onClick={() => handleLeadStatusFilter("Cold")}
-                            >
-                              Cold
-                            </li>
-                            <li
-                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                              onClick={() => handleLeadStatusFilter("Hot")}
-                            >
-                              Hot
-                            </li>
-                            <li
-                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                              onClick={() => handleLeadStatusFilter("Warm")}
-                            >
-                              Warm
-                            </li>
-                            <li
-                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                              onClick={() =>
-                                handleLeadStatusFilter("Paid Counselling")
-                              }
-                            >
-                              Paid Counselling
-                            </li>
-                            <li
-                              className="cursor-pointer hover:bg-gray-200 px-2 py-1"
-                              onClick={() =>
-                                handleLeadStatusFilter("Associate College")
-                              }
-                            >
-                              Associate College
-                            </li>
-                          </ul>
-                        )}
-                      </div>
-                    </th>
-                  )}
+                  <th scope="col" className="px-6 py-3">
+                    <div className="flex items-center relative">
+                      Lead Status
+                      {isLeadStatusDropdownOpen ? (
+                        <FaChevronUp
+                          onClick={toggleLeadStatusDropdown}
+                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                        />
+                      ) : (
+                        <FaChevronDown
+                          onClick={toggleLeadStatusDropdown}
+                          style={{ cursor: "pointer", marginLeft: "0.5rem" }}
+                        />
+                      )}
+                      {isLeadStatusDropdownOpen && (
+                        <ul className="absolute top-full left-0 mt-2 w-full border border-gray-300 bg-white rounded shadow-lg z-10">
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                            onClick={() => handleLeadStatusFilter("All")}
+                          >
+                            All
+                          </li>
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
+                            onClick={() => toggleSubmenu("FollowUp1")}
+                          >
+                            FollowUp1
+                            {activeSubmenu === "FollowUp1" ? (
+                              <FaChevronUp />
+                            ) : (
+                              <FaChevronDown />
+                            )}
+                          </li>
+                          {activeSubmenu === "FollowUp1" && (
+                            <ul className="ml-4 mt-2">
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Switch Off")
+                                }
+                              >
+                                Switch Off
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Not Reachable")
+                                }
+                              >
+                                Not Reachable
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Disconnect")
+                                }
+                              >
+                                Disconnect
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Network Issue")
+                                }
+                              >
+                                Network Issue
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter(
+                                    "Incoming Not Available"
+                                  )
+                                }
+                              >
+                                Incoming Not Available
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Not Received")
+                                }
+                              >
+                                Not Received
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("First Call Done")
+                                }
+                              >
+                                First Call Done
+                              </li>
+                            </ul>
+                          )}
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
+                            onClick={() => toggleSubmenu("FollowUp2")}
+                          >
+                            FollowUp2
+                            {activeSubmenu === "FollowUp2" ? (
+                              <FaChevronUp />
+                            ) : (
+                              <FaChevronDown />
+                            )}
+                          </li>
+                          {activeSubmenu === "FollowUp2" && (
+                            <ul className="ml-4 mt-2">
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() => handleLeadStatusFilter("Hot")}
+                              >
+                                Hot
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() => handleLeadStatusFilter("Warm")}
+                              >
+                                Warm
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() => handleLeadStatusFilter("Cold")}
+                              >
+                                Cold
+                              </li>
+                            </ul>
+                          )}
+                          <li
+                            className="cursor-pointer hover:bg-gray-200 px-2 py-1 flex justify-between items-center"
+                            onClick={() => toggleSubmenu("FollowUp3")}
+                          >
+                            FollowUp3
+                            {activeSubmenu === "FollowUp3" ? (
+                              <FaChevronUp />
+                            ) : (
+                              <FaChevronDown />
+                            )}
+                          </li>
+                          {activeSubmenu === "FollowUp3" && (
+                            <ul className="ml-4 mt-2">
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Paid Counselling")
+                                }
+                              >
+                                Paid Counselling
+                              </li>
+                              <li
+                                className="cursor-pointer hover:bg-gray-200 px-2 py-1"
+                                onClick={() =>
+                                  handleLeadStatusFilter("Associate College")
+                                }
+                              >
+                                Associate College
+                              </li>
+                            </ul>
+                          )}
+                        </ul>
+                      )}
+                    </div>
+                  </th>
+                )}
                 <th scope="col" className="px-6 py-3">
                   Update Status
                 </th>
               </tr>
             </thead>
             <tbody>
-              {/* {paginatedUsers.map((user, index) => (
-                <tr
-                  key={user._id}
-                  className="w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  {console.log(user.remarks, "user.remarkls")}
-                  <td className="w-4 p-4">
-                    <div className="flex items-center">{index + 1}</div>
-                  </td>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {user.name}
-                  </th>
-                  <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
-                  <td className="px-6 py-4">{user.neetScore}</td>
-                  <td className="px-6 py-4">{formatDate(user.DateToVisit)}</td>
-                  <td className="px-6 py-4">{user.state}</td>
-                  <td className="px-6 py-4">{user.courseSelected}</td>
-                  <td className="px-6 py-4">{user.contactNumber}</td>
-                  <td className="px-6 py-4">
-                    {user.remarks.FollowUp3.length > 0
-                      ? user.remarks.FollowUp3[
-                          user.remarks.FollowUp3.length - 1
-                        ].subject
-                      : user.remarks.FollowUp2.length > 0
-                      ? user.remarks.FollowUp2[
-                          user.remarks.FollowUp2.length - 1
-                        ].subject
-                      : user.remarks.FollowUp1.length > 0
-                      ? user.remarks.FollowUp1[
-                          user.remarks.FollowUp1.length - 1
-                        ].subject
-                      : "No Remarks "}
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to={`/student/${user._id}`}
-                      state={{
-                        id: `${user._id}`,
-                        counsellorID: id,
-                        page,
-                        origin: "counsellorProfile",
-                      }}
-                    >
-                      <Button variant="contained">Edit</Button>
-                    </Link>
-                  </td>
-                </tr>
-              ))} */}
 
               {paginatedUsers.length > 0 ? (
                 paginatedUsers.map((user, index) => (
