@@ -14,6 +14,8 @@ import { FaMoneyCheck } from "react-icons/fa6";
 import StyledCard from "../../component/StyledCard";
 import SideBar from "../../component/SideBar";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
 export const baseUrl = import.meta.env.VITE_API;
 
@@ -48,6 +50,7 @@ const CounsellorDashboard = () => {
 
   const [assignedStudents, setAssignedStudents] = useState([]);
   const {state} = useLocation();
+  const dispatch = useDispatch();
   console.log(state);
   // const state = {admissionHeadId : '66aa1bfb3cbc36b246e236b3'}
 
@@ -139,6 +142,9 @@ const CounsellorDashboard = () => {
       });
       setCounsellorName(revenueDetails.data.counsellorName);
     } catch (err) {
+      if(err?.response?.status == 401){
+        dispatch(logout())
+      }
       console.log(err);
     }
   };

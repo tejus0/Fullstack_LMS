@@ -137,6 +137,9 @@ const dispatch = useDispatch();
       //   });
       const response = await toast.promise(
         axios.get(`${baseUrl}/getUnassignedLeads`,{withCredentials:true}).catch((err) => {
+          if(err?.response?.status == 401){
+            dispatch(logout())
+          }
           console.log(err, "error");
         }),
 
@@ -163,7 +166,11 @@ const dispatch = useDispatch();
         setAllCouncellors(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching counsellors names:', error);
+        if(error?.response?.status == 401){
+          dispatch(logout())
+        }else{
+          console.error('Error fetching counsellors names:', error);
+        }
       }
     };
 
@@ -177,6 +184,9 @@ const dispatch = useDispatch();
       const res = await axios.get(`${baseUrl}/getCounsellorInfo`,{withCredentials:true});
       setCounsellors(res.data.data);
     } catch (error) {
+      if(error?.response?.status == 401){
+        dispatch(logout())
+      }
       console.log(error);
       setCounsellors([]);
     }
@@ -322,8 +332,12 @@ const dispatch = useDispatch();
         toast.error("Failed to assign leads. Please try again.");
       }
     } catch (error) {
-      toast.error("An error occurred while assigning leads.");
-      console.error("Error assigning leads:", error);
+      if(error?.response?.status == 401){
+        dispatch(logout())
+      }else{
+        toast.error("An error occurred while assigning leads.");
+        console.error("Error assigning leads:", error);
+      }
     }
 
     console.log(`Assign leads from index ${rangeStart} to ${rangeEnd}`);
@@ -364,9 +378,13 @@ const dispatch = useDispatch();
 
       }
     } catch (error) {
-      // Handle error response
-      console.error('Error distributing leads:', error);
-      toast.error('An error occurred while distributing leads.');
+        if(error?.response?.status == 401){
+          dispatch(logout())
+        }else{
+          // Handle error response
+          console.error('Error distributing leads:', error);
+          toast.error('An error occurred while distributing leads.');
+        }
 
     } finally {
       // Always turn off loading animation after API call is complete

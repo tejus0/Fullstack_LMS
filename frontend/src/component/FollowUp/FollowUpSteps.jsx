@@ -12,6 +12,8 @@ import NotesList from "./NotesList";
 import SlotBooking from "../TimeSlot/SlotBooking";
 import { useParams } from "react-router-dom";
 import { CollegeNames } from "../../pages/Registration/CollegeNames";
+import { logout } from "../../redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const baseUrl = import.meta.env.VITE_API;
 
@@ -47,6 +49,7 @@ const FollowUpSteps = ({ studentId }) => {
   const [file, setfile] = useState()
   const [Url, setUrl] = useState()
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const dispatch = useDispatch()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -62,8 +65,12 @@ const FollowUpSteps = ({ studentId }) => {
         }
         console.log(response.data[0].remarks, "remarks"); // Log the fetched data for debugging
       } catch (error) {
-        console.error("Error fetching data:", error);
-        toast.error("Failed to fetch data. Please try again.");
+          if(error?.response?.status == 401){
+            dispatch(logout())
+          }else{
+            console.error("Error fetching data:", error);
+            toast.error("Failed to fetch data. Please try again.");
+          }
       }
     };
 

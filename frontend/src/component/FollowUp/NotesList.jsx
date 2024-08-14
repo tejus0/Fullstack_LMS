@@ -8,6 +8,8 @@ import {
     followUpThree,
     associateCollegeOptions
   } from "../../data/followUpDropdown";
+import {useDispatch} from 'react-redux';
+import {logout} from '../../redux/authSlice'
 const baseUrl = import.meta.env.VITE_API;
 
 
@@ -23,6 +25,7 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
       // FollowUp2: [],
       // FollowUp3: [],
     });
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,9 +35,12 @@ const NotesList = ({FolloupStage,studentId, countaa}) => {
             setNotesByStage(response.data[0].remarks); // Update notesByStage with the fetched data
             console.log(notesByStage,"remarks");
           } catch (error) {
-    
-            console.error("Error fetching data:", error);
-            toast.error("Failed to fetch data. Please try again. hihihihihihi");
+            if(error?.response?.status == 401){
+              dispatch(logout())
+            }else{
+              console.error("Error fetching data:", error);
+              toast.error("Failed to fetch data. Please try again. hihihihihihi");
+            }
           }
         };
     

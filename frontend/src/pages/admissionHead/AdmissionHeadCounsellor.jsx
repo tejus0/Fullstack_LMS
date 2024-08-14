@@ -6,6 +6,8 @@ import { HiOutlineDocumentReport } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import useQuery from "../../hooks/useQuery";
+import {useDispatch} from 'react-redux'
+import {logout} from '../../redux/authSlice'
 
 export const AdmissionHeadCounsellor = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -16,6 +18,7 @@ export const AdmissionHeadCounsellor = () => {
 
   const query = useQuery();
   const isCollegeSpecific = query.get("collegeSpecific") === "true";
+  const dispatch = useDispatch();
   // console.log(isCollegeSpecific);
   
   const getAdmissionHeadCounsellorsWithStudents = async () => {
@@ -23,7 +26,11 @@ export const AdmissionHeadCounsellor = () => {
       const res = await toast.promise(
         axios.get(
           `${baseUrl}/getAdmissionHeadCounsellorsWithStudents/${id}?collegeSpecific=${isCollegeSpecific}`
-        ,{withCredentials:true}), 
+        ,{withCredentials:true}).catch(err=>{
+          if(err?.response?.status == 401){
+            dispatch(logout())
+          }
+        }), 
         {
           loading: "Fetching Data ...",
           success: "Data Fetched Successfully",

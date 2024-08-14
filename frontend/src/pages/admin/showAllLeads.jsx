@@ -113,20 +113,30 @@ const ShowAllleads = () => {
     //   const response = await axios.get(${baseUrl}/getCounsellorDataList/${id}).catch(err => {
     //     console.log(err, "error");
     //   });
-    const response = await toast.promise(
-      axios.get(`${baseUrl}/dashboard`,{withCredentials:true}).catch((err) => {
-        console.log(err, "error");
-      }),
-
-      {
-        loading: "Fetching Data ...",
-        success: "Data fetched Successfully",
-        error: "Failed to fetch Data",
-      }
-    );
-    setUsers(response.data.data);
-    setAllUsers(response.data.data);
-    setfilter(response.data.data);
+   try {
+     const response = await toast.promise(
+       axios.get(`${baseUrl}/dashboard`,{withCredentials:true}).catch((err) => {
+        if(err?.response?.status == 401){
+          dispatch(logout())
+        }
+         console.log(err.response.status, "error");
+       }),
+ 
+       {
+         loading: "Fetching Data ...",
+         success: "Data fetched Successfully",
+         error: "Failed to fetch Data",
+       }
+     );
+     setUsers(response.data.data);
+     setAllUsers(response.data.data);
+     setfilter(response.data.data);
+   } catch (err) {
+    if(err?.response?.status == 401){
+      dispatch(logout())
+    }
+    console.log(err.response.status)
+   }
   };
 
   useEffect(() => {
@@ -137,6 +147,9 @@ const ShowAllleads = () => {
         setAllCouncellors(response.data);
         setLoading(false);
       } catch (error) {
+        if(error?.response?.status == 401){
+          dispatch(logout())
+        }
         console.error("Error fetching counsellors names:", error);
       }
     };
@@ -151,6 +164,9 @@ const ShowAllleads = () => {
       const res = await axios.get(`${baseUrl}/getCounsellorInfo`,{withCredentials:true});
       setCounsellors(res.data.data);
     } catch (error) {
+      if(error?.response?.status == 401){
+        dispatch(logout())
+      }
       console.log(error);
       setCounsellors([]);
     }
@@ -369,6 +385,9 @@ const ShowAllleads = () => {
         toast.error("Failed to assign leads. Please try again.");
       }
     } catch (error) {
+      if(error?.response?.status == 401){
+        dispatch(logout())
+      }
       toast.error("An error occurred while assigning leads.");
       console.error("Error assigning leads:", error);
     }

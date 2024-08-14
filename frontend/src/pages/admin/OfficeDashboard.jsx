@@ -278,7 +278,7 @@ const OfficeDashboard = () => {
         {
           loading: "Fetching Data ...",
           success: "Data Fetched Successfully.",
-          error: "Failed to fetch data"
+          error: !url ?"Failed to fetch data" : "No Data Available"
         }
 
       )
@@ -314,6 +314,9 @@ const OfficeDashboard = () => {
       setTopPerformer(filterTopPerformer);
       console.log(res.data);
     } catch (err) {
+        if(err?.response?.status == 401){
+          dispatch(logout())
+        }
       console.error(err);
     }
   };

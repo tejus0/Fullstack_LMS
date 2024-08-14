@@ -12,6 +12,8 @@ import { OfficeDropDown } from "./Office";
 // import Select from "@mui/material/Select";
 // import MenuItem from "@mui/material/MenuItem";
 import { Box, Button, FormControl, InputLabel, MenuItem, Select, Grid } from '@mui/material';
+import {useDispatch} from 'react-redux';
+import {logout} from '../../redux/authSlice'
 
 export default function SlotBooking({ studentId}) {
   const baseUrl = import.meta.env.VITE_API;
@@ -22,6 +24,7 @@ export default function SlotBooking({ studentId}) {
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchDates = async () => {
@@ -63,6 +66,9 @@ export default function SlotBooking({ studentId}) {
           }
         }
         } catch (error) {
+          if(error?.response?.status == 401){
+            dispatch(logout())
+          }
             console.error("Error fetching dates:", error);
         }
     };

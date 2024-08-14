@@ -7,6 +7,8 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from 'axios';
 import Navbar from '../../component/navbar/Navbar';
 import dayjs from "dayjs"
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/authSlice';
 
 
 
@@ -21,6 +23,7 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
     const [noidaStartDate, setNoidaStartDate] = useState(null);
     const [noidaEndDate, setNoidaEndDate] = useState(null);
     const baseUrl = import.meta.env.VITE_API;
+    const dispatch = useDispatch();
 
     const isPreviousDate = (date) => {
         // const startOfWeek = dayjs().startOf('week');
@@ -69,9 +72,13 @@ const DaysAvaialble = ({ onDateRangeChange }) => {
             toast.success("Dates updated successfully!");
             console.log(response.data);
         } catch (error) {
-            const errorMessage = error.response?.data?.error || "Failed to update dates.";
-            toast.error(errorMessage);
-            console.error("Error updating dates:", errorMessage);
+            if(error?.response?.status == 401){
+                dispatch(logout())
+              }else{
+                  const errorMessage = error.response?.data?.error || "Failed to update dates.";
+                  toast.error(errorMessage);
+                  console.error("Error updating dates:", errorMessage);
+              }
         }
 
         // try {

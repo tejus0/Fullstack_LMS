@@ -50,6 +50,9 @@ const AgentLeads = () => {
             //     console.log(err, "error");
             //   });
             const response = await axios.get(`${baseUrl}/getAgentLeads/${cat_name}`,{withCredentials:true}).catch(err => {
+                if(err?.response?.status == 401){
+                    dispatch(logout())
+                  }
                 console.log(err, "error");
             });
             setUsers(response.data);

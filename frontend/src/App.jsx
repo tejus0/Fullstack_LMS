@@ -23,7 +23,7 @@ import CounsellorTrackerDashboard from './pages/admin/CounsellorDashboard'
 import OfficeDashboard from "./pages/admin/OfficeDashboard";
 import { AdmissionHeadCounsellor } from "./pages/admissionHead/AdmissionHeadCounsellor";
 import SeniorAdmHead from "./pages/admin/SeniorAdmHead";
-import { useSelector } from "react-redux";
+import ShowAllAssignedAdmHeads from "./pages/ShowAllAssignedAdmHeads";
 
 // import AdminSlotSelect from "./pages/admin/AdminSlotSelect";
 
@@ -59,6 +59,7 @@ const App = () => {
           <Route path="/forgot-pass" element={<ForgetPass />} />
           <Route path="/showCounsellorReport" element={<ProtectedRoute><AdmissionHeadCounsellor /></ProtectedRoute>} />
           <Route path="/seniorAdmHead" element={<ProtectedRoute><SeniorAdmHead /></ProtectedRoute>} />
+          <Route path="/showAllAssignedAdmHeads" element={<ProtectedRoute><ShowAllAssignedAdmHeads /></ProtectedRoute>} />
           {/* <Route path="/AdminSlotSelect" element={<AdminSlotSelect />} /> */}
         </Routes>
 

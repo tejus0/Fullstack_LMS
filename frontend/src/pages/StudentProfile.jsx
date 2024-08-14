@@ -8,6 +8,8 @@ import { useMemo } from 'react';
 import FollowUpSteps from '../component/FollowUp/FollowUpSteps';
 import SlotBooking from '../component/TimeSlot/SlotBooking';
 import DaysAvaialble from './admin/DaysAvailable';
+import { logout } from '../redux/authSlice';
+import { useDispatch } from 'react-redux';
 
 
 const StudentProfile = ({ counsellor_id }) => {
@@ -20,6 +22,7 @@ const StudentProfile = ({ counsellor_id }) => {
   const location = useLocation();
   const { id, counsellorID, page, origin } = location.state || { page: 0 }
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // const id = location.state.id;
 
   // console.log(location);
@@ -43,6 +46,9 @@ const StudentProfile = ({ counsellor_id }) => {
         setStudentData(studData.data.data[0]);
         // console.log(studentData.otherResponse,"data")
       } catch (e) {
+        if(e?.response?.status == 401){
+          dispatch(logout())
+        }
         console.log(e);
       }
     };

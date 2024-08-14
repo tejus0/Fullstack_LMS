@@ -83,10 +83,14 @@ const Table = () => {
       setActiveButton("college");
       setPage(0);
     } catch (error) {
-      console.error("Error fetching college leads:", error);
-      toast.error(
-          (error.response?.data?.msg || error.message)
-      );
+      if(error?.response?.status == 401){
+        dispatch(logout())
+      }else{
+        console.error("Error fetching college leads:", error);
+        toast.error(
+            (error.response?.data?.msg || error.message)
+        );
+      }
       // setUsers([])
       // setfilter([]);
       // setFilteredUsers([]);
@@ -122,6 +126,9 @@ const Table = () => {
 
     const response = await toast.promise(
       axios.get(`${baseUrl}/getCounsellorDataList/${id}`,{withCredentials:true}).catch((err) => {
+        if(err?.response?.status == 401){
+          dispatch(logout())
+        }
         console.log(err, "error");
       }),
 

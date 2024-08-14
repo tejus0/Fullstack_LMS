@@ -122,6 +122,9 @@ const Table = () => {
         setAllCouncellors(response.data.data.assignedCounsellors);
         setLoading(false);
       } catch (error) {
+        if(error?.response?.status == 401){
+          dispatch(logout())
+        }
         console.error('Error fetching counsellors names:', error);
       }
     };

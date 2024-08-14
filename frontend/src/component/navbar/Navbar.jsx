@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./navbar.css";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { FaHome } from "react-icons/fa";
@@ -7,8 +7,11 @@ import { ImUserTie } from "react-icons/im";
 import { BsBriefcaseFill } from "react-icons/bs";
 import { BiSolidMessageAltDetail } from "react-icons/bi";
 import { FaPeopleGroup } from "react-icons/fa6";
+import { MdArrowDropDownCircle } from "react-icons/md";
+import { IoMdArrowDropupCircle } from "react-icons/io";
 
 const Navbar = () => {
+    const [openDropdown , setOpenDropdown] = useState(false);
     const navIcons = {
         // fontSize: "1.5rem",
         marginRight: "2rem",
@@ -39,22 +42,22 @@ const Navbar = () => {
             <div className="nav-desk">
                 <div className="wrapper-desk group">
                     <ul>
-                        <div>
-                            <a href="#" style={linkStyle}>
+                        <div className="hover:bg-gray-700">
+                            <a href="#" style={linkStyle} className="hover:bg-gray-700 w-full">
                                 <li>
                                     <FaHome style={navIcons} /> <p>Home</p>
                                 </li>
                             </a>
                         </div>
                         <div>
-                            <Link to="/showAllLeads" style={linkStyle}>
+                            <Link to="/showAllLeads" style={linkStyle} className="hover:bg-gray-700 w-full">
                                 <li>
                                     <ImUserTie style={navIcons} /><p>Leads</p>
                                 </li>
                             </Link>
                         </div>
                         <div>
-                            <Link to="/adminAvailableDays" style={linkStyle}>
+                            <Link to="/adminAvailableDays" style={linkStyle} className="hover:bg-gray-700 w-full">
                                 <li>
                                     <BsBriefcaseFill style={navIcons} />{" "}
                                     <p>Days</p>
@@ -62,7 +65,7 @@ const Navbar = () => {
                             </Link>
                         </div>
                         <div>
-                            <a href="/allCounsellorsReport" style={linkStyle}>
+                            <a href="/allCounsellorsReport" style={linkStyle} className="hover:bg-gray-700 w-full">
                                 <li>
                                     <FaFileZipper style={navIcons} />{" "}
                                     <p>Report</p>
@@ -70,7 +73,7 @@ const Navbar = () => {
                             </a>
                         </div>
                         <div>
-                            <a href="#contact" style={linkStyle}>
+                            <a href="#contact" style={linkStyle} className="hover:bg-gray-700 w-full">
                                 <li>
                                     <BiSolidMessageAltDetail style={navIcons} />{" "}
                                     <p>Contact</p>
@@ -78,12 +81,22 @@ const Navbar = () => {
                             </a>
                         </div>
                         <div>
-                            <a href="/seniorAdmHead" style={linkStyle}>
+                            <a href="#" style={linkStyle} className="hover:bg-gray-700 w-full" onClick={()=>setOpenDropdown(!openDropdown)}>
                                 <li className="">
                                     <FaPeopleGroup style={navIcons} />{" "}
-                                    <p className=" group-hover:flex hidden">Senior Admission Head</p>
+                                    <p className=" group-hover:flex hidden">
+                                        <span className="text-sm">Senior Admission Head</span>
+                                       {openDropdown ? <span><IoMdArrowDropupCircle /></span> :  <span><MdArrowDropDownCircle /></span>}
+                                    </p>
                                 </li>
                             </a>
+                            {
+                                openDropdown && 
+                                <div className="flex flex-col list-none gap-4 p-2 text-sm text-white">
+                                    <Link className="cursor-pointer hover:bg-gray-700  rounded-sm  p-2" to={"/seniorAdmHead"}>Assign Admission Heads</Link>
+                                    <Link className="cursor-pointer hover:bg-gray-700 p-2" to={"/showAllAssignedAdmHeads"}>Assigned Admission Heads</Link>
+                                </div>
+                            }
                         </div>
                     </ul>
                 </div>

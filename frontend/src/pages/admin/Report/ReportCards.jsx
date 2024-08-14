@@ -21,6 +21,8 @@ import { FaSortAlphaDown } from "react-icons/fa";
 import OfficeWiseTopPerformer from "../../../component/OfficeWiseTopPerformer";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 import TableComponent from "../../../component/TableComponent";
+import {useDispatch} from 'react-redux'
+import {logout} from '../../../redux/authSlice'
 
 const ReportCards = () => {
   const baseUrl = import.meta.env.VITE_API;
@@ -36,6 +38,7 @@ const ReportCards = () => {
   const [searchTermNoida, setSearchTermNoida] = useState("");
   const [searchTermKanpur, setSearchTermKanpur] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const getAvatarUrl = (name) => {
     return `https://avatars.dicebear.com/api/avataaars/${name}.svg`;
@@ -45,7 +48,11 @@ const ReportCards = () => {
     const fetchData = async () => {
       try {
         const response = await toast.promise(
-          axios.get(`${baseUrl}/getCounsellorsWithStudents`,{withCredentials:true}),
+          axios.get(`${baseUrl}/getCounsellorsWithStudents`,{withCredentials:true}).catch(err=>{
+            if(err?.response?.status == 401){
+              dispatch(logout())
+            }
+          }),
 
           {
             loading: "Fetching Data ...",

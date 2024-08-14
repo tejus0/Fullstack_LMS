@@ -248,6 +248,13 @@ const studentDetailSchema = new mongoose.Schema(
     }, { timestamps: true }
 )
 
+studentDetailSchema.pre('save', function(next) {
+    if (this.name) {
+        this.name = this.name.trim();
+    }
+    next();
+});
+
 const studentModal = mongoose.model('Student', studentDetailSchema)
 
 export default studentModal

@@ -6,6 +6,8 @@ import Navbar from "../../component/navbar/Navbar";
 import axios from "axios";
 import { CollegeNames } from "../Registration/CollegeNames";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
 export default function SeniorAdmHead() {
   const [counsellors, setCounsellors] = useState([]);
@@ -15,6 +17,7 @@ export default function SeniorAdmHead() {
   const [counsellorData, setCounsellorData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const dispatch = useDispatch();
 
   const baseUrl = import.meta.env.VITE_API;
 
@@ -28,8 +31,12 @@ export default function SeniorAdmHead() {
         setLoadingSubmit(true)
         const res = await axios.post(`${baseUrl}/assignCollegesSeniorAdmHead`, assignCollegeMapping, {withCredentials:true})
     } catch (error) {
-        console.log(error);
-        toast.error("Some Error occurred while assigning")
+        if(error?.response?.status == 401){
+          dispatch(logout())
+        }else{
+          console.log(error);
+          toast.error("Some Error occurred while assigning")
+        }
     }finally{
       setLoadingSubmit(false)
     }
@@ -40,6 +47,9 @@ export default function SeniorAdmHead() {
       const res = await axios.get(`${baseUrl}/getCounsellorInfo`, { withCredentials: true });
       setCounsellors(res.data.data);
     } catch (error) {
+      if(error?.response?.status == 401){
+        dispatch(logout())
+      }
       console.log(error);
       setCounsellors([]);
     }
@@ -76,6 +86,9 @@ export default function SeniorAdmHead() {
       console.log(finalData)
       setCounsellorData(finalData)
     } catch (err) {
+        if(err?.response?.status == 401){
+          dispatch(logout())
+        }
       console.log(err);
       
     }finally{
@@ -89,6 +102,9 @@ export default function SeniorAdmHead() {
       const res = await axios.get(`${baseUrl}/getAssignedColleges`, { withCredentials: true });
       setAssignedColleges(res.data.assignedColleges);
     } catch (error) {
+        if(err?.response?.status == 401){
+          dispatch(logout())
+        }
       console.log(error);
       setAssignedColleges([])
     }

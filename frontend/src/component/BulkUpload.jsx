@@ -4,9 +4,12 @@ import * as XLSX from 'xlsx';
 import { requiredFields, requiredFieldsFornoteOnly, totalFields } from '../data/requiredFieldBulk';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import {useDispatch} from 'react-redux';
+import {logout} from '../redux/authSlice'
 const BulkUpload = ({ open, onClose }) => {
     const baseUrl = import.meta.env.VITE_API;
     const [val, setVal] = useState('')
+    const dispatch = useDispatch();
 
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
@@ -93,26 +96,31 @@ const BulkUpload = ({ open, onClose }) => {
                                 arr.push(row)
                             });
 
-                            // try {
-                            //     const res = await toast.promise(
-                            //         axios.post(`${baseUrl}/insertFromSheet`, filteredJsonData, {
-                            //             headers: {
-                            //                 "Content-Type": "application/json",
-                            //             },
-                            //             withCredentials: true
-                            //         }),
 
-                            //         {
-                            //             loading: "File is Uploading ...",
-                            //             success: "File Uploaded Successfully",
-                            //             error: "Failed to upload file",
-                            //         }
+                            try {
+                                const res = await toast.promise(
+                                    axios.post(`${baseUrl}/insertFromSheet`, filteredJsonData, {
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        withCredentials: true
+                                    }).catch(err=>{
+                                        if(err?.response?.status == 401){
+                                            dispatch(logout())
+                                          }
+                                    }),
 
-                            //     )
+                                    {
+                                        loading: "File is Uploading ...",
+                                        success: "File Uploaded Successfully",
+                                        error: "Failed to upload file",
+                                    }
 
-                            // } catch (error) {
-                            //     toast.error(error.response.data.msg);
-                            // }
+                                )
+
+                            } catch (error) {
+                                toast.error(error.response.data.msg);
+                            }
                         }
                     }
                 }
