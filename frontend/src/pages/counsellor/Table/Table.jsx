@@ -198,13 +198,15 @@ const Table = () => {
       setFilteredUsers(filter);
     } else {
       setFilteredUsers(
-        sortedUsers.filter((item) =>
+        unlockedUser.filter((item) =>
           item[SearchBy].toLowerCase().includes(e.target.value.toLowerCase())
         )
       );
     }
     setPage(0);
   };
+
+  const unlockedUser = sortedUsers.filter((elem) => elem.remarks.FollowUp1.length > 0)
 
   const DateSorting = async () => {
     try {
@@ -292,6 +294,8 @@ const Table = () => {
     next: paginatedUsers.some((item) => item.remarks.FollowUp1.length === 0),
     previous: false, // Always enable Previous button
   };
+
+
   // const paginationDisabled = paginatedUsers.some(item => console.log(item.remarks.FollowUp1.length , "table remarks bc"))
 
   // console.log(paginatedUsers);
@@ -326,6 +330,7 @@ const Table = () => {
       setPage(parseInt(newPage));
     }
   }, [users]);
+
   
   const handleInputChange = (event) => {
     const value = event.target.value;
@@ -337,14 +342,14 @@ const Table = () => {
   const handleInputBlur = () => {
     if (inputPage < 1) {
       setInputPage(1);
-    } else if (inputPage > Math.ceil(filteredAndSortedUsers.length / rowsPerPage)) {
-      setInputPage(Math.ceil(filteredAndSortedUsers.length / rowsPerPage));
+    } else if (inputPage > Math.ceil(unlockedUser.length / rowsPerPage)) {
+      setInputPage(Math.ceil(unlockedUser.length / rowsPerPage));
     }
     handleChangePage(null, inputPage - 1);
   };
 
   const handleGoToPage = () => {
-    const validPage = Math.min(Math.max(inputPage - 1, 0), Math.ceil(filteredAndSortedUsers.length / rowsPerPage) - 1);
+    const validPage = Math.min(Math.max(inputPage - 1, 0), Math.ceil(unlockedUser.length / rowsPerPage) - 1);
     setInputPage(validPage + 1);
     handleChangePage(null, validPage);
   };
@@ -810,7 +815,7 @@ const Table = () => {
                 value={inputPage}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
-                inputProps={{ min: 1, max: Math.ceil(filteredAndSortedUsers.length / rowsPerPage) }}
+                inputProps={{ min: 1, max: Math.ceil(unlockedUser.length / rowsPerPage) }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     '& fieldset': {
@@ -827,9 +832,9 @@ const Table = () => {
                 }
 
                 }
-                style={{ width: 45, borderBottom: "1px solid gray " }}
+                style={{ width: 80, borderBottom: "1px solid gray " }}
               />
-              <span> / {Math.ceil(filteredAndSortedUsers.length / rowsPerPage)}</span>
+              <span> / {Math.ceil(unlockedUser.length / rowsPerPage)}</span>
               <Button
                 onClick={handleGoToPage}
                 variant="contained"
