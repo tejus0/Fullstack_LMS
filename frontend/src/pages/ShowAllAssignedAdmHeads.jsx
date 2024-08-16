@@ -72,6 +72,23 @@ const ShowAllAssignedAdmHeads = () => {
         }
     }
 
+    const handleSeniorAdmHeadDelete = async (id) =>{
+        try {
+            const res = await toast.promise(
+                axios.delete(`${baseUrl}/removeCounsellor/${id}`, {withCredentials: true}),
+                {
+                    loading: "Deleteing Senior Adm Head ...",
+                    success: "Senior Adm Head Deleted Successfully.",
+                    error: "Failed to delete senior adm head"
+                }
+
+            )
+            setDataDeleted(!dataDeleted)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         getData();
     }, [dataDeleted]);
@@ -94,6 +111,7 @@ const ShowAllAssignedAdmHeads = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
+                                        {console.log(data)}
                                         {data.map((head, index) => (
                                             <React.Fragment key={index}>
                                                 <TableRow>
@@ -108,7 +126,7 @@ const ShowAllAssignedAdmHeads = () => {
                                                     </TableCell>
                                                     <TableCell>{head.name}</TableCell>
                                                     <TableCell>
-                                                        <button className='bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-700'>Delete</button>
+                                                        <button className='bg-red-500 px-4 py-2 rounded-md text-white hover:bg-red-700' onClick={() => handleSeniorAdmHeadDelete(head.id)}>Delete</button>
                                                     </TableCell>
                                                 </TableRow>
                                                 <TableRow>

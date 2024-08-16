@@ -23,6 +23,14 @@ export default function SeniorAdmHead() {
 
 
   const handleAssign = async () =>{
+    if(!selectedCounsellor){
+      return toast.error("Please select the senior admission head")
+    }
+
+    if(selectedColleges.length === 0){
+      return toast.error("Please select the college")
+    }
+
     const assignCollegeMapping = {
         counsellorID: selectedCounsellor,
         colleges: selectedColleges

@@ -24,6 +24,7 @@ import { requiredFields } from "../../data/requiredFieldBulk";
 import BulkUpload from "../../component/BulkUpload";
 import { logout } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
+import YoutubeLeads from "./YoutubeLeads";
 
 const ShowAllleads = () => {
   // const dispatch = useDispatch();
@@ -86,6 +87,9 @@ const ShowAllleads = () => {
   const [loading, setLoading] = useState(true);
 
   const [showUnassignedTable, setShowUnassignedTable] = useState(false);
+  const [showYoutubeLeads, setShowYoutubeLeads] = useState(false)
+  const [selectedCampaignId, setSelectedCampaignId] = useState('');
+  const [campaignOptions, setCampaignOptions] = useState();
   const [bulkOpen, setbulkOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -139,6 +143,10 @@ const ShowAllleads = () => {
    }
   };
 
+  
+
+
+
   useEffect(() => {
     const fetchCounsellors = async () => {
       try {
@@ -155,7 +163,6 @@ const ShowAllleads = () => {
     };
 
     fetchCounsellors();
-
     fetchData();
   }, []);
 
@@ -396,6 +403,11 @@ const ShowAllleads = () => {
     setModalOpen(false);
   };
 
+
+  useEffect(() =>{
+    console.log(users);
+  }, [users])
+
   return (
     <div>
       <Box className="flex">
@@ -484,14 +496,22 @@ const ShowAllleads = () => {
                   showNewTable={showNewTable}
                   setShowNewTable={setShowNewTable}
                   setShowUnassignedTable={setShowUnassignedTable}
+                  // youtubeLeads={showYoutubeLeads}
+                  setYoutubeLeads = {setShowYoutubeLeads}
                   isAdmin={true}
                   resetUser={fetchData}
+                  selectedCampaignId = {selectedCampaignId}
+                  setCampaignId = {setSelectedCampaignId}
+                  campaignOptions = {campaignOptions}
+                  setCampaignOptions = {setCampaignOptions}
+                  users ={setUsers}
                 />
               </div>
             </div>
           </div>
 
-          {showUnassignedTable ? (
+          
+          {showYoutubeLeads ? (<YoutubeLeads campaign_id={selectedCampaignId} setCampaignOptions={setCampaignOptions} />) : showUnassignedTable ? (
             <ShowUnassignedLeads />
           ) : !showNewTable ? (
             <div>

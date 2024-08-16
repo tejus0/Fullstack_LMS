@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Drawer, List, ListItem, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
+import { Drawer, List, ListItem, InputLabel, MenuItem, FormControl, Select, Button } from '@mui/material';
+import toast from 'react-hot-toast';
+import axios from 'axios';
 
-const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable, showNewTable, setShowNewTable, setShowUnassignedTable, isAdmin, resetUser }) => {
+const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filterDate, date, handleToggleTable, showNewTable, setShowNewTable, setShowUnassignedTable, isAdmin, resetUser, setYoutubeLeads, selectedCampaignId, setCampaignId, campaignOptions }) => {
     // State for dropdown selection       
-
+    const baseUrl = import.meta.env.VITE_API
     const [selectedOption, setSelectedOption] = useState('');
     const [showFilter, setShowFilter] = useState(true)
+    const [showCampaignDropdown, setShowCampaignDropdown] = useState(false);
+    // const [showYoutubeLeads, setShowYoutubeLeads] = useState(false)
+    // const [selectedCampaignId, setCampaignId] = useState('');
+  
+
     const handleDateChange = (e) => {
         const { name, value } = e.target;
         setdate({ ...date, [name]: value });
@@ -18,20 +25,41 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                 setShowNewTable(false)
                 setShowUnassignedTable(false)
                 setShowFilter(true)
+                setShowCampaignDropdown(false);
+                setYoutubeLeads(false)
             }
             else if (selectedOption === "offlineVisits") {
                 setShowUnassignedTable(false)
                 setShowNewTable(true)
                 setShowFilter(false)
+                setShowCampaignDropdown(false);
+                setYoutubeLeads(false)
             }
             else if (selectedOption === "unassignedLeads") {
                 setShowUnassignedTable(true)
                 setShowFilter(false)
+                setShowCampaignDropdown(false);
+                setYoutubeLeads(false)
+            } 
+
+            else if (selectedOption === "youtube") {
+                setShowCampaignDropdown(true);
+                setShowFilter(false);
+                setYoutubeLeads(true);
+                setShowUnassignedTable(false);
+                setShowNewTable(false);
             }
         };
 
         handleDropdownChange()
     }, [selectedOption])
+
+
+    const handleCampaignIdChange = (e) =>{
+        const newValue = e.target.value
+        setCampaignId((prev) => prev === newValue ? '' : newValue)
+        // setShowYoutubeLeads(true)
+    }
 
 
 
@@ -114,9 +142,37 @@ const FilterDrawer = ({ open, onClose, columns, handleSelectRow, setdate, filter
                                         <MenuItem value="allLeads" >All Leads</MenuItem>
                                         <MenuItem value="offlineVisits">Offline Visits</MenuItem>
                                         <MenuItem value="unassignedLeads">Unassigned Leads</MenuItem>
+                                        <MenuItem value="youtube">YouTube Leads</MenuItem>
                                     </Select>
                                 </FormControl>
                             </div>
+                            {showCampaignDropdown && (
+                                <div className='mt-4'>
+                                    <FormControl fullWidth>
+                                        <p id="campaign-label">Campaign Id</p>
+                                        <Select
+                                            labelId="campaign-label"
+                                            value={selectedCampaignId}
+                                            onChange={handleCampaignIdChange}
+                                            displayEmpty
+                                        >
+                                            {campaignOptions?.map((option) => { 
+                                                console.log(option)
+                                                return <MenuItem value={option}>{option}</MenuItem>
+                                            })}
+                                            {/* <MenuItem value="2">2</MenuItem> */}
+                                        </Select>
+                                    </FormControl>
+                                    {/* <Button
+                                        variant="contained"
+                                        color="primary"
+                                        className='mt-2'
+                                        // onClick={handleApplyClick}
+                                    >
+                                        Apply
+                                    </Button> */}
+                                </div>
+                            )}
                         </div> : ""}
 
                 </ListItem>

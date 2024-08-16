@@ -2484,3 +2484,32 @@ export const removeAssignedCollege = async (req, res) =>{
   }
   
 }
+
+
+export const getYoutubeLeads = async (req, res) => {
+  try {
+    // const counsellerId = req.params.counsellerId;
+    // const {source, campaign_id} = req.query
+    // let students;
+    // if(campaign_id != ''){
+      //   students = await studentModal.find({$and: [{source: source}, {sourceId: campaign_id}]});
+      // } else{
+        //   students = await studentModal.find({source: source});
+        // }
+        // const {source,} = req.query
+        const {source} = req.query
+        const students = await studentModal.find({source: source})
+        const uniqueSourceIds = await studentModal.distinct('sourceId', {source: source})
+
+    return res.status(200).json({
+      message: "Sucess",
+      data: students,
+      options: uniqueSourceIds
+    })
+
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something Went Wrong"
+    })
+  }
+}
