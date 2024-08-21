@@ -367,7 +367,7 @@ const ShowAllleads = () => {
       return;
     }
     // Extract the subset of users from sortedUsers
-    const usersToAssign = sortedUsers.slice(
+    const usersToAssign = paginatedUsers.slice(
       parseInt(rangeStart, 10) - 1,
       parseInt(rangeEnd, 10)
     );
@@ -810,6 +810,24 @@ const ShowAllleads = () => {
                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                               >
                                 Associate College
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("Not Received");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                Not Received
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("First Call Done");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                First Call Done
                               </button>
                             </div>
                           )}
