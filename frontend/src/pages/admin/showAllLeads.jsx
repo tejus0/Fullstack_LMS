@@ -25,6 +25,7 @@ import BulkUpload from "../../component/BulkUpload";
 import { logout } from "../../redux/authSlice";
 import { useDispatch } from "react-redux";
 import YoutubeLeads from "./YoutubeLeads";
+import { IoMdCloudDownload } from "react-icons/io";
 
 const ShowAllleads = () => {
   // const dispatch = useDispatch();
@@ -91,6 +92,8 @@ const ShowAllleads = () => {
   const [selectedCampaignId, setSelectedCampaignId] = useState('');
   const [campaignOptions, setCampaignOptions] = useState();
   const [bulkOpen, setbulkOpen] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState()
+
   const dispatch = useDispatch();
 
   const handleToggleTable = () => {
@@ -408,6 +411,39 @@ const ShowAllleads = () => {
     console.log(users);
   }, [users])
 
+
+  const handleContinue = async () =>{
+    setIsAlertOpen(false);
+    try {
+        const res = await toast.promise(
+          axios.get(`${baseUrl}/download-excel`, {
+            responseType: "blob",
+            withCredentials: true
+          }),
+
+          {
+            loading: "Downloading File ...",
+            success: "File downloaded Successfully",
+            error: "Failed to download file",
+          }
+
+        )
+
+        const url = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", "StudentData.xlsx")
+        document.body.appendChild(link);
+        link.click()
+
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+    } catch (error) {
+      console.log("Failed to download excel", error)
+    }
+  }
+
+
   return (
     <div>
       <Box className="flex">
@@ -455,13 +491,14 @@ const ShowAllleads = () => {
                 onChange={handelChange}
               />
             </div>
-            <div className="flex justify-end items-center">
+            <div className="flex justify-end gap-2 items-center">
               <MdCloudUpload
                 fontSize={30}
                 className="cursor-pointer"
                 title="File Upload"
                 onClick={triggerFileInput}
               />
+
               <BulkUpload open={bulkOpen} onClose={triggerFileInput} />
               {/* < input
                 type="file"
@@ -470,6 +507,30 @@ const ShowAllleads = () => {
                 style={{ display: "none" }}
                 onChange={handleFileUpload}
               /> */}
+
+              <IoMdCloudDownload fontSize={30} className="cursor-pointer" title="Download excel" onClick={() => setIsAlertOpen(true)}/>
+              {isAlertOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                  <div className="bg-white p-4 rounded shadow-md">
+                    <p>Are you sure you want to download the Excel file?</p>
+                    <div className="flex justify-end gap-2 mt-4">
+                      <button
+                        className="bg-gray-200 px-4 py-2 rounded"
+                        onClick={() => setIsAlertOpen(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                        onClick={handleContinue}
+                      >
+                        Continue
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <Tooltip title="Logout">
                 <IconButton onClick={handleLogout}>
                   <RiLogoutBoxLine />
@@ -512,7 +573,7 @@ const ShowAllleads = () => {
 
           
           {showYoutubeLeads ? (<YoutubeLeads campaign_id={selectedCampaignId} setCampaignOptions={setCampaignOptions} />) : showUnassignedTable ? (
-            <ShowUnassignedLeads />
+            <ShowUnassignedLeads modalOpen={modalOpen} setModalOpen={setModalOpen} />
           ) : !showNewTable ? (
             <div>
               {/* Modal */}
@@ -765,6 +826,15 @@ const ShowAllleads = () => {
                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                               >
                                 All
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setLeadStatusFilter("No remarks");
+                                  toggleLeadStatusDropdown();
+                                }}
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                              >
+                                No remarks
                               </button>
                               <button
                                 onClick={() => {

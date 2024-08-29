@@ -17,6 +17,9 @@ import cloudinary from "cloudinary";
 import { group, log } from "console";
 import { networkInterfaces } from "os";
 import generateToken from "../utils/generateToken.js";
+import { MongoClient } from "mongodb";
+import ExcelJS from "exceljs";
+
 export const loginLoad = async (req, res) => {
   try {
     res.json("this is working");
@@ -134,8 +137,10 @@ export const insertFromSheet = async (req, res) => {
       return entry;
     });
 
-    const userPhone = dataToInsert.map(user => user.contactNumber);
-    const isExist = await studentModal.find({ contactNumber: { $in: userPhone } })
+    const userPhone = dataToInsert.map((user) => user.contactNumber);
+    const isExist = await studentModal.find({
+      contactNumber: { $in: userPhone },
+    });
     // console.log(isExist);
 
     const data = dataToInsert.filter((elem) =>
@@ -143,13 +148,19 @@ export const insertFromSheet = async (req, res) => {
     );
 
     const filteredDataToInsert = dataToInsert.filter((elem) => {
-      return !data.some((dataElem) => dataElem.contactNumber === elem.contactNumber);
+      return !data.some(
+        (dataElem) => dataElem.contactNumber === elem.contactNumber
+      );
     });
 
     if (isExist) {
       for (const elem of data) {
         for (const isExistElem of isExist) {
-          if (isExistElem.preferredCollege === String(elem.preferredCollege) || isExistElem.otherResponse.preferredCollege === String(elem.preferredCollege)) {
+          if (
+            isExistElem.preferredCollege === String(elem.preferredCollege) ||
+            isExistElem.otherResponse.preferredCollege ===
+              String(elem.preferredCollege)
+          ) {
             return res.status(400).json({
               success: false,
               msg: `${elem.name} Already Exists in the database`,
@@ -158,36 +169,32 @@ export const insertFromSheet = async (req, res) => {
         }
       }
 
-
       data.forEach(async (elem) => {
         isExist.forEach(async (isExist) => {
           if (isExist.contactNumber == elem.contactNumber) {
             isExist.otherResponse.push(elem);
             await isExist.save();
           }
-        })
-      })
-
+        });
+      });
 
       const insertedStudents = filteredDataToInsert.forEach(async (elem) => {
         await studentModal.create(elem);
-      })
+      });
 
       return res.status(200).json({
         success: true,
         msg: "Multiple Students Created Successfully",
       });
-
     }
 
     const insertedStudents = await studentModal.create(dataToInsert);
 
     return res.status(200).json({
       success: true,
-      msg: "Multiple Students Created Successfully"
+      msg: "Multiple Students Created Successfully",
     });
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(500).json({
       success: false,
       msg: "Failed to create multiple students",
@@ -328,11 +335,12 @@ export const createFollowUp3 = async (req, res) => {
     } = req.body;
     console.log(preBookingAmount, "amount");
 
-    const file = req.file
+    const file = req.file;
 
-    const uri = getUri(file)
-    const cloud = await cloudinary.v2.uploader.upload(uri.content, { folder: `fee-receipt` })
-
+    const uri = getUri(file);
+    const cloud = await cloudinary.v2.uploader.upload(uri.content, {
+      folder: `fee-receipt`,
+    });
 
     const todo = await studentModal.updateOne(
       { _id: _id },
@@ -428,25 +436,25 @@ export const insertUser = async (req, res) => {
     if (req.body.pageFor == "admissionHead") {
       isAdmissionHead = true;
     } else {
-      officeLocation = req.body.office_location
+      officeLocation = req.body.office_location;
       if (!officeLocation) {
         return res.status(400).json({
-          message: "Office Location needed"
-        })
+          message: "Office Location needed",
+        });
       }
 
       if (officeLocation == "Noida") {
-        officeLocation = "CKN" + (new Date()).getFullYear();
+        officeLocation = "CKN" + new Date().getFullYear();
       } else if (officeLocation == "Kanpur") {
-        officeLocation = "CKK" + (new Date()).getFullYear();
+        officeLocation = "CKK" + new Date().getFullYear();
       }
-
     }
     counsellorId = officeLocation;
     counsellorLength = await assignmentConfigModal.findOne({});
     if (!counsellorLength.lastCounsellorLength) {
-      counsellorLength.lastCounsellorLength = await counsellorModal.countDocuments({});
-      await counsellorLength.save()
+      counsellorLength.lastCounsellorLength =
+        await counsellorModal.countDocuments({});
+      await counsellorLength.save();
     }
     counsellorLength = counsellorLength.lastCounsellorLength + 1;
     counsellorId += `${counsellorLength}`.padStart(3, "0");
@@ -463,13 +471,16 @@ export const insertUser = async (req, res) => {
       password: spassword,
       is_admin: 0,
       college_website: req.body.college_website,
-      who_am_i: isAdmissionHead ? "admissionHead" : "counsellor"
+      who_am_i: isAdmissionHead ? "admissionHead" : "counsellor",
     });
 
     const userData = await user.save();
 
     if (req.body.pageFor == "counsellor") {
-      const admissionHead = await counsellorModal.findOne({ college_website: req.body.college_website, who_am_i: "admissionHead" });
+      const admissionHead = await counsellorModal.findOne({
+        college_website: req.body.college_website,
+        who_am_i: "admissionHead",
+      });
       if (admissionHead) {
         // add counsellor under admissionHead
         admissionHead.assignedCounsellors.push(userData._id);
@@ -477,20 +488,23 @@ export const insertUser = async (req, res) => {
       }
     }
     // update counsellor length count
-    await assignmentConfigModal.updateOne({}, {
-      $set: { lastCounsellorLength: counsellorLength }
-    });
+    await assignmentConfigModal.updateOne(
+      {},
+      {
+        $set: { lastCounsellorLength: counsellorLength },
+      }
+    );
     console.log(userData);
     res.send(userData);
 
     // if (userData) {
     //   // sendVerifyMail(req.body.username, req.body.email, userData._id);
-    // } 
+    // }
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({
-      message: "Something Went Wrong"
-    })
+      message: "Something Went Wrong",
+    });
   }
 };
 
@@ -535,11 +549,11 @@ export const verifyLogin = async (req, res) => {
           //   return res.json({ status: "ok", data: userData._id, type: "admin" });
           // } else {
           token = generateToken(userData, false);
-          res.cookie('token', token, {
+          res.cookie("token", token, {
             httpOnly: true,
-            sameSite: 'none',
-            secure: true
-          })
+            sameSite: "none",
+            secure: true,
+          });
           return res.json({ status: "ok", data: category_name, type: "agent" });
 
           // }
@@ -586,17 +600,17 @@ export const verifyLogin = async (req, res) => {
 
           // Set the JWT token in a cookie
           // res.cookie('token', token, {
-          //   httpOnly: true,  
-          //   secure: false, 
-          //   maxAge: 3600000, 
+          //   httpOnly: true,
+          //   secure: false,
+          //   maxAge: 3600000,
           //   sameSite: 'none',
           //   priority: 'High'
           // });
-          res.cookie('token', token, {
+          res.cookie("token", token, {
             httpOnly: true,
-            sameSite: 'none',
-            secure: true
-          })
+            sameSite: "none",
+            secure: true,
+          });
 
           if (res.status(201)) {
             if (userData.is_admin === 1) {
@@ -606,7 +620,10 @@ export const verifyLogin = async (req, res) => {
                 type: "admin",
               });
             } else {
-              if (userData.college_website != "" && userData.who_am_i == "admissionHead") {
+              if (
+                userData.college_website != "" &&
+                userData.who_am_i == "admissionHead"
+              ) {
                 return res.json({
                   status: "ok",
                   data: userData._id,
@@ -672,31 +689,28 @@ export const assignAuto = async (req, res) => {
             $in: [
               /off_rec/,
               /localhost/,
-
-            ]
-          }
-        }
+              "https://naiminath-ayurveda.vercel.app/",
+            ],
+          },
+        },
       },
       {
         sourceId: {
-          $ne: ""  // $ne (not equal) to an empty string
-        }
+          $ne: "", // $ne (not equal) to an empty string
+        },
       },
       {
         sourceId: {
-          $ne: null  // $ne (not equal) to an empty string
-        }
+          $ne: null, // $ne (not equal) to an empty string
+        },
       },
       // Exclude records with 'office_rec' in sourceId
       { assignedCouns: "" }, // Filter records with empty 'assignedCouns'
-      { neetScore: { $regex: /^\d+$/, $lt: "350" } }
-    ]
+      { neetScore: { $regex: /^\d+$/, $lt: "350" } },
+    ],
   });
 
-
-
-
-  console.log(students, "stude");
+  // console.log(students.length, "stude");
 
   // const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
   // let counsellorIndex = assignmentConfig
@@ -1096,7 +1110,7 @@ export const getCounsellorsWithStudents = async (req, res) => {
   try {
     // Fetch all counsellors with allLeads equal to 0
     const counsellors = await counsellorModal.find({ allLeads: 0 });
-    console.log(counsellors, "Kfjdsljfl")
+    console.log(counsellors, "Kfjdsljfl");
 
     // Fetch all students where assignedCouns is not empty
     const students = await studentModal.find({});
@@ -1105,7 +1119,7 @@ export const getCounsellorsWithStudents = async (req, res) => {
     const counsellorMap = counsellors.reduce((acc, counsellor) => {
       acc[counsellor._id.toString()] = {
         counsellor,
-        students: []
+        students: [],
       };
       return acc;
     }, {});
@@ -1127,7 +1141,6 @@ export const getCounsellorsWithStudents = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
 
 export const getVisitLeads = async (req, res) => {
   const visitedStud = await studentModal.find({
@@ -1163,27 +1176,31 @@ export const assignOfflineLeadsToCouncellor = async (req, res) => {
 };
 
 export const removeCounsellor = async (req, res) => {
-  const counsellorId = req.params.id
-  console.log(counsellorId, "id to remove")
+  const counsellorId = req.params.id;
+  console.log(counsellorId, "id to remove");
 
   try {
     // Remove the counsellor document
     await counsellorModal.findByIdAndDelete(counsellorId);
 
     // Update student documents
-    await studentModal.updateMany({ assignedCouns: counsellorId }, { $set: { assignedCouns: '' } });
+    await studentModal.updateMany(
+      { assignedCouns: counsellorId },
+      { $set: { assignedCouns: "" } }
+    );
 
-    res.status(200).json({ message: 'Counsellor removed and students updated successfully.' });
+    res
+      .status(200)
+      .json({
+        message: "Counsellor removed and students updated successfully.",
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Error removing counsellor and updating students.' });
+    res
+      .status(500)
+      .json({ message: "Error removing counsellor and updating students." });
   }
 };
-
-
-
-
-
 
 export const getCounsellorRevenueDetails = async (req, res) => {
   try {
@@ -1197,13 +1214,15 @@ export const getCounsellorRevenueDetails = async (req, res) => {
     const admissionHeadId = req.query.admissionHeadId;
     let college_website;
     if (admissionHeadId) {
-      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      const admissionHead = await counsellorModal.findOne({
+        _id: admissionHeadId,
+      });
       college_website = admissionHead.college_website;
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }
-    college_website ? stuFilter.sourceId = college_website : null;
+    };
+    college_website ? (stuFilter.sourceId = college_website) : null;
     const counsellorStudents = await studentModal.aggregate([
       {
         $match: stuFilter,
@@ -1290,13 +1309,15 @@ export const getCoursesCounselled = async (req, res) => {
     const admissionHeadId = req.query.admissionHeadId;
     let college_website;
     if (admissionHeadId) {
-      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      const admissionHead = await counsellorModal.findOne({
+        _id: admissionHeadId,
+      });
       college_website = admissionHead.college_website;
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }
-    college_website ? stuFilter.sourceId = college_website : null;
+    };
+    college_website ? (stuFilter.sourceId = college_website) : null;
     const coursesAggregated = await studentModal.aggregate([
       { $match: stuFilter },
       { $group: { _id: "$courseSelected", count: { $sum: 1 } } },
@@ -1320,17 +1341,18 @@ export const getCounsellorLeadDetails = async (req, res) => {
     const admissionHeadId = req.query.admissionHeadId;
     let college_website;
     if (admissionHeadId) {
-      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      const admissionHead = await counsellorModal.findOne({
+        _id: admissionHeadId,
+      });
       college_website = admissionHead.college_website;
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }
-    college_website ? stuFilter.sourceId = college_website : null;
+    };
+    college_website ? (stuFilter.sourceId = college_website) : null;
     const totalLeads = (await studentModal.find(stuFilter)).length;
 
-
-    console.log(totalLeads)
+    console.log(totalLeads);
     // const completedLeads = (await studentModal.find({ assignedCouns: counsellerId,  $where: "this.remarks.FollowUp3.length > 1" }));
     const stage1Students = await studentModal.aggregate([
       {
@@ -1349,6 +1371,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
         },
       },
     ]);
+
     const stage2Students = await studentModal.aggregate([
       {
         $match: stuFilter,
@@ -1366,6 +1389,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
         },
       },
     ]);
+
     const counselledStudents = await studentModal.aggregate([
       {
         $match: stuFilter,
@@ -1381,6 +1405,7 @@ export const getCounsellorLeadDetails = async (req, res) => {
         },
       },
     ]);
+
     const completedLeads = counselledStudents.length;
 
     const stage1Obj = {};
@@ -1501,13 +1526,15 @@ export const getCounsellorPendingAmount = async (req, res) => {
     const admissionHeadId = req.query.admissionHeadId;
     let college_website;
     if (admissionHeadId) {
-      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      const admissionHead = await counsellorModal.findOne({
+        _id: admissionHeadId,
+      });
       college_website = admissionHead.college_website;
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }
-    college_website ? stuFilter.sourceId = college_website : null;
+    };
+    college_website ? (stuFilter.sourceId = college_website) : null;
     const counselledStudents = await studentModal.aggregate([
       {
         $match: stuFilter,
@@ -1540,7 +1567,9 @@ export const getCounsellorPendingAmount = async (req, res) => {
         );
         let totalAmountPaid = 0;
         for (let j = 0; j < student.remarks.FollowUp3.length; j++) {
-          totalAmountPaid += parseInt(student.remarks.FollowUp3[j].preBookingAmount);
+          totalAmountPaid += parseInt(
+            student.remarks.FollowUp3[j].preBookingAmount
+          );
         }
         let pendingAmount = studentPackage - totalAmountPaid;
         studentObj.pendingAmount = pendingAmount < 0 ? 0 : pendingAmount;
@@ -1569,13 +1598,15 @@ export const getAssignedCounsellorStudents = async (req, res) => {
     const admissionHeadId = req.query.admissionHeadId;
     let college_website;
     if (admissionHeadId) {
-      const admissionHead = await counsellorModal.findOne({ _id: admissionHeadId });
+      const admissionHead = await counsellorModal.findOne({
+        _id: admissionHeadId,
+      });
       college_website = admissionHead.college_website;
     }
     let stuFilter = {
       assignedCouns: counsellerId,
-    }
-    college_website ? stuFilter.sourceId = college_website : null;
+    };
+    college_website ? (stuFilter.sourceId = college_website) : null;
     const students = await studentModal.find(stuFilter);
 
     return res.status(200).json({
@@ -1593,15 +1624,15 @@ export const getOfficeReport = async (req, res) => {
   try {
     const office = req.query.office?.toUpperCase();
     let college = req.query.college;
-    college = college?.replaceAll("'","")
+    college = college?.replaceAll("'", "");
     // console.log(college , "string..")
 
-    let counsellorFilter = {}
-    let studentFilter = {}
+    let counsellorFilter = {};
+    let studentFilter = {};
 
-    if(college){
-      counsellorFilter.college_website = college
-      studentFilter.sourceId = college
+    if (college) {
+      counsellorFilter.college_website = college;
+      studentFilter.sourceId = college;
     } else if (office) {
       // Filter by office if office parameter is provided and no college parameter is present
       if (office.length !== 1) {
@@ -1609,7 +1640,9 @@ export const getOfficeReport = async (req, res) => {
       }
       counsellorFilter.counsellor_id = new RegExp(`^..${office}`);
     } else {
-      return res.status(400).send("Either Office or College Parameter is required");
+      return res
+        .status(400)
+        .send("Either Office or College Parameter is required");
     }
     // if (!office || office.length !== 1) {
     //   return res.status(400).send("Invalid Office Parameter");
@@ -1619,7 +1652,7 @@ export const getOfficeReport = async (req, res) => {
     //   counsellor_id: new RegExp(`^..${office}`),
     // });
 
-    console.log(counsellorFilter)
+    console.log(counsellorFilter);
 
     const counsellors = await counsellorModal.find(counsellorFilter);
 
@@ -1659,7 +1692,6 @@ export const getOfficeReport = async (req, res) => {
     let incomingNotAvailable = 0;
     let notReceived = 0;
 
-
     let pendingAmounts = [];
 
     students.forEach((student) => {
@@ -1676,7 +1708,6 @@ export const getOfficeReport = async (req, res) => {
         let totalPaid = 0;
         let packageAmount = 0;
 
-
         student.remarks.FollowUp3.forEach((followUp, index) => {
           const preBookingAmount = parseFloat(followUp.preBookingAmount || 0);
           totalPaid += preBookingAmount;
@@ -1688,7 +1719,9 @@ export const getOfficeReport = async (req, res) => {
           // Calculate paid counselling and associate college based on latest remark
           if (index === student.remarks.FollowUp3.length - 1) {
             const packageAmountMatch = followUp.additionalOption.match(/\d+/);
-            packageAmount = packageAmountMatch ? parseInt(packageAmountMatch[0]) * 1000 : 0;
+            packageAmount = packageAmountMatch
+              ? parseInt(packageAmountMatch[0]) * 1000
+              : 0;
 
             if (followUp.subject.includes("Paid Counselling")) {
               paidCounselling++;
@@ -1709,10 +1742,9 @@ export const getOfficeReport = async (req, res) => {
             name: student.name,
             packageAmount,
             totalPaid,
-            pendingAmount
+            pendingAmount,
           });
         }
-
       } else if (hasFollowUp2) {
         totalFollowUp2++;
 
@@ -1729,7 +1761,8 @@ export const getOfficeReport = async (req, res) => {
       } else if (hasFollowUp1) {
         totalFollowUp1++;
 
-        const latestFollowUp1 = student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
+        const latestFollowUp1 =
+          student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
         if (latestFollowUp1.subject.includes("Switch Off")) {
           switchOff++;
         } else if (latestFollowUp1.subject.includes("Not Reachable")) {
@@ -1778,7 +1811,7 @@ export const getOfficeReport = async (req, res) => {
         associateCollege,
       },
       students,
-      pendingAmounts
+      pendingAmounts,
     });
 
     // return res.json(students)
@@ -1804,7 +1837,6 @@ export const getOfficeReport = async (req, res) => {
 //       return acc;
 //     }, {});
 
-
 //     let admissionMap = {};
 //     Object.keys(groupedStudents).forEach(async (key) => {
 //       let totalAdmissions = 0;
@@ -1829,7 +1861,6 @@ export const getOfficeReport = async (req, res) => {
 
 //     });
 
-
 //     return res.status(200).json(admissionMap);
 
 //   } catch (error) {
@@ -1838,15 +1869,15 @@ export const getOfficeReport = async (req, res) => {
 //   }
 // };
 
-
 export const getTopPerformer = async (req, res) => {
   try {
-
-    const allCouncellor = await counsellorModal.find().select('_id name counsellor_id');
+    const allCouncellor = await counsellorModal
+      .find()
+      .select("_id name counsellor_id");
     const allStudents = await studentModal.find();
     let totalPerformance = [];
     allCouncellor.forEach((cons) => {
-      let isPreBookingAmount = false
+      let isPreBookingAmount = false;
       let admission = 0;
       allStudents.forEach((stud) => {
         if (stud.assignedCouns == cons._id) {
@@ -1854,27 +1885,29 @@ export const getTopPerformer = async (req, res) => {
             if (parseInt(follow.preBookingAmount) > 0) {
               isPreBookingAmount = true;
             }
-          })
-
+          });
         }
         if (isPreBookingAmount) {
           admission += 1;
           isPreBookingAmount = false;
         }
       });
-      totalPerformance.push({ name: cons.name, id: cons.counsellor_id, admission, objectId: cons._id });
+      totalPerformance.push({
+        name: cons.name,
+        id: cons.counsellor_id,
+        admission,
+        objectId: cons._id,
+      });
     });
 
-    return res.status(200).json(
-      {
-        sucess: true,
-        totalPerformance
-      });
+    return res.status(200).json({
+      sucess: true,
+      totalPerformance,
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: "Server Error" });
   }
-}
-
+};
 
 export const getUnassignedLeads = async (req, res) => {
   try {
@@ -1883,16 +1916,14 @@ export const getUnassignedLeads = async (req, res) => {
 
     return res.status(200).json({
       message: "Sucess",
-      data: students
-    })
-
+      data: students,
+    });
   } catch (err) {
     return res.status(500).json({
-      message: "Something Went Wrong"
-    })
+      message: "Something Went Wrong",
+    });
   }
-}
-
+};
 
 export const updatePassword = async (req, res) => {
   try {
@@ -1902,7 +1933,7 @@ export const updatePassword = async (req, res) => {
 
     if (!newPass) {
       return res.status(400).json({
-        message: "Please Provide Password"
+        message: "Please Provide Password",
       });
     }
 
@@ -1914,7 +1945,7 @@ export const updatePassword = async (req, res) => {
     const user = await counsellorModal.findById(userId);
     if (!user) {
       return res.status(404).json({
-        message: "User not found"
+        message: "User not found",
       });
     }
 
@@ -1922,65 +1953,68 @@ export const updatePassword = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      message: "Password updated successfully"
+      message: "Password updated successfully",
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({
-      message: "Something went wrong"
+      message: "Something went wrong",
     });
   }
-}
-
+};
 
 export const getCounsellorByNumber = async (req, res) => {
   try {
     const bodyData = req.body;
     if (!bodyData.mobileNo) {
       return res.status(400).json({
-        message: "Please Provide Mobile No"
-      })
+        message: "Please Provide Mobile No",
+      });
     }
-    const counsellor = await counsellorModal.findOne({ mobile: bodyData.mobileNo });
+    const counsellor = await counsellorModal.findOne({
+      mobile: bodyData.mobileNo,
+    });
 
     return res.status(200).json({
       message: "Success",
-      data: counsellor
-    })
+      data: counsellor,
+    });
   } catch (err) {
     return res.status(500).json({
-      message: "Something Went Wrong"
-    })
+      message: "Something Went Wrong",
+    });
   }
-}
+};
 
 export const getAdmissionHeadCounsellors = async (req, res) => {
   try {
     const admId = req.params.admissionHeadId;
-    console.log(admId, "id in  head")
-    const counsellorData = await counsellorModal.findOne({ _id: admId, who_am_i: "admissionHead" }).populate("assignedCounsellors");
+    console.log(admId, "id in  head");
+    const counsellorData = await counsellorModal
+      .findOne({ _id: admId, who_am_i: "admissionHead" })
+      .populate("assignedCounsellors");
 
     return res.status(200).json({
       message: "Success",
-      data: counsellorData
-    })
-
+      data: counsellorData,
+    });
   } catch (err) {
     return res.status(500).json({
       message: "Something Went Wrong",
-      error: err.message
-    })
+      error: err.message,
+    });
   }
-}
+};
 
 export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
   try {
     const admId = req.params.admissionHeadId;
-    const isCollegeSpecific = req.query.collegeSpecific === 'true';
+    const isCollegeSpecific = req.query.collegeSpecific === "true";
     console.log(isCollegeSpecific);
-    console.log(admId, "id in  head")
-    const counsellorData = await counsellorModal.findOne({ _id: admId, who_am_i: "admissionHead" }).populate("assignedCounsellors");
+    console.log(admId, "id in  head");
+    const counsellorData = await counsellorModal
+      .findOne({ _id: admId, who_am_i: "admissionHead" })
+      .populate("assignedCounsellors");
 
     const counsellorWithStudents = [];
 
@@ -1998,10 +2032,9 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
 
       // Apply college website filter only if it's a college-specific report
       if (isCollegeSpecific) {
-        console.log(isCollegeSpecific)
+        console.log(isCollegeSpecific);
         studentQuery.sourceId = collegeWebsite;
       }
-
 
       const students = await studentModal.find(studentQuery);
 
@@ -2022,16 +2055,15 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
       let totalRevenue = 0;
       let totalAdmissions = 0;
 
-
       // Process each student
       students.forEach((student) => {
         let hasPreBookingAmount = false;
         const remarks = student.remarks || {};
 
         if (
-          remarks.FollowUp1 && remarks.FollowUp1.length > 0 ||
-          remarks.FollowUp2 && remarks.FollowUp2.length > 0 ||
-          remarks.FollowUp3 && remarks.FollowUp3.length > 0
+          (remarks.FollowUp1 && remarks.FollowUp1.length > 0) ||
+          (remarks.FollowUp2 && remarks.FollowUp2.length > 0) ||
+          (remarks.FollowUp3 && remarks.FollowUp3.length > 0)
         ) {
           totalCallsDone++;
         }
@@ -2046,7 +2078,7 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
             }
 
             if (followUp.preBookingAmount > 0) {
-              hasPreBookingAmount = true
+              hasPreBookingAmount = true;
             }
           });
 
@@ -2111,16 +2143,15 @@ export const getAdmissionHeadCounsellorsWithStudents = async (req, res) => {
     // Response
     return res.status(200).json({
       message: "Success",
-      data: counsellorWithStudents
+      data: counsellorWithStudents,
     });
-
   } catch (err) {
     return res.status(500).json({
       message: "Something Went Wrong",
-      error: err.message
-    })
+      error: err.message,
+    });
   }
-}
+};
 
 export const showCounsCollegeLeads = async (req, res) => {
   const id = req.params.id;
@@ -2137,13 +2168,12 @@ export const showCounsCollegeLeads = async (req, res) => {
     console.log(collegeWebsite, "website");
 
     if (collegeWebsite) {
-      const studentList = await studentModal.find(
-
-        {
-          $and: [
-            { sourceId: { $regex: collegeWebsite, $options: "i" } },
-            { assignedCouns: id }],
-        });
+      const studentList = await studentModal.find({
+        $and: [
+          { sourceId: { $regex: collegeWebsite, $options: "i" } },
+          { assignedCouns: id },
+        ],
+      });
       // $regex is used for case-insensitive substring matching
 
       // if (studentList.length === 0) {
@@ -2151,47 +2181,50 @@ export const showCounsCollegeLeads = async (req, res) => {
       // }
 
       res.status(200).json(studentList);
-
     } else {
-      return res.status(403).json({ msg: "You are not authorized to access these leads" })
+      return res
+        .status(403)
+        .json({ msg: "You are not authorized to access these leads" });
     }
   } catch (error) {
     res.status(500).json({ error: error });
   }
 };
 
-
 export const logout = (req, res) => {
   try {
-    return res.clearCookie('token', {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true
-    }).json({
-      status: "Success",
-      message: "Logged Out Succesfully"
-    });
+    return res
+      .clearCookie("token", {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+      })
+      .json({
+        status: "Success",
+        message: "Logged Out Succesfully",
+      });
   } catch (err) {
     return res.status(500).json({
       status: "Error",
-      message: "Something Went Wrong"
-    })
+      message: "Something Went Wrong",
+    });
   }
-}
-
+};
 
 export const assignCollegesSeniorAdmHead = async (req, res) => {
-  const { counsellorID, colleges } = req.body
+  const { counsellorID, colleges } = req.body;
   try {
-    const exisitingCounsellor = await counsellorModal.findById(counsellorID)
+    const exisitingCounsellor = await counsellorModal.findById(counsellorID);
 
-    if(!exisitingCounsellor){
-      return res.status(404).json({message: "Senior Admission Head Not Found"});
+    if (!exisitingCounsellor) {
+      return res
+        .status(404)
+        .json({ message: "Senior Admission Head Not Found" });
     }
 
-    const currentColleges = new Set(exisitingCounsellor.multiple_colleges)
+    const currentColleges = new Set(exisitingCounsellor.multiple_colleges);
 
-    colleges.forEach((college) => currentColleges.add(college))
+    colleges.forEach((college) => currentColleges.add(college));
 
     const updatedColleges = Array.from(currentColleges);
 
@@ -2201,33 +2234,36 @@ export const assignCollegesSeniorAdmHead = async (req, res) => {
         $set: {
           who_am_i: "senior_adm_head",
           multiple_colleges: updatedColleges,
-        }
+        },
       },
 
       { new: true }
-    )
+    );
 
     if (!updatedCounsellor) {
-      return res.status(404).json({ message: "Counsellor not found" })
+      return res.status(404).json({ message: "Counsellor not found" });
     }
 
     res.status(200).json({
       message: "Counsellor Updated Successfully",
-      counsellor: updatedCounsellor
-    })
+      counsellor: updatedCounsellor,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error updating counsellor", error })
+    res.status(500).json({ message: "Error updating counsellor", error });
   }
-}
-
+};
 
 export const getAllSeniorAdmHeads = async (req, res) => {
   try {
     // Find all counsellors where who_am_i is 'senior_adm_head'
-    const seniorAdmHeads = await counsellorModal.find({ who_am_i: "senior_adm_head" });
+    const seniorAdmHeads = await counsellorModal.find({
+      who_am_i: "senior_adm_head",
+    });
 
     if (seniorAdmHeads.length === 0) {
-      return res.status(404).json({ message: "No Senior Admission Heads found" });
+      return res
+        .status(404)
+        .json({ message: "No Senior Admission Heads found" });
     }
 
     res.status(200).json({
@@ -2235,64 +2271,69 @@ export const getAllSeniorAdmHeads = async (req, res) => {
       seniorAdmHeads,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving Senior Admission Heads", error });
+    res
+      .status(500)
+      .json({ message: "Error retrieving Senior Admission Heads", error });
   }
 };
 
-
-export const getAssignedColleges = async (req, res) =>{
+export const getAssignedColleges = async (req, res) => {
   try {
     const seniorAdmHeads = await counsellorModal.find(
-      {who_am_i: "senior_adm_head" },
-      {multiple_colleges: 1, _id: 0}
-    )
+      { who_am_i: "senior_adm_head" },
+      { multiple_colleges: 1, _id: 0 }
+    );
 
-    const assignedColleges = seniorAdmHeads.map((head) => head.multiple_colleges).flat()
+    const assignedColleges = seniorAdmHeads
+      .map((head) => head.multiple_colleges)
+      .flat();
 
-    return res.status(200).json({assignedColleges})
-
+    return res.status(200).json({ assignedColleges });
   } catch (error) {
-    return res.status(500).json({message: "Error fetching already assigned colleges", error})
+    return res
+      .status(500)
+      .json({ message: "Error fetching already assigned colleges", error });
   }
-}
+};
 
-
-
-
-export const getSeniorAdmHeadReport = async (req, res) =>{
+export const getSeniorAdmHeadReport = async (req, res) => {
   try {
-    const seniorAdmHeadID = req.query.seniorAdmHeadID
-    
-    const seniorAdmHead = await counsellorModal.findById(seniorAdmHeadID)
-  
-    if(!seniorAdmHead || !seniorAdmHead.multiple_colleges){
-      return res.status(404).json({message: "Senior Admission Head not found or no colleges assigned"})
+    const seniorAdmHeadID = req.query.seniorAdmHeadID;
+
+    const seniorAdmHead = await counsellorModal.findById(seniorAdmHeadID);
+
+    if (!seniorAdmHead || !seniorAdmHead.multiple_colleges) {
+      return res
+        .status(404)
+        .json({
+          message: "Senior Admission Head not found or no colleges assigned",
+        });
     }
-  
-    const colleges = seniorAdmHead.multiple_colleges
-  
-    let reportData = []
-  
-    for(let college of colleges){
-      console.log(college)
-      let counsellorFilter = {college_website: college}
-      let studentFilter = {sourceId: college}
-  
-      const counsellors = await counsellorModal.find(counsellorFilter)
-  
+
+    const colleges = seniorAdmHead.multiple_colleges;
+
+    let reportData = [];
+
+    for (let college of colleges) {
+      console.log(college);
+      let counsellorFilter = { college_website: college };
+      let studentFilter = { sourceId: college };
+
+      const counsellors = await counsellorModal.find(counsellorFilter);
+
       // if (counsellors.length === 0) {
       //   continue; // Skip if no counselors found for this college
       // }
-  
-      const counsellorIds = counsellors.map((c) => c._id)
-  
-      studentFilter.assignedCouns = {$in: counsellorIds}
-      const students = await studentModal.find(studentFilter)
-  
+
+      const counsellorIds = counsellors.map((c) => c._id);
+
+      studentFilter.assignedCouns = { $in: counsellorIds };
+      const students = await studentModal.find(studentFilter);
+
       // if (students.length === 0) {
       //   continue; // Skip if no students found for this college
       // }
-  
+
       let totalRevenue = 0;
       let totalAdmissions = 0;
       let totalFollowUp1 = 0;
@@ -2310,10 +2351,9 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
       let firstCallDone = 0;
       let incomingNotAvailable = 0;
       let notReceived = 0;
-  
-  
+
       let pendingAmounts = [];
-  
+
       students.forEach((student) => {
         let hasPreBookingAmount = false;
         let hasFollowUp3 =
@@ -2322,26 +2362,27 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
           student.remarks.FollowUp2 && student.remarks.FollowUp2.length > 0;
         let hasFollowUp1 =
           student.remarks.FollowUp1 && student.remarks.FollowUp1.length > 0;
-  
+
         if (hasFollowUp3) {
           totalFollowUp3++;
           let totalPaid = 0;
           let packageAmount = 0;
-  
-  
+
           student.remarks.FollowUp3.forEach((followUp, index) => {
             const preBookingAmount = parseFloat(followUp.preBookingAmount || 0);
             totalPaid += preBookingAmount;
             totalRevenue += preBookingAmount;
-  
+
             if (preBookingAmount > 0) {
               hasPreBookingAmount = true;
             }
             // Calculate paid counselling and associate college based on latest remark
             if (index === student.remarks.FollowUp3.length - 1) {
               const packageAmountMatch = followUp.additionalOption.match(/\d+/);
-              packageAmount = packageAmountMatch ? parseInt(packageAmountMatch[0]) * 1000 : 0;
-  
+              packageAmount = packageAmountMatch
+                ? parseInt(packageAmountMatch[0]) * 1000
+                : 0;
+
               if (followUp.subject.includes("Paid Counselling")) {
                 paidCounselling++;
               } else if (followUp.subject.includes("Associate College")) {
@@ -2349,11 +2390,11 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
               }
             }
           });
-  
+
           if (hasPreBookingAmount) {
             totalAdmissions++;
           }
-  
+
           const pendingAmount = packageAmount - totalPaid;
           if (pendingAmount > 0) {
             pendingAmounts.push({
@@ -2361,13 +2402,12 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
               name: student.name,
               packageAmount,
               totalPaid,
-              pendingAmount
+              pendingAmount,
             });
           }
-  
         } else if (hasFollowUp2) {
           totalFollowUp2++;
-  
+
           // Calculate hot, warm, and cold leads based on latest remark in FollowUp2
           const latestFollowUp2 =
             student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
@@ -2380,8 +2420,9 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
           }
         } else if (hasFollowUp1) {
           totalFollowUp1++;
-  
-          const latestFollowUp1 = student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
+
+          const latestFollowUp1 =
+            student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
           if (latestFollowUp1.subject.includes("Switch Off")) {
             switchOff++;
           } else if (latestFollowUp1.subject.includes("Not Reachable")) {
@@ -2394,18 +2435,21 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
             firstCallDone++;
           } else if (latestFollowUp1.subject.includes("Not Received")) {
             notReceived++;
-          } else if (latestFollowUp1.subject.includes("Incoming Not Available")) {
+          } else if (
+            latestFollowUp1.subject.includes("Incoming Not Available")
+          ) {
             incomingNotAvailable++;
           }
         }
       });
-  
+
       const totalCounsellors = counsellors.length;
       // const conversionExpected = Math.round((hotLead / totalFollowUp2) * 100);
-      const conversionExpected = totalFollowUp2 > 0 ? Math.round((hotLead / totalFollowUp2) * 100) : 0;
+      const conversionExpected =
+        totalFollowUp2 > 0 ? Math.round((hotLead / totalFollowUp2) * 100) : 0;
 
       // console.log("second")
-  
+
       reportData.push({
         college,
         totalRevenue,
@@ -2434,57 +2478,61 @@ export const getSeniorAdmHeadReport = async (req, res) =>{
           associateCollege,
         },
         students,
-        pendingAmounts
+        pendingAmounts,
       });
 
       // console.log(reportData);
     }
-  
+
     return res.json({
       seniorAdmHeadID,
-      reportData
+      reportData,
     });
-    
   } catch (error) {
     return res.status(500).json({
       message: error.message,
     });
   }
+};
 
-}
-
-export const removeAssignedCollege = async (req, res) =>{
+export const removeAssignedCollege = async (req, res) => {
   try {
-    const {seniorAdmHeadID, college} = req.body
-  
-    if(!seniorAdmHeadID || !college){
-      return res.status(404).json({message: "Senior Adm Head and College are required"})
+    const { seniorAdmHeadID, college } = req.body;
+
+    if (!seniorAdmHeadID || !college) {
+      return res
+        .status(404)
+        .json({ message: "Senior Adm Head and College are required" });
     }
-  
-      const seniorAdmHead = await counsellorModal.findById(seniorAdmHeadID)
 
-      if(!seniorAdmHead || !seniorAdmHead.multiple_colleges){
-        return res.status(404).json({message: "Senior Admission Head not found or no colleges assigned."})
-      }
+    const seniorAdmHead = await counsellorModal.findById(seniorAdmHeadID);
 
-      const collegeIndex = seniorAdmHead.multiple_colleges.indexOf(college)
+    if (!seniorAdmHead || !seniorAdmHead.multiple_colleges) {
+      return res
+        .status(404)
+        .json({
+          message: "Senior Admission Head not found or no colleges assigned.",
+        });
+    }
 
-      if(collegeIndex === -1){
-        return res.status(404).json({message: "No college found in the list"})
-      }
+    const collegeIndex = seniorAdmHead.multiple_colleges.indexOf(college);
 
-      seniorAdmHead.multiple_colleges.splice(collegeIndex, 1);
+    if (collegeIndex === -1) {
+      return res.status(404).json({ message: "No college found in the list" });
+    }
 
-      await seniorAdmHead.save()
+    seniorAdmHead.multiple_colleges.splice(collegeIndex, 1);
 
-      return res.json({ message: "College removed successfully", updatedColleges: seniorAdmHead.multiple_colleges });
-    
+    await seniorAdmHead.save();
+
+    return res.json({
+      message: "College removed successfully",
+      updatedColleges: seniorAdmHead.multiple_colleges,
+    });
   } catch (error) {
-    return res.status(500).json({message: error.message})
+    return res.status(500).json({ message: error.message });
   }
-  
-}
-
+};
 
 export const getYoutubeLeads = async (req, res) => {
   try {
@@ -2492,24 +2540,162 @@ export const getYoutubeLeads = async (req, res) => {
     // const {source, campaign_id} = req.query
     // let students;
     // if(campaign_id != ''){
-      //   students = await studentModal.find({$and: [{source: source}, {sourceId: campaign_id}]});
-      // } else{
-        //   students = await studentModal.find({source: source});
-        // }
-        // const {source,} = req.query
-        const {source} = req.query
-        const students = await studentModal.find({source: source})
-        const uniqueSourceIds = await studentModal.distinct('sourceId', {source: source})
+    //   students = await studentModal.find({$and: [{source: source}, {sourceId: campaign_id}]});
+    // } else{
+    //   students = await studentModal.find({source: source});
+    // }
+    // const {source,} = req.query
+    const { source } = req.query;
+    const students = await studentModal.find({ source: source });
+    const uniqueSourceIds = await studentModal.distinct("sourceId", {
+      source: source,
+    });
 
     return res.status(200).json({
       message: "Sucess",
       data: students,
-      options: uniqueSourceIds
-    })
-
+      options: uniqueSourceIds,
+    });
   } catch (err) {
     return res.status(500).json({
-      message: "Something Went Wrong"
-    })
+      message: "Something Went Wrong",
+    });
   }
-}
+};
+
+export const downloadExcel = async (req, res) => {
+  try {
+    // Connect to MongoDB
+    const client = new MongoClient(process.env.MONGO_URI);
+    await client.connect();
+
+    const db = client.db("LMS");
+    const collection = db.collection("students");
+
+    // Perform aggregation to fetch data
+    const data = await collection
+      .aggregate([
+        {
+          $addFields: {
+            assignedCounsObjId: {
+              $cond: {
+                if: { $eq: ["$assignedCouns", ""] },
+                then: null,
+                else: { $toObjectId: "$assignedCouns" },
+              },
+            },
+            latestRemark: {
+              $let: {
+                vars: {
+                  followUp3: {
+                    $arrayElemAt: ["$remarks.FollowUp3.subject", -1],
+                  },
+                  followUp2: {
+                    $arrayElemAt: ["$remarks.FollowUp2.subject", -1],
+                  },
+                  followUp1: {
+                    $arrayElemAt: ["$remarks.FollowUp1.subject", -1],
+                  },
+                },
+                in: {
+                  $cond: {
+                    if: { $ne: ["$$followUp3", null] },
+                    then: "$$followUp3",
+                    else: {
+                      $cond: {
+                        if: { $ne: ["$$followUp2", null] },
+                        then: "$$followUp2",
+                        else: "$$followUp1",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "counsellors",
+            localField: "assignedCounsObjId",
+            foreignField: "_id",
+            as: "counselorDetails",
+          },
+        },
+        {
+          $unwind: {
+            path: "$counselorDetails",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            name: 1,
+            contactNumber: 1,
+            email: 1,
+            guardianName: 1,
+            district: 1,
+            state: 1,
+            courseSelected: 1,
+            preferredCollege: 1,
+            source: 1,
+            sourceId: 1,
+            neetScore: 1,
+            neetAIR: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            counselorName: "$counselorDetails.name",
+            latestRemark: 1,
+          },
+        },
+      ])
+      .toArray();
+
+    // Create a new workbook and worksheet
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Student Data");
+
+    // Define the columns in the worksheet
+    worksheet.columns = [
+      { header: "Name", key: "name", width: 20 },
+      { header: "Contact Number", key: "contactNumber", width: 20 },
+      { header: "Email", key: "email", width: 25 },
+      { header: "Guardian Name", key: "guardianName", width: 25 },
+      { header: "District", key: "district", width: 15 },
+      { header: "State", key: "state", width: 15 },
+      { header: "Course Selected", key: "courseSelected", width: 25 },
+      { header: "Preferred College", key: "preferredCollege", width: 40 },
+      { header: "Source", key: "source", width: 15 },
+      { header: "Source ID", key: "sourceId", width: 10 },
+      { header: "NEET Score", key: "neetScore", width: 10 },
+      { header: "NEET AIR", key: "neetAIR", width: 10 },
+      { header: "Counselor Name", key: "counselorName", width: 25 },
+      { header: "Latest Remark", key: "latestRemark", width: 50 },
+      { header: "Created At", key: "createdAt", width: 25 },
+      { header: "Updated At", key: "updatedAt", width: 25 },
+    ];
+
+    // Add the data rows to the worksheet
+    worksheet.addRows(data);
+
+    // Set the response headers to prompt file download
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=StudentData.xlsx"
+    );
+
+    // Write the workbook to the response
+    await workbook.xlsx.write(res);
+    res.end();
+
+    // Close the MongoDB connection
+    await client.close();
+  } catch (error) {
+    console.error("Failed to export to Excel:", error);
+    res.status(500).send("Failed to export to Excel");
+  }
+};

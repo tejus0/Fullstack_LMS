@@ -147,7 +147,6 @@ function clickAgentButton(name,password) {
             const scriptElement = window.location.href.includes('localhost') ? document.querySelector('script[src="http://localhost:4000/api/v1/student-form/form.js"]') :  document.querySelector('script[src="https://ntechzy.in/api/v1/student-form/form.js"]')
             
             
-            
             if (!scriptElement) {
               console.error('Script element with src="Form.js" not found.');
               return;
@@ -267,10 +266,18 @@ function createForm(courseOptions, styles, logo, contact, divID) {
   logoElement.classList.add("logo-style");
   logoAndContactContainer.appendChild(logoElement);
 
-  const contactElement = document.createElement("div");
+  // const contactElement = document.createElement("div");
+  // contactElement.textContent = "Contact us: " + contact;
+  // contactElement.classList.add("contact-style");
+  // logoAndContactContainer.appendChild(contactElement);
+
+  const contactElement = document.createElement("a");
+  contactElement.href = "tel:" + contact
   contactElement.textContent = "Contact us: " + contact;
   contactElement.classList.add("contact-style");
   logoAndContactContainer.appendChild(contactElement);
+
+
   const form = document.createElement("form");
   form.id = "studentDetailsForm";
   form.classList.add("formWrapper");

@@ -32,7 +32,7 @@ import { logout } from "../../redux/authSlice";
 
 
 
-const ShowUnassignedLeads = () => {
+const ShowUnassignedLeads = ({modalOpen, setModalOpen}) => {
   console.log("first in show unassigned Leads")
   const [columns, setColumns] = useState([
     { visible: true, label: 'name' },
@@ -80,7 +80,7 @@ const ShowUnassignedLeads = () => {
   const [isAllSelected, setIsAllSelected] = useState(false);
 
 
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
   const [rangeStart, setRangeStart] = useState('');
   const [rangeEnd, setRangeEnd] = useState('');
   const [selectedCounsellor, setSelectedCounsellor] = useState('');

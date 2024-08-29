@@ -1,6 +1,6 @@
 import express from "express";
 
-import { createStudentProfile, getAllStudentProfile, getTodos, createTodos, deleteTodos, insertUser, getStudentProfile, verifyLogin, assignAuto, getCounsellorDataList, loginLoad, renameKey, cleatAllAssignedCouns, getArnavCounsellorDataList, createFollowUp3, insertAgent, slotBook, bookedSlot, formToSheet, insertFromSheet, getAgentLeads, showSpecificLeads, updateAdminAvailableDays, getAdminAvailableDays, getCounsellorInfo, getCounsellorsWithStudents, getVisitLeads, getCounsellorNames, assignOfflineLeadsToCouncellor, dateSorting, getTopPerformer , getCounsellorRevenueDetails, getCoursesCounselled, getCounsellorLeadDetails, getCounsellorPendingAmount, getAssignedCounsellorStudents, getOfficeReport,removeCounsellor,getUnassignedLeads, updatePassword, getCounsellorByNumber, getAdmissionHeadCounsellors,showCounsCollegeLeads, getAdmissionHeadCounsellorsWithStudents, logout, assignCollegesSeniorAdmHead, getAllSeniorAdmHeads, getAssignedColleges, getSeniorAdmHeadReport, removeAssignedCollege, getYoutubeLeads} from "../controller/studentForm.js";
+import { createStudentProfile, getAllStudentProfile, getTodos, createTodos, deleteTodos, insertUser, getStudentProfile, verifyLogin, assignAuto, getCounsellorDataList, loginLoad, renameKey, cleatAllAssignedCouns, getArnavCounsellorDataList, createFollowUp3, insertAgent, slotBook, bookedSlot, formToSheet, insertFromSheet, getAgentLeads, showSpecificLeads, updateAdminAvailableDays, getAdminAvailableDays, getCounsellorInfo, getCounsellorsWithStudents, getVisitLeads, getCounsellorNames, assignOfflineLeadsToCouncellor, dateSorting, getTopPerformer , getCounsellorRevenueDetails, getCoursesCounselled, getCounsellorLeadDetails, getCounsellorPendingAmount, getAssignedCounsellorStudents, getOfficeReport,removeCounsellor,getUnassignedLeads, updatePassword, getCounsellorByNumber, getAdmissionHeadCounsellors,showCounsCollegeLeads, getAdmissionHeadCounsellorsWithStudents, logout, assignCollegesSeniorAdmHead, getAllSeniorAdmHeads, getAssignedColleges, getSeniorAdmHeadReport, removeAssignedCollege, getYoutubeLeads, downloadExcel} from "../controller/studentForm.js";
 import { createCounsellor } from "../controller/counsellorDetail.js";
 import { upload } from "../middleware/multer.js";
 import { isLoggedIn, isSuperAdmin } from "../middleware/auth.js";
@@ -51,8 +51,6 @@ router.route("/getTopPerformer").get(isLoggedIn , getTopPerformer)
 // router.route("/getTopPerformer").get(getTopPerformer)
 
 
-
-
 router.route("/getCounsellorRevenueDetails/:id").get(isLoggedIn,getCounsellorRevenueDetails);
 router.route("/getCoursesCounselled/:counsellerId").get(isLoggedIn,getCoursesCounselled);
 router.route("/getCounsellorLeadDetails/:counsellerId").get(isLoggedIn,getCounsellorLeadDetails);
@@ -76,7 +74,7 @@ router.route("/removeAssignedCollege").post(isLoggedIn, removeAssignedCollege)
 router.route("/getYoutubeLeads").get(isLoggedIn, getYoutubeLeads)
 // router.route("/getCounsellorDataList/6672c48614be596e4ccb3b39").get(getArnavCounsellorDataList);
 
-
+router.route("/download-excel").get(isLoggedIn, downloadExcel)
 // router.route("/").get(tableFilter); mc
 router.route("/logout").get(logout)
 

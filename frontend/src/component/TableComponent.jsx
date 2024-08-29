@@ -3,7 +3,7 @@ import { Box, Typography, Table, TableContainer, TableHead, TableRow, TableCell,
 import { Link } from "react-router-dom";
 import { HiOutlineDocumentReport } from "react-icons/hi";
 
-const TableComponent = ({ data, title, leadsUnlocked, totalCallsDone, countHotCallsByCounsellor, countColdCallsByCounsellor, countWarmCallsByCounsellor }) => {
+const TableComponent = ({ data, title, touchedLeads, untouchedLeads, counsellorReport, countFollowUp3, paidCounselling, associateCollege, totalCallsDone, countHotCallsByCounsellor, countColdCallsByCounsellor, countWarmCallsByCounsellor }) => {
   return (
     <Box sx={{ my: 3 }}>
         {console.log(data)}
@@ -48,8 +48,26 @@ const TableComponent = ({ data, title, leadsUnlocked, totalCallsDone, countHotCa
                 <Typography variant="h6">Email</Typography>
               </TableCell>
               <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                <Typography variant="h6">Leads Unlocked</Typography>
+                <Typography variant="h6">Total Leads Assigned</Typography>
               </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="h6">Touched Leads</Typography>
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="h6">Untouched Leads</Typography>
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="h6">Total Admissions</Typography>
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="h6">Total FollowUp3</Typography>
+              </TableCell>
+              {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="h6">Paid Counselling</Typography>
+              </TableCell>
+              <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                <Typography variant="h6">Associate College</Typography>
+              </TableCell> */}
               <TableCell sx={{ whiteSpace: 'nowrap' }}>
                 <Typography variant="h6">Total Calls Done</Typography>
               </TableCell>
@@ -71,7 +89,13 @@ const TableComponent = ({ data, title, leadsUnlocked, totalCallsDone, countHotCa
                 <TableCell align="left">{item.counsellor.name}</TableCell>
                 <TableCell align="left">{item.counsellor.mobile}</TableCell>
                 <TableCell align="left">{item.counsellor.email}</TableCell>
-                <TableCell align="center">{leadsUnlocked(item.students)}</TableCell>
+                <TableCell align="center">{item.students.length}</TableCell>
+                <TableCell align="center">{touchedLeads(item.students)}</TableCell>
+                <TableCell align="center">{untouchedLeads(item.students)}</TableCell>
+                <TableCell align="center">{countFollowUp3(item.students)?.totalAdmissions}</TableCell>
+                <TableCell align="center">{countFollowUp3(item.students)?.totalFollowUp3}</TableCell>
+                {/* <TableCell align="center">{paidCounselling(item.students)}</TableCell>
+                <TableCell align="center">{associateCollege(item.students)}</TableCell> */}
                 <TableCell align="center">{totalCallsDone(item.students)}</TableCell>
                 <TableCell align="center">
                   {countHotCallsByCounsellor(item.students)}

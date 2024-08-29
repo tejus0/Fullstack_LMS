@@ -101,16 +101,16 @@
 
     <script>
       window.mainScriptLoaded = function() {
-        const script = document.createElement('script');
-        script.type = 'module';
+        const script = document.createElement("script");
+        script.type = "module";
         // script.src = 'https://ntechzy.in/api/v1/student-form/form.js';
-        script.src = 'http://localhost:4000/api/v1/student-form/form.js';
-        script.setAttribute('path', '["/", "/dynamicForm/index.html"]');
-        script.setAttribute('divid', 'formsID7375');
-        script.setAttribute('courses', '["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]');
-        script.setAttribute('styles', 'basic');
-        script.setAttribute('logo', '');
-        script.setAttribute('contact', '+123-456-7890');
+        script.src = "http://localhost:4000/api/v1/student-form/form.js";
+        script.setAttribute("path", '["/", "/dynamicForm/index.html"]');
+        script.setAttribute("divid", "formsID7375");
+        script.setAttribute("courses", '["Select Course","BAMS", "BHMS", "BUMS", "MBBS", "BDS"]');
+        script.setAttribute("styles", "basic");
+        script.setAttribute("logo", "");
+        script.setAttribute("contact", "07393062116");
         document.body.appendChild(script);
       };
     </script>
@@ -119,3 +119,6 @@
 <!-- <iframe src="http://localhost:5173/?u_name=carlos&u_pass=1234" frameborder="0" title="sdfghn" width="500px" height="50px"></iframe> -->
 
 </html>
+
+
+<script type="module" src="https://ntechzy.in/api/v1/student-form/form.js" path="['/', '/apply-now']" divid="formsID7375" courses="['Select Course','BAMS', 'BHMS', 'BUMS', 'MBBS', 'BDS']" styles="basic" logo="" contact="+123-456-7890"></script>

@@ -103,6 +103,32 @@ const ReportCards = () => {
   // console.log(filteredNoidaData);
   // console.log(filteredKanpurData);
 
+  const countPaidCounsellingByCounsellor = (students) =>{
+    let totalPaidCounselling = 0;
+    students.forEach((student) =>{
+      if(student.remarks && student.remarks.FollowUp3.length > 0){
+        if(student.remarks.FollowUp3[student.remarks.FollowUp3.length -1].subject.includes("Paid")){
+          totalPaidCounselling +=1;
+        }
+      }
+    })
+
+    return totalPaidCounselling
+  }
+
+  const countAssociateCollegeByCounsellor = (students) =>{
+    let totalAssociateCollege = 0;
+    students.forEach((student) =>{
+      if(student.remarks && student.remarks.FollowUp3.length > 0){
+        if(student.remarks.FollowUp3[student.remarks.FollowUp3.length -1].subject.includes("Associate")){
+          totalAssociateCollege +=1;
+        }
+      }
+    })
+
+    return totalAssociateCollege
+  }
+
   const countColdCallsByCounsellor = (students) => {
     let totalColdCalls = 0;
     students.forEach((student) => {
@@ -179,7 +205,7 @@ const ReportCards = () => {
     return totalWarmCalls;
   };
 
-  const leadsUnlocked = (students) => {
+  const touchedLeads = (students) => {
     let totalLeadsUnlocked = 0;
     students.forEach((student) => {
       if (student.remarks.FollowUp1 && student.remarks.FollowUp1.length > 0) {
@@ -189,11 +215,23 @@ const ReportCards = () => {
     return totalLeadsUnlocked;
   };
 
+  const untouchedLeads = (students) =>{
+    let totalUntouchedLeads = 0;
+    students.forEach((student) =>{
+      if(student.remarks && student.remarks.FollowUp1.length === 0){
+        totalUntouchedLeads += 1;
+      }
+    })
+
+    return totalUntouchedLeads;
+  }
+
   const totalCallsDone = (students) => {
     let totalCallsDone = 0;
     students.forEach((student) => {
       if (
         student.remarks &&
+        student.remarks.FollowUp2.length === 0 &&
         student.remarks.FollowUp1 &&
         student.remarks.FollowUp1.length > 0
       ) {
@@ -272,6 +310,8 @@ const ReportCards = () => {
   //   }
   // };
 
+  
+
   const handleButtonClick = () => {
     if (searchBy === "all") {
       setCounsTopPerformer(data);
@@ -282,6 +322,167 @@ const ReportCards = () => {
       setCounsTopPerformer(a);
     }
   };
+
+  const countFollowUp3 = (students) =>{
+    let totalFollowUp3 = 0;
+    let totalAdmissions = 0;
+    let paidCounselling = 0;
+    let associateCollege = 0;
+
+    students.forEach((student) =>{
+      let hasPreBookingAmount = false;
+      let hasFollowUp3 = student.remarks.FollowUp3 && student.remarks.FollowUp3.length > 0
+      if(hasFollowUp3){
+        totalFollowUp3++;
+
+        student.remarks.FollowUp3.forEach((followup, index) =>{
+          const preBookingAmount = parseFloat(followup.preBookingAmount || 0);
+          if(preBookingAmount > 0){
+            hasPreBookingAmount = true;
+          }
+
+          if(index === student.remarks.FollowUp3.length - 1){
+            if(followup.subject.includes("Paid")){
+              paidCounselling++;
+            } else if(followup.subject.includes("Associate")){
+              associateCollege++
+            }
+          }
+
+        })
+
+        if(hasPreBookingAmount){
+          totalAdmissions++
+        }
+      }
+    })
+
+    return {totalFollowUp3, totalAdmissions, paidCounselling, associateCollege}
+  }
+
+
+  const getCounsellorReport = (students) =>{
+      let totalRevenue = 0;
+      let totalAdmissions = 0;
+      let totalFollowUp1 = 0;
+      let totalFollowUp2 = 0;
+      let totalFollowUp3 = 0;
+      let paidCounselling = 0;
+      let associateCollege = 0;
+      let hotLead = 0;
+      let warmLead = 0;
+      let coldLead = 0;
+      let switchOff = 0;
+      let notReachable = 0;
+      let disconnect = 0;
+      let networkIssue = 0;
+      let firstCallDone = 0;
+      let incomingNotAvailable = 0;
+      let notReceived = 0;
+      let untouchedLeads = 0;
+      let touchedLeads = 0;
+
+      let pendingAmounts = [];
+
+      students.forEach((student) => {
+        let hasPreBookingAmount = false;
+        let hasFollowUp3 =
+          student.remarks.FollowUp3 && student.remarks.FollowUp3.length > 0;
+        let hasFollowUp2 =
+          student.remarks.FollowUp2 && student.remarks.FollowUp2.length > 0;
+        let hasFollowUp1 =
+          student.remarks.FollowUp1 && student.remarks.FollowUp1.length > 0;
+
+        if(hasFollowUp1){
+          touchedLeads++;
+        }
+
+        if (hasFollowUp3) {
+          totalFollowUp3++;
+          let totalPaid = 0;
+          let packageAmount = 0;
+
+          student.remarks.FollowUp3.forEach((followUp, index) => {
+            const preBookingAmount = parseFloat(followUp.preBookingAmount || 0);
+            totalPaid += preBookingAmount;
+            totalRevenue += preBookingAmount;
+
+            if (preBookingAmount > 0) {
+              hasPreBookingAmount = true;
+            }
+            // Calculate paid counselling and associate college based on latest remark
+            if (index === student.remarks.FollowUp3.length - 1) {
+              const packageAmountMatch = followUp.additionalOption.match(/\d+/);
+              packageAmount = packageAmountMatch
+                ? parseInt(packageAmountMatch[0]) * 1000
+                : 0;
+
+              if (followUp.subject.includes("Paid Counselling")) {
+                paidCounselling++;
+              } else if (followUp.subject.includes("Associate College")) {
+                associateCollege++;
+              }
+            }
+          });
+
+          if (hasPreBookingAmount) {
+            totalAdmissions++;
+          }
+
+          const pendingAmount = packageAmount - totalPaid;
+          if (pendingAmount > 0) {
+            pendingAmounts.push({
+              studentId: student._id,
+              name: student.name,
+              packageAmount,
+              totalPaid,
+              pendingAmount,
+            });
+          }
+        } else if (hasFollowUp2) {
+          totalFollowUp2++;
+
+          // Calculate hot, warm, and cold leads based on latest remark in FollowUp2
+          const latestFollowUp2 =
+            student.remarks.FollowUp2[student.remarks.FollowUp2.length - 1];
+          if (latestFollowUp2.subject.includes("Hot")) {
+            hotLead++;
+          } else if (latestFollowUp2.subject.includes("Warm")) {
+            warmLead++;
+          } else if (latestFollowUp2.subject.includes("Cold")) {
+            coldLead++;
+          }
+        } else if (hasFollowUp1) {
+          totalFollowUp1++;
+
+          const latestFollowUp1 =
+            student.remarks.FollowUp1[student.remarks.FollowUp1.length - 1];
+          if (latestFollowUp1.subject.includes("Switch Off")) {
+            switchOff++;
+          } else if (latestFollowUp1.subject.includes("Not Reachable")) {
+            notReachable++;
+          } else if (latestFollowUp1.subject.includes("Disconnect")) {
+            disconnect++;
+          } else if (latestFollowUp1.subject.includes("Network Issue")) {
+            networkIssue++;
+          } else if (latestFollowUp1.subject.includes("First Call Done")) {
+            firstCallDone++;
+          } else if (latestFollowUp1.subject.includes("Not Received")) {
+            notReceived++;
+          } else if (
+            latestFollowUp1.subject.includes("Incoming Not Available")
+          ) {
+            incomingNotAvailable++;
+          }
+        } else{
+          untouchedLeads++;
+        }
+      });
+
+
+      return {totalAdmissions, totalFollowUp1, totalFollowUp2, totalFollowUp3, firstCallDone, touchedLeads, untouchedLeads}
+  }
+
 
   useEffect(() => {
     console.log(CounstopPerformer);
@@ -515,7 +716,12 @@ const ReportCards = () => {
             <TableComponent
               data={noidaCounsData}
               title="Noida Office Leads"
-              leadsUnlocked={leadsUnlocked}
+              // counsellorReport={getCounsellorReport}
+              touchedLeads={touchedLeads}
+              untouchedLeads={untouchedLeads}
+              countFollowUp3 = {countFollowUp3}
+              // paidCounselling = {countPaidCounsellingByCounsellor}
+              // associateCollege = {countAssociateCollegeByCounsellor}
               totalCallsDone={totalCallsDone}
               countHotCallsByCounsellor={countHotCallsByCounsellor}
               countColdCallsByCounsellor={countColdCallsByCounsellor}
@@ -526,7 +732,12 @@ const ReportCards = () => {
             <TableComponent
               data={kanpurCounsData}
               title="Kanpur Office Leads"
-              leadsUnlocked={leadsUnlocked}
+              // counsellorReport={getCounsellorReport}
+              touchedLeads={touchedLeads}
+              untouchedLeads={untouchedLeads}
+              countFollowUp3={countFollowUp3}
+              // paidCounselling = {countPaidCounsellingByCounsellor}
+              // associateCollege = {countAssociateCollegeByCounsellor}
               totalCallsDone={totalCallsDone}
               countHotCallsByCounsellor={countHotCallsByCounsellor}
               countColdCallsByCounsellor={countColdCallsByCounsellor}
