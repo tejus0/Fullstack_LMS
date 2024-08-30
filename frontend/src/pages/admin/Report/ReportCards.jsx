@@ -257,6 +257,7 @@ const ReportCards = () => {
     return totalCallsDone;
   };
 
+  
   const noidaCounsData = filteredData.filter((item) => {
     return item.counsellor.counsellor_id.toLowerCase().includes("ckn");
   });
@@ -481,108 +482,9 @@ const ReportCards = () => {
 
 
       return {totalAdmissions, totalFollowUp1, totalFollowUp2, totalFollowUp3, firstCallDone, touchedLeads, untouchedLeads}
+
   }
 
-
-  useEffect(() => {
-    console.log(CounstopPerformer);
-  }, [CounstopPerformer]);
-
-  // const renderTable = (data, title) => (
-  //   <Box sx={{ my: 3 }}>
-  //     {console.log(data)}
-  //     <Box
-  //       sx={{
-  //         display: "flex",
-  //         justifyContent: "space-between",
-  //         alignItems: "center",
-  //         bgcolor: "#f5f5f5",
-  //         p: 1,
-  //         borderRadius: 1,
-  //       }}
-  //     >
-  //       <Typography variant="h5" component="div" sx={{ color: "#333" }}>
-  //         {title}
-  //       </Typography>
-
-  //       <Link
-  //         to={`/officeDashboard?office=${
-  //           title === "Noida Office Leads" ? "N" : "K"
-  //         }`}
-  //       >
-  //         <Button variant="contained" onClick={() => handleShowReport(title)}>
-  //           {title === "Noida Office Leads" ? "Noida" : "Kanpur"} Office Report
-  //         </Button>
-  //       </Link>
-  //     </Box>
-  //     <TableContainer component={Paper} sx={{ mt: 2 }}>
-  //       <Table>
-  //         <TableHead>
-  //           <TableRow>
-  // <TableCell><Typography variant="h6">Picture</Typography></TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Name</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Mobile</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Email</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Leads Unlocked</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Total Calls Done</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Hot Leads</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Cold Leads</Typography>
-  //             </TableCell>
-  //             <TableCell>
-  //               <Typography variant="h6">Warm Leads</Typography>
-  //             </TableCell>
-  //           </TableRow>
-  //         </TableHead>
-  //         <TableBody>
-  //           {data.map((item) => (
-  //             <TableRow key={item.counsellor.counsellor_id}>
-  // <TableCell>
-  //   <Avatar src={getAvatarUrl(item.counsellor.name)} alt={item.counsellor.name} />
-  // </TableCell>
-  //               <TableCell align="left">{item.counsellor.name}</TableCell>
-  //               <TableCell align="left">{item.counsellor.mobile}</TableCell>
-  //               <TableCell align="left">{item.counsellor.email}</TableCell>
-  //               <TableCell align="center">{leadsUnlocked(item.students)}</TableCell>
-  //               <TableCell align="center">{totalCallsDone(item.students)}</TableCell>
-  //               <TableCell align="center">
-  //                 {countHotCallsByCounsellor(item.students)}
-  //               </TableCell>
-  //               <TableCell align="center">
-  //                 {countColdCallsByCounsellor(item.students)}
-  //               </TableCell>
-  //               <TableCell align="center">
-  //                 {countWarmCallsByCounsellor(item.students)}
-  //               </TableCell>
-  //               <TableCell align="center">
-  //                 <Link to={`/counsellorDashboard/${item.counsellor._id}`}>
-  //                   <HiOutlineDocumentReport
-  //                     fontSize={30}
-  //                     color="blue"
-  //                     className="cursor-pointer"
-  //                     title="Overall Summary"
-  //                   />
-  //                 </Link>
-  //               </TableCell>
-  //             </TableRow>
-  //           ))}
-  //         </TableBody>
-  //       </Table>
-  //     </TableContainer>
-  //   </Box>
-  // );
 
   return (
     <Box sx={{ display: "flex", p: 0, height: "100vh" }}>
@@ -716,32 +618,32 @@ const ReportCards = () => {
             <TableComponent
               data={noidaCounsData}
               title="Noida Office Leads"
-              // counsellorReport={getCounsellorReport}
-              touchedLeads={touchedLeads}
-              untouchedLeads={untouchedLeads}
-              countFollowUp3 = {countFollowUp3}
+              counsellorReport={getCounsellorReport}
+              // touchedLeads={touchedLeads}
+              // untouchedLeads={untouchedLeads}
+              // countFollowUp3 = {countFollowUp3}
               // paidCounselling = {countPaidCounsellingByCounsellor}
               // associateCollege = {countAssociateCollegeByCounsellor}
-              totalCallsDone={totalCallsDone}
-              countHotCallsByCounsellor={countHotCallsByCounsellor}
-              countColdCallsByCounsellor={countColdCallsByCounsellor}
-              countWarmCallsByCounsellor={countWarmCallsByCounsellor}
+              // totalCallsDone={totalCallsDone}
+              // countHotCallsByCounsellor={countHotCallsByCounsellor}
+              // countColdCallsByCounsellor={countColdCallsByCounsellor}
+              // countWarmCallsByCounsellor={countWarmCallsByCounsellor}
             />
           )}
           {kanpurCounsData.length > 0 && (
             <TableComponent
               data={kanpurCounsData}
               title="Kanpur Office Leads"
-              // counsellorReport={getCounsellorReport}
-              touchedLeads={touchedLeads}
-              untouchedLeads={untouchedLeads}
-              countFollowUp3={countFollowUp3}
+              counsellorReport={getCounsellorReport}
+              // touchedLeads={touchedLeads}
+              // untouchedLeads={untouchedLeads}
+              // countFollowUp3={countFollowUp3}
               // paidCounselling = {countPaidCounsellingByCounsellor}
               // associateCollege = {countAssociateCollegeByCounsellor}
-              totalCallsDone={totalCallsDone}
-              countHotCallsByCounsellor={countHotCallsByCounsellor}
-              countColdCallsByCounsellor={countColdCallsByCounsellor}
-              countWarmCallsByCounsellor={countWarmCallsByCounsellor}
+              // totalCallsDone={totalCallsDone}
+              // countHotCallsByCounsellor={countHotCallsByCounsellor}
+              // countColdCallsByCounsellor={countColdCallsByCounsellor}
+              // countWarmCallsByCounsellor={countWarmCallsByCounsellor}
             />
           )}
         </Box>
