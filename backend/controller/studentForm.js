@@ -18,6 +18,7 @@ import { group, log } from "console";
 import { networkInterfaces } from "os";
 import generateToken from "../utils/generateToken.js";
 import { MongoClient } from "mongodb";
+import { CollegeNames } from "../constants.js";
 import ExcelJS from "exceljs";
 
 export const loginLoad = async (req, res) => {
@@ -676,48 +677,11 @@ export const verifyLogin = async (req, res) => {
 //   }
 // }
 
+
 export const assignAuto = async (req, res) => {
   // Fetch all counsellor ids
-  // const counsellors = await counsellorModal.find({ allLeads: 0 });
-  // const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
-
-  const eligibleCounsellors = [];
-  const underThresholdCounsellors = [];
-
-  const allCounsellors = await counsellorModal.find({});
-
-  for (let counsellor of allCounsellors) {
-    const totalAssignedLeads = await studentModal.countDocuments({
-      assignedCouns: counsellor._id,
-    });
-
-    if (totalAssignedLeads < 10) {
-      // console.log(counsellor._id, totalAssignedLeads)
-      underThresholdCounsellors.push(counsellor._id);
-    } else {
-      const studentCountWithRemarks = await studentModal.countDocuments({
-        assignedCouns: counsellor._id,
-        "remarks.FollowUp1": { $exists: true, $not: { $size: 0 } },
-      });
-      
-      // console.log(counsellor._id, totalAssignedLeads, studentCountWithRemarks)
-      if (studentCountWithRemarks >= 10) {
-        eligibleCounsellors.push(counsellor._id);
-      }
-    }
-  }
-
-  // Combine eligible counsellors with those under the threshold
-  const allAssignableCounsellors = [
-    ...underThresholdCounsellors,
-    ...eligibleCounsellors,
-  ];
-
-  // console.log(allAssignableCounsellors);
-
-  if (allAssignableCounsellors.length === 0) {
-    return res.status(400).json({ message: "No counselors available for assignment." });
-  }
+  const counsellors = await counsellorModal.find({ allLeads: 0 });
+  const counsellorIds = counsellors.map((c) => c._id); // counsellor_id is changed to id bacause we fetch councellor by id from url.
 
   const students = await studentModal.find({
     $and: [
@@ -749,37 +713,6 @@ export const assignAuto = async (req, res) => {
   });
 
   console.log(students.length, "stude");
-
-  const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
-  let counsellorIndex = assignmentConfig
-    ? assignmentConfig.lastAssignedCounsellorIndex
-    : 0;
-
-  // Assign counsellor ids in a round-robin fashion
-  for (let i = 0; i < students.length; i++) {
-    const student = students[i];
-    const newCounsellorId = allAssignableCounsellors[counsellorIndex];
-
-    console.log(newCounsellorId);
-
-    await studentModal.updateOne(
-      { _id: student._id },
-      { $set: { assignedCouns: newCounsellorId } }
-    );
-
-    console.log("Student id:", student._id, "assignedCouns:", student.assignedCouns)
-    counsellorIndex = (counsellorIndex + 1) % allAssignableCounsellors.length;
-  }
-
-  // Update the last assigned counsellor index
-  await assignmentConfigModal.updateOne(
-    {},
-    { $set: { lastAssignedCounsellorIndex: counsellorIndex } },
-    { upsert: true }
-  );
-
-  console.log("Updated students with counsellor ids successfully.");
-  return res.status(200).json(students);
 
   // const assignmentConfig = await assignmentConfigModal.findOne({}).exec();
   // let counsellorIndex = assignmentConfig
@@ -815,7 +748,7 @@ export const assignAuto = async (req, res) => {
   // );
 
   // console.log("Updated students with counsellor ids successfully.");
-  // return res.status(200).json(students);
+  return res.status(200).json(students);
   // return res.status(200).json(counsellorIds);
 };
 
@@ -1024,14 +957,14 @@ export const slotBook = async (req, res) => {
   console.log(req.body, "params in slotbook");
 
   try {
-    const { _id, visitDate, office } = req.body;
+    const { _id, visitDate, location } = req.body;
 
     const update = await studentModal.updateOne(
       { _id: _id },
       {
         $set: {
           DateToVisit: visitDate,
-          location: office,
+          location: location,
         },
       }
     );
@@ -2644,6 +2577,15 @@ export const downloadExcel = async (req, res) => {
     // Perform aggregation to fetch data
     const data = await collection
       .aggregate([
+        // {
+        //   $match: {
+        //     createdAt: {
+        //       $gte: new Date("2024-08-21T00:00:00Z"),
+        //       $lte: new Date("2024-08-31T00:00:00Z")
+        //     }
+        //   }
+        // },
+
         {
           $addFields: {
             assignedCounsObjId: {

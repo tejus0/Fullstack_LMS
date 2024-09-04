@@ -181,7 +181,8 @@ function clickAgentButton(name,password) {
       const styleLink = document.createElement("link");
       styleLink.rel = "stylesheet";
       // styleLink.href = "https://abhigyadufare.github.io/dynamicForm/style.css";
-      styleLink.href = "https://tejus0.github.io/lmsFormStyle/index.css";
+      // styleLink.href = "https://tejus0.github.io/lmsFormStyle/index.css";
+      styleLink.href = "https://ntechzy.github.io/LMS_Form_Style/index.css";
       // styleLink.href = "http://localhost:4000/api/v1/student-form/style.css";
 
       document.head.prepend(styleLink);

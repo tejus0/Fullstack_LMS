@@ -16,7 +16,7 @@ const StudentProfile = ({ counsellor_id }) => {
   const [todos, setTodos] = useState([]);
   const [studentData, setStudentData] = useState([]);
 
-  const [selectedValues, setselectedValues] = useState('Office Visit')
+  const [selectedValues, setselectedValues] = useState('Visit')
 
   const baseUrl = import.meta.env.VITE_API;
   const location = useLocation();
@@ -81,7 +81,7 @@ const StudentProfile = ({ counsellor_id }) => {
 
   const renderedComponent = useMemo(() => {
     switch (selectedValues) {
-      case 'Office Visit':
+      case 'Visit':
         return <SlotBooking studentId={studentData._id} />;
       case 'Follow_Ups':
         return <FollowUpSteps studentId={studentData._id} />;
